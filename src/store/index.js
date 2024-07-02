@@ -9,6 +9,7 @@ import { hotelApi } from "../services/hotelAPI";
 import { roomApi } from "../services/roomAPI";
 import { userApi } from "../services/userAPI";
 import { bookingApi } from "../services/bookingAPI";
+import { paymentApi } from "../services/paymentAPI";
 
 const persistConfig = {
   key: "root",
@@ -31,6 +32,7 @@ export const store = configureStore({
     [hotelApi.reducerPath]: hotelApi.reducer,
     [roomApi.reducerPath]: roomApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [paymentApi.reducerPath]: paymentApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -39,6 +41,7 @@ export const store = configureStore({
       roomApi.middleware,
       userApi.middleware,
       bookingApi.middleware,
+      paymentApi.middleware,
     ),
 });
 
