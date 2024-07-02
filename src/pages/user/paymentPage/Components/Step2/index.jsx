@@ -4,6 +4,9 @@ import { UserOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useCreateBookingMutation } from "../../../../../services/bookingAPI";
+import { useGetPaymentUrlMutation } from "../../../../../services/paymentAPI";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 function daysBetween(date1, date2) {
     // Chuyển đổi các chuỗi ngày thành đối tượng Date
@@ -24,7 +27,9 @@ function daysBetween(date1, date2) {
 }
 
 function Step2({ backStep }) {
+    const navigate = useNavigate();
     const [createBooking, { isLoading }] = useCreateBookingMutation();
+    const [getPayurl, { isLoading: isGetting }] = useGetPaymentUrlMutation();
     const userId = useSelector(state => state.auth.userId);
     const fullName = useSelector(state => state.auth.fullName);
     const email = useSelector(state => state.auth.email);
@@ -36,7 +41,8 @@ function Step2({ backStep }) {
     const roomTypeId = useSelector(state => state.booking.roomTypeId);
     const roomPrice = useSelector(state => state.booking.roomPrice);
 
-    const [method, setMethod] = useState("VNPay");
+    const [method, setMethod] = useState("");
+    const [bank, setBank] = useState("");
 
     const handleVNPayPayment = async () => {
         try {
@@ -88,7 +94,18 @@ function Step2({ backStep }) {
                 })
             }
             if (result) {
-                console.log(result);
+                const payRes = await getPayurl({
+                    "total": (roomPrice * rooms * daysBetween(date?.[1], date?.[0])),
+                    "bank": bank,
+                    "bookingId": result?.data?.data?.["booking-id"],
+                    "phone": phoneNumber,
+                    "fullName": fullName,
+                    "email": email
+                })
+                if (payRes) {
+                    const paymentUrl = payRes?.data?.data?.paymentUrl;
+                    window.location.href = paymentUrl;
+                }
             }
         } catch (error) {
             notification.error({
@@ -126,6 +143,40 @@ function Step2({ backStep }) {
                             alt="VNPay"
                         />
                     </div>
+                    {method == "VNPay" &&
+                        <div>
+                            <div className="sub-item" onClick={() => { setBank("NCB") }}>
+                                <div className="name">
+                                    <input type="radio" checked={bank === "NCB"} onChange={() => { setBank("NCB") }} />
+                                    <img
+                                        src="https://s-vnba-cdn.aicms.vn/vnba-media/23/8/22/ncb_64e48d66c2ccd.jpg"
+                                        alt="NCB"
+                                    />
+                                    <span>NCB</span>
+                                </div>
+                            </div>
+                            <div className="sub-item" onClick={() => { setBank("OtherBank") }}>
+                                <div className="name">
+                                    <input type="radio" checked={bank === "OtherBank"} onChange={() => { setBank("OtherBank") }} />
+                                    <img
+                                        src="https://stepup.edu.vn/wp-content/uploads/2020/08/the-other-1.jpg"
+                                        alt="OtherBank"
+                                    />
+                                    <span>Other Bank</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div className="method-item" onClick={() => { setMethod("OtherPay") }}>
+                        <div className="name">
+                            <input type="radio" checked={method === "OtherPay"} onChange={() => { setMethod("OtherPay") }} />
+                            <span>Other Payment</span>
+                        </div>
+                        <img
+                            src="https://stepup.edu.vn/wp-content/uploads/2020/08/the-other-1.jpg"
+                            alt="OtherPay"
+                        />
+                    </div>
                 </div>
                 <div className="pay-section">
                     <div className="confirm-price">
@@ -138,6 +189,7 @@ function Step2({ backStep }) {
                         onClick={() => {
                             handlePay();
                         }}
+                        disabled={(method === "OtherPay" || bank === "" || bank === "OtherBank") ? true : false}
                     >
                         Pay
                     </button>
