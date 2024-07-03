@@ -388,6 +388,12 @@ const AdminManageHotels = () => {
             ),
         },
     ];
+
+    const transformedData = data?.data?.content?.map((item, index) => ({
+        ...item,
+        key: index, // add key property
+    }));
+
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
@@ -398,7 +404,7 @@ const AdminManageHotels = () => {
             <Table
                 bordered={true}
                 columns={columns}
-                dataSource={data?.data?.content}
+                dataSource={transformedData}
                 onChange={onChange}
             />
             <Modal
