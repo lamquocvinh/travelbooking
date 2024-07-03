@@ -19,6 +19,7 @@ const Booking = Loadable({ loader: () => import("../pages/user/profile/Component
 const Invoice = Loadable({ loader: () => import("../pages/user/profile/Components/Invoice/Invoice") });
 const Review = Loadable({ loader: () => import("../pages/user/profile/Components/Review/Review") });
 const PaymentPage = Loadable({ loader: () => import("../pages/user/paymentPage") });
+const PaymentReturnPage = Loadable({ loader: () => import("../pages/user/paymentReturnPage") });
 
 // admin page
 const Dashboard = Loadable({ loader: () => import("../pages/admin/Dashboard") });
@@ -109,10 +110,13 @@ export const router = createBrowserRouter([
         path: "/register",
         element: Register
       },
-
       {
         path: "/payment",
         element: PaymentPage,
+      },
+      {
+        path: "/payment-return/:status",
+        element: PaymentReturnPage,
       },
       ////////////// add for more no login
     ]
