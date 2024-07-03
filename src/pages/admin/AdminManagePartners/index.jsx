@@ -153,7 +153,7 @@ const AdminManageUsers = () => {
                     textToHighlight={text ? text.toString() : ''}
                 />
             ) : (
-                dataIndex === "full_name" ? <Link to={`details-user/${record.id}`}>{text}</Link> : text
+                dataIndex === "full_name" ? <Link to={`partner-details/${record.id}`}>{text}</Link> : text
             ),
     });
 
@@ -248,6 +248,12 @@ const AdminManageUsers = () => {
             ),
         },
     ];
+
+    const transformedData = data?.map((item, index) => ({
+        ...item,
+        key: index, // add key property
+    }));
+
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
@@ -258,7 +264,7 @@ const AdminManageUsers = () => {
             <Table
                 bordered={true}
                 columns={columns}
-                dataSource={data}
+                dataSource={transformedData}
                 onChange={onChange}
             />
             <Modal

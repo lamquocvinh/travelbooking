@@ -24,8 +24,11 @@ const PaymentReturnPage = Loadable({ loader: () => import("../pages/user/payment
 // admin page
 const Dashboard = Loadable({ loader: () => import("../pages/admin/Dashboard") });
 const AdminManageBookings = Loadable({ loader: () => import("../pages/admin/AdminManageBookings") });
+const AdminBookingDetails = Loadable({ loader: () => import("../pages/admin/AdminManageBookings/Components/AdminBookingDetails") });
 const AdminManageUsers = Loadable({ loader: () => import("../pages/admin/AdminManageUsers") });
+const AdminUserDetails = Loadable({ loader: () => import("../pages/admin/AdminManageUsers/Components/AdminUserDetails") });
 const AdminManagePartners = Loadable({ loader: () => import("../pages/admin/AdminManagePartners") });
+const AdminPartnerDetails = Loadable({ loader: () => import("../pages/admin/AdminManagePartners/Components/AdminPartnerDetails") });
 const AdminManageHotels = Loadable({ loader: () => import("../pages/admin/AdminManageHotels") });
 const AdminHotelDetails = Loadable({ loader: () => import("../pages/admin/AdminManageHotels/Components/AdminHotelDetails") });
 const AdminManageConveniences = Loadable({ loader: () => import("../pages/admin/AdminManageConveniences") });
@@ -138,15 +141,42 @@ export const router = createBrowserRouter([
               },
               {
                 path: "manage-bookings",
-                element: AdminManageBookings,
+                children: [
+                  {
+                    index: true,
+                    element: AdminManageBookings,
+                  },
+                  {
+                    path: "booking-details/:bookingId",
+                    element: AdminBookingDetails,
+                  }
+                ]
               },
               {
                 path: "manage-users",
-                element: AdminManageUsers,
+                children: [
+                  {
+                    index: true,
+                    element: AdminManageUsers,
+                  },
+                  {
+                    path: "user-details/:userId",
+                    element: AdminUserDetails,
+                  }
+                ]
               },
               {
                 path: "manage-partners",
-                element: AdminManagePartners,
+                children: [
+                  {
+                    index: true,
+                    element: AdminManagePartners,
+                  },
+                  {
+                    path: "partner-details/:partnerId",
+                    element: AdminPartnerDetails,
+                  }
+                ]
               },
               {
                 path: "manage-hotels",
