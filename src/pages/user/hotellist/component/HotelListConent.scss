@@ -1,0 +1,121 @@
+.list-hotel {
+    flex: 1;
+
+    .hotel-item {
+        position: relative;
+        display: flex;
+        margin-bottom: 20px;
+        height: 240px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-color: white;
+        overflow: hidden;
+        transition: all 0.4s ease;
+
+        &:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .hotel-img {
+            width: 30%;
+            object-fit: cover;
+        }
+
+        .hotel-info {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .body-start {
+                .hotel-name {
+                    margin: 0 0 4px;
+                    font-size: 1.4rem;
+                    font-weight: bold;
+                }
+
+                .hotel-rating {
+                    margin: 0 0 16px;
+                    color: yellowgreen;
+                }
+
+                .hotel-conveniences {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+
+                    .no-conveniences {
+                        padding: 8px;
+                        width: 100%;
+                        border-radius: 8px;
+                        background-color: whitesmoke;
+                        color: gray;
+                        font-size: 16px;
+                        text-align: center;
+                    }
+
+                    .convenience-item {
+                        padding: 8px;
+                        border-radius: 8px;
+                        background-color: whitesmoke;
+                        color: gray;
+                    }
+                }
+            }
+
+            .body-end {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .infomation {
+                    color: gray;
+                    font-weight: bold;
+                }
+
+                .hotel-book-now {
+                    display: inline-block;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    border: 1px solid var(--blue-main-color);
+                    background-color: var(--blue-main-color);
+                    color: white;
+                    font-weight: bold;
+                    transition: all ease-in-out 0.2s;
+
+                    &:hover {
+                        border: 1px solid var(--blue-main-color);
+                        background-color: white;
+                        color: var(--blue-main-color);
+                    }
+                }
+            }
+        }
+
+        .hotel-discount {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background-color: var(--blue-main-color);
+            color: white;
+        }
+    }
+
+    .pagination-container {
+        text-align: right;
+    }
+
+    .no-data {
+        padding: 8px;
+        width: 100%;
+        border-radius: 8px;
+        background-color: whitesmoke;
+        color: gray;
+        font-size: 16px;
+        text-align: center;
+    }
+}
