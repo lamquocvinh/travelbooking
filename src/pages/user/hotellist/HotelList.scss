@@ -66,10 +66,14 @@
         font-weight: bold;
 
         .facilities-check-box {
+          display: flex;
+          flex-direction: column;
           font-weight: normal;
           font-size: larger;
         }
+
       }
+
 
       .btn {
         padding: 20px 0;

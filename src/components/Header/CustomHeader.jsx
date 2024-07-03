@@ -12,6 +12,7 @@ const CustomHeader = () => {
     const navigate = useNavigate();
     const selectedKey = location.pathname;
     const fullName = useSelector(state => state.auth.fullName);
+    const token = sessionStorage.getItem("token");
 
     const handleLogout = () => {
         dispatch(logOut());
@@ -40,7 +41,7 @@ const CustomHeader = () => {
                     }}
                     icon={<UserOutlined />}
                 />
-                <p>{fullName} <DownOutlined /></p>
+                <p>{fullName || "User"} <DownOutlined /></p>
             </Space>
         </Dropdown>
     );
@@ -55,7 +56,7 @@ const CustomHeader = () => {
                 <Link className={`link-item ${selectedKey === "/view-hotels" && "isSelected"}`} to="/view-hotels">View Hotels</Link>
             </div>
             <div className="header-actions">
-                {fullName ? renderProfileDropdown() : (
+                {fullName || token ? renderProfileDropdown() : (
                     <Link to='/login' className="login-btn">
                         Login
                     </Link>

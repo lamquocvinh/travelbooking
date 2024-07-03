@@ -1,4 +1,5 @@
-import "./CreateRoom.scss";
+import React, { useEffect, useState } from "react";
+import "./UpdateRoom.scss";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -14,7 +15,6 @@ const schema = yup.object().shape({
     description: yup.string().required("Description is required").trim(),
     room_price: yup.number().min(0).required("Price is required").typeError('Price must be a number'),
     number_of_rooms: yup.number().min(0).required("Number of rooms is required").typeError('Number of rooms must be a number'),
-    images: yup.mixed().required("Images are required"),
     room_type_name: yup.string().required("Room name is required").trim(),
     conveniences: yup.object().shape({
         air_conditioning: yup.boolean(),
@@ -22,7 +22,7 @@ const schema = yup.object().shape({
         wifi: yup.boolean(),
         toiletries: yup.boolean(),
         kitchen: yup.boolean(),
-        wardrobe: yup.boolean(),
+        wardrobe: yup.boolean(),  // Ensure wardrobe is included in schema
     }),
     types: yup.object().shape({
         luxury: yup.boolean(),
@@ -32,87 +32,84 @@ const schema = yup.object().shape({
     }),
 });
 
-function CreateRoom() {
+function UpdateRoom() {
     const dispatch = useDispatch();
     const { id } = useParams();
-
-    const [createRoom, { isLoading: createRoomLoading }] = roomApi.useCreateRoomMutation();
-    const [putRoomImage, { isLoading: putRoomImageLoading }] = roomApi.usePutRoomImageMutation();
-
+    const { data } = roomApi.useGetRoomDetailQuery(id);
+    const [Update] = roomApi.useUpdateRoomMutation();
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors },
         control,
-        watch,
+        setValue,
     } = useForm({
         resolver: yupResolver(schema),
     });
 
-    const image = watch("images");
+    useEffect(() => {
+        if (data) {
+            setValue('capacity_per_room', data?.data?.capacity_per_room);
+            setValue('description', data?.data?.description);
+            setValue('room_price', data?.data?.room_price);
+            setValue('number_of_rooms', data?.data?.number_of_rooms);
+            setValue('room_type_name', data?.data?.room_type_name);
+            setValue('conveniences.air_conditioning', data?.data?.conveniences[0]?.air_conditioning);
+            setValue('conveniences.tv', data?.data?.conveniences[0]?.tv);
+            setValue('conveniences.wifi', data?.data?.conveniences[0]?.wifi);
+            setValue('conveniences.toiletries', data?.data?.conveniences[0]?.toiletries);
+            setValue('conveniences.kitchen', data?.data?.conveniences[0]?.kitchen);
+            setValue('conveniences.wardrobe', data?.data?.conveniences[0]?.wardrobe);
+            setValue('types.luxury', data?.data?.types[0]?.luxury);
+            setValue('types.single_bedroom', data?.data?.types[0]?.single_bedroom);
+            setValue('types.twin_bedroom', data?.data?.types[0]?.twin_bedroom);
+            setValue('types.double_bedroom', data?.data?.types[0]?.double_bedroom);
+        }
+    }, [data, setValue]);
 
     // Handle form submission
-    const onSubmit = async (data) => {
+    const onSubmit = async (formData) => {
         try {
             // Handle conveniences data
-            const conveniences = [{
-                air_conditioning: data.conveniences.air_conditioning || false,
-                tv: data.conveniences.tv || false,
-                wifi: data.conveniences.wifi || false,
-                toiletries: data.conveniences.toiletries || false,
-                kitchen: data.conveniences.kitchen || false,
-            }];
+            const conveniences = {
+                air_conditioning: formData.conveniences.air_conditioning || false,
+                tv: formData.conveniences.tv || false,
+                wifi: formData.conveniences.wifi || false,
+                toiletries: formData.conveniences.toiletries || false,
+                kitchen: formData.conveniences.kitchen || false,
+                wardrobe: formData.conveniences.wardrobe || false,
+            };
 
             // Handle types data
             const types = {
-                luxury: data.types.luxury || false,
-                single_bedroom: data.types.single_bedroom || false,
-                twin_bedroom: data.types.twin_bedroom || false,
-                double_bedroom: data.types.double_bedroom || false,
+                luxury: formData.types.luxury || false,
+                single_bedroom: formData.types.single_bedroom || false,
+                twin_bedroom: formData.types.twin_bedroom || false,
+                double_bedroom: formData.types.double_bedroom || false,
             };
 
             // Prepare room data
             const roomData = {
-                hotel_id: Number(id),
-                description: data.description,
-                room_type_name: data.room_type_name,
-                number_of_rooms: data.number_of_rooms,
-                room_price: data.room_price,
-                capacity_per_room: data.capacity_per_room,
-                conveniences: conveniences,
+                description: formData.description,
+                room_type_name: formData.room_type_name,
+                number_of_rooms: formData.number_of_rooms,
+                room_price: formData.room_price,
+                capacity_per_room: formData.capacity_per_room,
+                conveniences: [conveniences],
                 types: types,
             };
 
-            // Check if images are uploaded
-            if (!image || image.length === 0) {
-                notification.error({
-                    message: "Error",
-                    description: "An image of the room is required.",
-                });
-                return;
-            }
-
-            // Prepare formData for image upload
-            const formData = new FormData();
-            image.forEach((file) => {
-                formData.append('images', file);
-            });
-
-            // Call API to create room
-            const createRoomResponse = await createRoom(roomData).unwrap();
-            console.log("Created room response:", createRoomResponse);
-
-            // Call API to upload room images
-            await putRoomImage({ roomTypeId: createRoomResponse?.data?.id, images: formData }).unwrap();
+            // Call API to update room
+            await Update({ roomTypeId: Number(id), roomData }).unwrap();
 
             // Show success notification
             notification.success({
                 message: "Success",
-                description: "Room created successfully!",
+                description: "Room updated successfully!",
             });
 
-            // Reset form after successful creation
+            // Reset form after successful update
             reset();
 
             // Navigate back to previous page
@@ -129,8 +126,8 @@ function CreateRoom() {
     };
 
     return (
-        <div className="create-hotel-wrapper">
-            <h2 className="title">New Room</h2>
+        <div className="update-room-wrapper">
+            <h2 className="title">Update Room</h2>
             <form className="form" onSubmit={handleSubmit(onSubmit)}>
                 <div className="item-50">
                     <label>Room Name*:</label>
@@ -158,35 +155,7 @@ function CreateRoom() {
                     <textarea className="input" type="text" {...register('description')} placeholder="Describe about room" />
                     <p className="error-message">{errors.description?.message}</p>
                 </div>
-                <div className="item-100">
-                    <label>Image Room*</label>
-                    <Controller
-                        name="images"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <Upload
-                                listType="picture"
-                                beforeUpload={(file) => {
-                                    onChange([...(value || []), file]);
-                                    return false;
-                                }}
-                                onRemove={(file) => {
-                                    const filteredValue = value.filter((v) => v.uid !== file.uid);
-                                    onChange(filteredValue);
-                                }}
-                                fileList={value ? value.map((file) => ({
-                                    uid: file.uid,
-                                    name: file.name,
-                                    status: 'done',
-                                    url: URL.createObjectURL(file),
-                                })) : []}
-                            >
-                                <Button icon={<UploadOutlined />}>Upload</Button>
-                            </Upload>
-                        )}
-                    />
-                    <p className="error-message">{errors.images?.message}</p>
-                </div>
+
                 <div className="item-100">
                     <h3>Type room:</h3>
                     <div className="conveniences">
@@ -196,7 +165,7 @@ function CreateRoom() {
                                     name={`types.${key}`}
                                     control={control}
                                     render={({ field }) => (
-                                        <input type="checkbox" {...field} />
+                                        <input type="checkbox" {...field} checked={!!field.value} />
                                     )}
                                 />
                                 <label className="label">
@@ -215,7 +184,7 @@ function CreateRoom() {
                                     name={`conveniences.${key}`}
                                     control={control}
                                     render={({ field }) => (
-                                        <input type="checkbox" {...field} />
+                                        <input type="checkbox" {...field} checked={!!field.value} />
                                     )}
                                 />
                                 <label className="label">
@@ -232,11 +201,11 @@ function CreateRoom() {
                     }}>
                         Cancel
                     </button>
-                    <button className="create" type="submit">Create</button>
+                    <button className="create" type="submit">Update</button>
                 </div>
             </form>
         </div>
     );
 }
 
-export default CreateRoom;
+export default UpdateRoom;
