@@ -35,9 +35,23 @@ export const bookingApi = createApi({
                 body: body,
             }),
         }),
+        getBooking: builder.query({
+            query: () => ({
+                url: `bookings/get-bookings?page=0&size=${currentUnixTimestamp}`,
+                method: "GET",
+            }),
+        }),
+        getBookingDetails: builder.query({
+            query: (bookingId) => ({
+                url: `bookings/get-booking-detail/${bookingId}`,
+                method: "GET",
+            }),
+        }),
     }),
 });
 
 export const {
-    useCreateBookingMutation
+    useCreateBookingMutation,
+    useGetBookingQuery,
+    useGetBookingDetailsQuery
 } = bookingApi;

@@ -34,6 +34,12 @@ export const userApi = createApi({
                 method: "PUT",
             }),
         }),
+        getUserDetails: builder.query({
+            query: (id) => ({
+                url: `users/get-user/${id}`,
+                method: "GET",
+            }),
+        }),
     }),
 })
 
@@ -41,4 +47,5 @@ export const {
     useGetUsersQuery,
     useGetPartnersQuery,
     useChangeStatusUserMutation,
+    useGetUserDetailsQuery
 } = userApi;
