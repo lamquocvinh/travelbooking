@@ -62,10 +62,13 @@ $blue-main-color: #5c98f2;
     .action-item {
         display: block;
         margin: 4px 0;
+        margin-bottom: 20px;
         width: 120px;
+        padding-top: 20px;
 
         .link {
             margin-left: 8px;
         }
+
     }
 }

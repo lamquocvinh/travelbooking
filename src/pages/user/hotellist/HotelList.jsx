@@ -5,7 +5,7 @@ import './HotelList.scss';
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from 'react-redux';
 import { setGuests, setRooms, setDate, setDestination } from '../../../slices/bookingSlice';
-import { Col, Row, DatePicker, InputNumber, Checkbox, Select, Rate, Button, notification, Popover, Pagination, Spin } from "antd";
+import { Col, Row, DatePicker, InputNumber, Checkbox, Select, Rate, Button, notification, Popover, Pagination, Spin, Radio } from "antd";
 import { VietnameseProvinces } from "../../../utils/utils";
 import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
@@ -30,7 +30,6 @@ const HotelList = () => {
     const [filterOptions, { isLoading: isFiltering }] = usePostFilterHotelMutation();
     const [selectedFacilities, setSelectedFacilities] = useState([]);
     const [selectedRatings, setSelectedRatings] = useState([]);
-
     const handlePageChange = (page) => {
         setCurrentPage(page - 1);
         window.scrollTo({
@@ -57,7 +56,7 @@ const HotelList = () => {
         });
 
         const body = {
-            rating: selectedRatings.length > 0 ? selectedRatings[selectedRatings.length - 1].toString() : null,
+            rating: selectedRatings,
             freeBreakfast: facilitiesMapping.freeBreakfast,
             pickUpDropOff: facilitiesMapping.pickUpDropOff,
             restaurant: facilitiesMapping.restaurant,
@@ -75,9 +74,7 @@ const HotelList = () => {
             console.log("Filtering with:", body, "Response:", response);
             setFilters(response);
         } catch (error) {
-            console.error("Error filtering hotels:", error);
             setFilters({ data: { content: [] } });
-
         }
     };
 
@@ -157,11 +154,9 @@ const HotelList = () => {
         setSelectedFacilities(checkedValues);
     };
 
-    const handleRatingChange = (checkedValues) => {
-        setSelectedRatings(checkedValues);
+    const handleRatingChange = (e) => {
+        setSelectedRatings(e.target.value);
     };
-    const filterUpdate = filters?.data?.content;
-    console.log("Filters:", filterUpdate);
 
     return (
         <div className='container-hotel-hotelSearch'>
@@ -226,88 +221,148 @@ const HotelList = () => {
                     </div>
                     <div className='facilities'>
                         Rating
-                        <Checkbox.Group className="facilities-check-box" onChange={handleRatingChange}>
-                            <div><Checkbox value={1}><Rate value={1} disabled /></Checkbox></div>
-                            <div><Checkbox value={2}><Rate value={2} disabled /></Checkbox></div>
-                            <div><Checkbox value={3}><Rate value={3} disabled /></Checkbox></div>
-                            <div><Checkbox value={4}><Rate value={4} disabled /></Checkbox></div>
-                            <div><Checkbox value={5}><Rate value={5} disabled /></Checkbox></div>
-                        </Checkbox.Group>
+                        <Radio.Group className="facilities-check-box" onChange={handleRatingChange} value={selectedRatings}>
+                            <div><Radio value={1}><Rate value={1} disabled /></Radio></div>
+                            <div><Radio value={2}><Rate value={2} disabled /></Radio></div>
+                            <div><Radio value={3}><Rate value={3} disabled /></Radio></div>
+                            <div><Radio value={4}><Rate value={4} disabled /></Radio></div>
+                            <div><Radio value={5}><Rate value={5} disabled /></Radio></div>
+                        </Radio.Group>
                     </div>
+
                     <Button className="btn" type="button" onClick={handleFilter}>
                         Search Room
                     </Button>
                 </Form>
                 <div className="list-hotel">
                     <Spin spinning={isLoading || isFiltering}>
-                        {data?.data?.content?.length > 0 ? (
-                            <>
-                                {data?.data?.content?.map((hotel) => (
-                                    <div key={hotel?.id} className="hotel-item">
-                                        {hotel?.discount && <div className="hotel-discount">{hotel?.discount}</div>}
-                                        <img
-                                            src={hotel?.image_urls?.[0]?.url || 'default_image_url.jpg'}
-                                            alt={hotel?.hotel_name || 'Default Hotel Name'}
-                                            className="hotel-img"
-                                        />
-                                        <div className="hotel-info">
-                                            <div className='body-start'>
-                                                <h2 className="hotel-name">{hotel?.hotel_name}</h2>
-                                                <div className="hotel-rating">
-                                                    <Rate allowHalf value={hotel?.rating} disabled />
-                                                </div>
-                                                <div className='hotel-conveniences'>
-                                                    {hotel?.conveniences && hotel?.conveniences.length > 0 ? (
-                                                        hotel?.conveniences.map((convenience, index) => {
-                                                            const trueConveniences = [];
-                                                            if (convenience.bar) trueConveniences.push("Bar");
-                                                            if (convenience.free_breakfast) trueConveniences.push("Breakfast");
-                                                            if (convenience.free_internet) trueConveniences.push("Internet");
-                                                            if (convenience.laundry) trueConveniences.push("Laundry");
-                                                            if (convenience.pick_up_drop_off) trueConveniences.push("Pick-Up/Drop-Off");
-                                                            if (convenience.pool) trueConveniences.push("Pool");
-                                                            if (convenience.reception_24h) trueConveniences.push("24h Reception");
-                                                            if (convenience.restaurant) trueConveniences.push("Restaurant");
-                                                            return (
-                                                                <React.Fragment key={index}>
-                                                                    {trueConveniences.map((item, idx) => (
-                                                                        <span key={`${index}-${idx}`} className="convenience-item">
-                                                                            {item}{idx < trueConveniences.length - 1 ? ', ' : ''}
-                                                                        </span>
-                                                                    ))}
-                                                                </React.Fragment>
-                                                            );
-                                                        })
-                                                    ) : (
-                                                        <p className="no-conveniences">No conveniences available</p>
-                                                    )}
-                                                </div>
+                        {filters?.data?.content && filters?.data?.content?.length === 0 ? (
+                            <p className="no-data">No hotel available</p>
+                        ) : filters?.data?.content?.length > 0 ? (
+                            filters?.data?.content?.map((hotel) => (
+                                <div key={hotel?.id} className="hotel-item">
+                                    {hotel?.discount && <div className="hotel-discount">{hotel?.discount}</div>}
+                                    <img
+                                        src={hotel?.image_urls?.[0]?.url || 'default_image_url.jpg'}
+                                        alt={hotel?.hotel_name || 'Default Hotel Name'}
+                                        className="hotel-img"
+                                    />
+                                    <div className="hotel-info">
+                                        <div className='body-start'>
+                                            <h2 className="hotel-name">{hotel?.hotel_name}</h2>
+                                            <div className="hotel-rating">
+                                                <Rate allowHalf value={hotel?.rating} disabled />
                                             </div>
-                                            <div className='body-end'>
-                                                <div className="infomation">
-                                                    Click on details to see more information.
-                                                </div>
-                                                <Link className="hotel-book-now" to={`/hotel-detail/${hotel?.id}`}>
-                                                    DETAIL
-                                                </Link>
+                                            <div className='hotel-conveniences'>
+                                                {hotel?.conveniences && hotel?.conveniences.length > 0 ? (
+                                                    hotel?.conveniences.map((convenience, index) => {
+                                                        const trueConveniences = [];
+                                                        if (convenience.bar) trueConveniences.push("Bar");
+                                                        if (convenience.free_breakfast) trueConveniences.push("Breakfast");
+                                                        if (convenience.free_internet) trueConveniences.push("Internet");
+                                                        if (convenience.laundry) trueConveniences.push("Laundry");
+                                                        if (convenience.pick_up_drop_off) trueConveniences.push("Pick-Up/Drop-Off");
+                                                        if (convenience.pool) trueConveniences.push("Pool");
+                                                        if (convenience.reception_24h) trueConveniences.push("24h Reception");
+                                                        if (convenience.restaurant) trueConveniences.push("Restaurant");
+                                                        return (
+                                                            <React.Fragment key={index}>
+                                                                {trueConveniences.map((item, idx) => (
+                                                                    <span key={`${index}-${idx}`} className="convenience-item">
+                                                                        {item}{idx < trueConveniences.length - 1 ? ', ' : ''}
+                                                                    </span>
+                                                                ))}
+                                                            </React.Fragment>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <p className="no-conveniences">No conveniences available</p>
+                                                )}
                                             </div>
                                         </div>
+                                        <div className='body-end'>
+                                            <div className="infomation">
+                                                Click on details to see more information.
+                                            </div>
+                                            <Link className="hotel-book-now" to={`/hotel-detail/${hotel?.id}`}>
+                                                DETAIL
+                                            </Link>
+                                        </div>
                                     </div>
-                                ))}
-                                <Pagination
-                                    className='pagination-container'
-                                    current={currentPage + 1}
-                                    total={filters?.data?.totalElements}
-                                    pageSize={pageSize}
-                                    onChange={handlePageChange}
-                                    showTotal={(total) => `Total ${total} items`}
-                                />
-                            </>
+                                </div>
+                            ))
+                        ) : data?.data?.content?.length > 0 ? (
+                            data?.data?.content?.map((hotel) => (
+                                <div key={hotel?.id} className="hotel-item">
+                                    {hotel?.discount && <div className="hotel-discount">{hotel?.discount}</div>}
+                                    <img
+                                        src={hotel?.image_urls?.[0]?.url || 'default_image_url.jpg'}
+                                        alt={hotel?.hotel_name || 'Default Hotel Name'}
+                                        className="hotel-img"
+                                    />
+                                    <div className="hotel-info">
+                                        <div className='body-start'>
+                                            <h2 className="hotel-name">{hotel?.hotel_name}</h2>
+                                            <div className="hotel-rating">
+                                                <Rate allowHalf value={hotel?.rating} disabled />
+                                            </div>
+                                            <div className='hotel-conveniences'>
+                                                {hotel?.conveniences && hotel?.conveniences.length > 0 ? (
+                                                    hotel?.conveniences.map((convenience, index) => {
+                                                        const trueConveniences = [];
+                                                        if (convenience.bar) trueConveniences.push("Bar");
+                                                        if (convenience.free_breakfast) trueConveniences.push("Breakfast");
+                                                        if (convenience.free_internet) trueConveniences.push("Internet");
+                                                        if (convenience.laundry) trueConveniences.push("Laundry");
+                                                        if (convenience.pick_up_drop_off) trueConveniences.push("Pick-Up/Drop-Off");
+                                                        if (convenience.pool) trueConveniences.push("Pool");
+                                                        if (convenience.reception_24h) trueConveniences.push("24h Reception");
+                                                        if (convenience.restaurant) trueConveniences.push("Restaurant");
+                                                        return (
+                                                            <React.Fragment key={index}>
+                                                                {trueConveniences.map((item, idx) => (
+                                                                    <span key={`${index}-${idx}`} className="convenience-item">
+                                                                        {item}{idx < trueConveniences.length - 1 ? ', ' : ''}
+                                                                    </span>
+                                                                ))}
+                                                            </React.Fragment>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <p className="no-conveniences">No conveniences available</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className='body-end'>
+                                            <div className="infomation">
+                                                Click on details to see more information.
+                                            </div>
+                                            <Link className="hotel-book-now" to={`/hotel-detail/${hotel?.id}`}>
+                                                DETAIL
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            ))
+
                         ) : (
-                            <div className="no-data">No hotels found</div>
+                            <p className="no-data">No hotel1 available</p>
+
                         )}
+                        <Pagination
+                            className='pagination-container'
+                            current={currentPage + 1}
+                            total={filters?.data?.totalElements}
+                            pageSize={pageSize}
+                            onChange={handlePageChange}
+                            showTotal={(total) => `Total ${total} items`}
+                        />
+
                     </Spin>
                 </div>
+
 
             </div>
         </div>

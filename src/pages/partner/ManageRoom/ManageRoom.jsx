@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import "./ManageRoom.scss"
 import { Table, Tag, Button, Popover, Modal, notification, Input, Space } from 'antd';
 import {
@@ -22,11 +22,15 @@ const ManageRoom = () => {
     const { id } = useParams();
     const { data, refetch } = roomApi.useGetAllRoomQuery(id);
     const [changeStatus, { isLoading }] = roomApi.useUpdateStatusMutation();
+    const [hasStatusChanged, setHasStatusChanged] = useState(false);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [statusRoom, setStatusRoom] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
     const handleOk = async () => {
         try {
             const result = await changeStatus(statusRoom);
@@ -34,7 +38,7 @@ const ManageRoom = () => {
                 notification.success({
                     message: "Change status successfully!"
                 });
-                setHasStatusChanged(true); // cập nhật trạng thái đã thay đổi
+                setHasStatusChanged(true);
             }
         } catch (error) {
             console.log(error);
@@ -234,14 +238,42 @@ const ManageRoom = () => {
                             </Button>
                         </Link>
 
-                        <Link className='link' to={`${record.id}/delete`}>
-                            <Button
-                                className='action-item'
-                                icon={<DeleteOutlined />}
-                            >
-                                <span className='link'>Disable</span>
-                            </Button>
-                        </Link>
+                        {
+                            record.status === "DISABLED" && <div>
+                                <Button
+                                    className='action-item'
+                                    style={{ marginTop: '5px' }}
+                                    icon={<CheckCircleOutlined />}
+                                    onClick={() => {
+                                        setStatusRoom({
+                                            roomTypeId: record.id,
+                                            status: `"AVAILABLE"`
+                                        });
+                                        showModal();
+                                    }}
+                                >
+                                    <span className='link'>Available</span>
+                                </Button>
+                            </div>
+                        }
+                        {
+                            record.status === "AVAILABLE" && <div>
+                                <Button
+                                    className='action-item'
+                                    style={{ marginTop: '5px' }}
+                                    icon={<CloseCircleOutlined />}
+                                    onClick={() => {
+                                        setStatusRoom({
+                                            roomTypeId: record.id,
+                                            status: `"DISABLED"`
+                                        });
+                                        showModal();
+                                    }}
+                                >
+                                    <span className='link'>Disabled</span>
+                                </Button>
+                            </div>
+                        }
                     </div >
                 } trigger="hover" placement='left'>
                     <Button icon={<MenuOutlined />}></Button>
@@ -249,6 +281,13 @@ const ManageRoom = () => {
             ),
         },
     ];
+
+    useEffect(() => {
+        if (hasStatusChanged) { // Đúng điều kiện
+            refetch();
+            setHasStatusChanged(false); // reset trạng thái
+        }
+    }, [hasStatusChanged, refetch]);
 
     return (
         <div className='manage-hotel-wrapper'>

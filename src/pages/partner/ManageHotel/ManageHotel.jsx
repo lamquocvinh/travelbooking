@@ -23,6 +23,7 @@ const ManageHotel = () => {
 
     // trạng thái để theo dõi thay đổi trạng thái của khách sạn
     const [hasStatusChanged, setHasStatusChanged] = useState(false);
+    const [hotelCount, setHotelCount] = useState(0); // to track number of hotels
 
     // search in table
     const [searchText, setSearchText] = useState('');
@@ -385,6 +386,21 @@ const ManageHotel = () => {
             setHasStatusChanged(false); // reset trạng thái
         }
     }, [hasStatusChanged, refetch]);
+
+    // tự động làm mới dữ liệu sau mỗi 10 giây và khi số lượng khách sạn thay đổi
+    useEffect(() => {
+        const interval = setInterval(() => {
+            refetch();
+        }, 10000);
+
+        // Kiểm tra số lượng khách sạn và cập nhật nếu thay đổi
+        if (data?.data?.content?.length !== hotelCount) {
+            setHotelCount(data?.data?.content?.length);
+            refetch();
+        }
+
+        return () => clearInterval(interval);
+    }, [data, hotelCount, refetch]);
 
     return (
         <div className='partner-manage-hotel-wrapper'>

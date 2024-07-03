@@ -79,6 +79,7 @@ function CreateHotel() {
                 description: "Hotel created successfully!",
             });
             reset();
+            window.history.back();
         } catch (error) {
             notification.error({
                 message: "Error",

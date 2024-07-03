@@ -41,7 +41,7 @@ const CustomHeader = () => {
                     }}
                     icon={<UserOutlined />}
                 />
-                <p>{fullName} <DownOutlined /></p>
+                <p>{fullName || "User"} <DownOutlined /></p>
             </Space>
         </Dropdown>
     );
