@@ -144,10 +144,10 @@ const AdminManageBookings = () => {
     const columns = [
         {
             title: 'Guest Name',
-            dataIndex: 'user.full_name',
-            key: 'user.full_name',
+            dataIndex: 'full-name',
+            key: 'full-name',
             width: "25%",
-            ...getColumnSearchProps('user.full_name', (text, record) => record.user.full_name),
+            ...getColumnSearchProps('user.full_name', (text, record) => record["full-name"]),
         },
         {
             title: 'Date',

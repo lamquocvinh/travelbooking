@@ -64,7 +64,7 @@ function AdminBookingDetails() {
                     </div>
                     <div className="item-50">
                         <label>Hotel name</label>
-                        <p className="input"></p>
+                        <p className="input">{data?.data["hotel-name"]}</p>
                     </div>
                     <div className="item-25">
                         <label>Check in</label>
@@ -76,7 +76,7 @@ function AdminBookingDetails() {
                     </div>
                     <div className="item-25">
                         <label>Room name</label>
-                        <p className="input"></p>
+                        <p className="input">{data?.data["booking-details"][0]["room-name"]}</p>
                     </div>
                     <div className="item-25">
                         <label>Quantity</label>
@@ -101,15 +101,15 @@ function AdminBookingDetails() {
                 <div className="details">
                     <div className="item-50">
                         <label>Fullname</label>
-                        <p className="input">{data?.data?.user?.full_name}</p>
+                        <p className="input">{data?.data["full-name"]}</p>
                     </div>
                     <div className="item-25">
                         <label>Email</label>
-                        <p className="input">{data?.data?.user?.email}</p>
+                        <p className="input">{data?.data["email"]}</p>
                     </div>
                     <div className="item-25">
                         <label>Phone</label>
-                        <p className="input">{data?.data?.user?.phone_number}</p>
+                        <p className="input">{data?.data["phone-number"]}</p>
                     </div>
                 </div>
             </div>

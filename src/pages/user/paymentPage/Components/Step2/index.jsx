@@ -36,6 +36,7 @@ function Step2({ backStep }) {
     const phoneNumber = useSelector(state => state.auth.phoneNumber);
     const date = useSelector(state => state.booking.date);
     const rooms = useSelector(state => state.booking.rooms);
+    const hotelId = useSelector(state => state.booking.hotelId);
     const hotelName = useSelector(state => state.booking.hotelName);
     const roomName = useSelector(state => state.booking.roomTypeName);
     const roomTypeId = useSelector(state => state.booking.roomTypeId);
@@ -60,7 +61,6 @@ function Step2({ backStep }) {
                     "full-name": fullName,
                     "phone-number": phoneNumber,
                     "email": email,
-                    "booking-date": new Date().toISOString(),
                     "payment-method": "VNPay",
                     "booking-details": [
                         {
@@ -69,7 +69,8 @@ function Step2({ backStep }) {
                             "number-of-rooms": rooms,
                             "total-money": (roomPrice * rooms * daysBetween(date?.[1], date?.[0]))
                         }
-                    ]
+                    ],
+                    "hotel-id": hotelId
                 })
             } else {
                 result = await createBooking({
@@ -81,7 +82,6 @@ function Step2({ backStep }) {
                     "full-name": fullName,
                     "phone-number": phoneNumber,
                     "email": email,
-                    "booking-date": new Date().toISOString(),
                     "payment-method": "VNPay",
                     "booking-details": [
                         {
@@ -90,7 +90,8 @@ function Step2({ backStep }) {
                             "number-of-rooms": rooms,
                             "total-money": (roomPrice * rooms * daysBetween(date?.[1], date?.[0]))
                         }
-                    ]
+                    ],
+                    "hotel-id": hotelId
                 })
             }
             if (result) {
