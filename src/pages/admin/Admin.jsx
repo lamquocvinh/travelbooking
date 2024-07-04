@@ -5,7 +5,8 @@ import {
     BankOutlined,
     UserOutlined,
     UsergroupAddOutlined,
-    WifiOutlined
+    WifiOutlined,
+    InboxOutlined
 } from '@ant-design/icons';
 
 import { Layout, Menu, theme } from 'antd';
@@ -60,6 +61,10 @@ const Admin = () => {
                         <Menu.Divider />
                         <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-hotels" icon={<BankOutlined style={{ fontSize: '20px' }} />}>
                             <Link to="/admin/manage-hotels">Hotels</Link>
+                        </Menu.Item>
+                        <Menu.Divider />
+                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-packages" icon={<InboxOutlined style={{ fontSize: '20px' }} />}>
+                            <Link to="/admin/manage-packages">Packages</Link>
                         </Menu.Item>
                         <Menu.Divider />
                         <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-conveniences" icon={<WifiOutlined style={{ fontSize: '20px' }} />}>
