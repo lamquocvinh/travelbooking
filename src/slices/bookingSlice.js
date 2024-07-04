@@ -7,6 +7,7 @@ const bookingSlice = createSlice({
         rooms: 1,
         date: [],
         destination: '',
+        hotelId: 0,
         hotelName: "",
         roomTypeId: 0,
         roomTypeName: "",
@@ -26,8 +27,9 @@ const bookingSlice = createSlice({
         setDestination: (state, action) => {
             state.destination = action.payload;
         },
-        setHotelName: (state, action) => {
-            state.hotelName = action.payload;
+        setHotelInfo: (state, action) => {
+            state.hotelId = action.payload.hotelId;
+            state.hotelName = action.payload.hotelName;
         },
         setRoomInfo: (state, action) => {
             state.roomTypeId = action.payload.roomTypeId;
@@ -43,7 +45,7 @@ export const {
     setRooms,
     setDate,
     setDestination,
-    setHotelName,
+    setHotelInfo,
     setRoomInfo
 } = bookingSlice.actions;
 export default bookingSlice.reducer;

@@ -62,7 +62,7 @@ const RoomlistDetail = () => {
                 </div>
                 <Amentites data={AmentitesParams} />
                 <div ref={roomRef}>
-                    <Roomlist {...RoomListParams} hotel_name={data?.data?.hotel_name} />
+                    <Roomlist {...RoomListParams} hotel_name={data?.data?.hotel_name} hotel_Id={hotelId} />
                 </div>
             </Spin>
         </div>
