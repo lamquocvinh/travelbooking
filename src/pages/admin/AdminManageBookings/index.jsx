@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import "./AdminManageBookings.scss"
-import { Table, Tag, Button, Modal, Tooltip, notification, Input, Space } from 'antd';
+import { Table, Tag, Button, Tooltip, Input, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
@@ -237,6 +237,11 @@ const AdminManageBookings = () => {
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
+
+
+    useEffect(() => {
+        refetch()
+    }, []);
 
     return (
         <div className='admin-manage-bookings-wrapper'>

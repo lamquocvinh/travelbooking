@@ -1,7 +1,7 @@
 import "./HotelDetailsPage.scss";
 import React, { useEffect, useRef } from 'react';
-import { Spin } from 'antd';
-import { useParams } from 'react-router-dom';
+import { FloatButton, Result, Spin } from 'antd';
+import { Link, useParams } from 'react-router-dom';
 import HeaderHotel from './component/jsx/HeaderHotel';
 import HotelAbout from './component/jsx/HotelAbout';
 import Amentites from './component/jsx/Amentites';
@@ -55,16 +55,26 @@ const RoomlistDetail = () => {
 
     return (
         <div className="hotel-details-page-wrapper">
-            <Spin spinning={isLoading}>
-                <HeaderHotel data={HeaderParams} toHotelAbout={scrollToHotelAbout} toRoom={scrollToRoom} />
-                <div ref={hotelAboutRef}>
-                    <HotelAbout data={AboutParams} />
-                </div>
-                <Amentites data={AmentitesParams} />
-                <div ref={roomRef}>
-                    <Roomlist {...RoomListParams} hotel_name={data?.data?.hotel_name} hotel_Id={hotelId} />
-                </div>
-            </Spin>
+            {data?.data ?
+                <Spin spinning={isLoading}>
+                    <HeaderHotel data={HeaderParams} toHotelAbout={scrollToHotelAbout} toRoom={scrollToRoom} />
+                    <div ref={hotelAboutRef}>
+                        <HotelAbout data={AboutParams} />
+                    </div>
+                    <Amentites data={AmentitesParams} />
+                    <div ref={roomRef}>
+                        <Roomlist {...RoomListParams} hotel_name={data?.data?.hotel_name} hotel_Id={hotelId} />
+                    </div>
+                </Spin>
+                :
+                <Result
+                    status="404"
+                    title="404"
+                    subTitle="Sorry, the page you visited does not exist."
+                    extra={<Link to={"/"} className="back-home">Back Home</Link>}
+                />
+            }
+            <FloatButton.BackTop visibilityHeight={800} />
         </div>
     );
 }
