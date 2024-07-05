@@ -10,7 +10,7 @@ import { roomApi } from "../services/roomAPI";
 import { userApi } from "../services/userAPI";
 import { bookingApi } from "../services/bookingAPI";
 import { paymentApi } from "../services/paymentAPI";
-import { packetApi } from "../services/packetAPI";
+import { packageApi } from "../services/packageAPI";
 
 const persistConfig = {
   key: "root",
@@ -34,7 +34,7 @@ export const store = configureStore({
     [roomApi.reducerPath]: roomApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [paymentApi.reducerPath]: paymentApi.reducer,
-    [packetApi.reducerPath]: packetApi.reducer,
+    [packageApi.reducerPath]: packageApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -44,7 +44,7 @@ export const store = configureStore({
       userApi.middleware,
       bookingApi.middleware,
       paymentApi.middleware,
-      packetApi.middleware
+      packageApi.middleware,
     ),
 });
 

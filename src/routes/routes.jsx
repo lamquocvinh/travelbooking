@@ -31,6 +31,10 @@ const AdminManagePartners = Loadable({ loader: () => import("../pages/admin/Admi
 const AdminPartnerDetails = Loadable({ loader: () => import("../pages/admin/AdminManagePartners/Components/AdminPartnerDetails") });
 const AdminManageHotels = Loadable({ loader: () => import("../pages/admin/AdminManageHotels") });
 const AdminHotelDetails = Loadable({ loader: () => import("../pages/admin/AdminManageHotels/Components/AdminHotelDetails") });
+const AdminManagePackages = Loadable({ loader: () => import("../pages/admin/AdminManagePackages") });
+const AdminPackageDetails = Loadable({ loader: () => import("../pages/admin/AdminManagePackages/Components/AdminPackageDetails") });
+const AdminPackageCreate = Loadable({ loader: () => import("../pages/admin/AdminManagePackages/Components/AdminPackageCreate") });
+const AdminPackageEdit = Loadable({ loader: () => import("../pages/admin/AdminManagePackages/Components/AdminPackageEdit") });
 const AdminManageConveniences = Loadable({ loader: () => import("../pages/admin/AdminManageConveniences") });
 
 // partner page
@@ -189,6 +193,27 @@ export const router = createBrowserRouter([
                   {
                     path: "hotel-details/:hotelId",
                     element: AdminHotelDetails,
+                  }
+                ]
+              },
+              {
+                path: "manage-packages",
+                children: [
+                  {
+                    index: true,
+                    element: AdminManagePackages,
+                  },
+                  {
+                    path: "package-details/:packageId",
+                    element: AdminPackageDetails,
+                  },
+                  {
+                    path: "package-create",
+                    element: AdminPackageCreate,
+                  },
+                  {
+                    path: "package-edit/:packageId",
+                    element: AdminPackageEdit,
                   }
                 ]
               },
