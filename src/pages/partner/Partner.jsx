@@ -2,6 +2,7 @@ import React from 'react';
 import {
     SolutionOutlined,
     EditOutlined,
+    DollarOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
@@ -47,6 +48,10 @@ const Partner = () => {
                     >
                         <Menu.Item className="dashboard-content-sider-menu-item" key="/partner" icon={<EditOutlined style={{ fontSize: '20px' }} />}>
                             <Link to="/partner">View Booking</Link>
+                        </Menu.Item>
+                        <Menu.Divider />
+                        <Menu.Item className="dashboard-content-sider-menu-item" key="/partner/packet" icon={<DollarOutlined style={{ fontSize: '20px' }} />}>
+                            <Link to="/partner/packet">Buy Packet</Link>
                         </Menu.Item>
                         <Menu.Divider />
                         <Menu.Item className="dashboard-content-sider-menu-item" key="/partner/manage-hotel" icon={<SolutionOutlined style={{ fontSize: '20px' }} />}>

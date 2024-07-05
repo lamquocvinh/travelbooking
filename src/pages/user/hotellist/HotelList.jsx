@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGetHotelWithPageQuery, usePostFilterHotelMutation } from '../../../services/hotelAPI';
+import { useGetHotelWithPageQuery, usePostFilterHotelMutation, useSearchHotelsMutation } from '../../../services/hotelAPI';
 import { Form, Link } from 'react-router-dom';
 import './HotelList.scss';
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
@@ -12,6 +12,10 @@ import dayjs from 'dayjs';
 import moment from 'moment';
 const { RangePicker } = DatePicker;
 const dateFormat = 'DD/MM/YYYY';
+const storageFormat = 'YYYY-MM-DD';
+const disabledDate = (current) => {
+    return current && current < dayjs().startOf('day');
+};
 
 const HotelList = () => {
     const dispatch = useDispatch();
@@ -24,10 +28,14 @@ const HotelList = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize] = useState(10);
     const [filters, setFilters] = useState({});
+    const [searches, setSearches] = useState({});
     const { data, isLoading } = useGetHotelWithPageQuery({ pageNumber: currentPage, pageSize });
+
     const [filterOptions, { isLoading: isFiltering }] = usePostFilterHotelMutation();
     const [selectedFacilities, setSelectedFacilities] = useState([]);
     const [selectedRatings, setSelectedRatings] = useState([]);
+
+    const [searchHotels] = useSearchHotelsMutation();
 
     const handlePageChange = (page) => {
         setCurrentPage(page - 1);
@@ -71,11 +79,37 @@ const HotelList = () => {
         try {
             const response = await filterOptions(body).unwrap();
             console.log("Filtering with:", body, "Response:", response);
+            setSearches();
             setFilters(response);
         } catch (error) {
             setFilters({ data: { content: [] } });
         }
     };
+
+    const handleSearchChange = async () => {
+        if (!destination || !guests || !date || date.length !== 2) {
+            console.log("Invalid search parameters");
+            return;
+        }
+
+        const searchData = {
+            province: destination,
+            numPeople: guests,
+            checkInDate: date[0],
+            checkOutDate: date[1],
+        };
+        try {
+            const response = await searchHotels(searchData).unwrap();
+            console.log("Search with:", searchData, "Response:", response);
+            setFilters();
+            setSearches(response);
+        } catch (error) {
+            console.log("Error:", error);
+            setSearches({ data: { content: [] } });
+        }
+    };
+
+
 
     const handleRoomsChange = (value) => {
         dispatch(setRooms(value));
@@ -109,17 +143,22 @@ const HotelList = () => {
         dispatch(setDestination(value));
     };
 
-    const handleSearchChange = () => {
-        setCurrentPage(0); // Reset to first page on search
-    };
+
 
     const handleVisibleChange = (visible) => {
         setVisible(visible);
     };
 
-    // Convert date strings to moment objects
-    const momentDates = date.map(dateString => moment(dateString, 'YYYY-MM-DD'));
-    console.log("momentDates", momentDates.map(momentObj => momentObj._i));
+    const defaultStartDate = dayjs().add(1, 'day');
+    const defaultEndDate = dayjs().add(2, 'day');
+    const defaultDates = [defaultStartDate, defaultEndDate];
+
+    const dateObjects = date?.length ? date.map(dateString => dayjs(dateString, storageFormat)) : defaultDates;
+    useEffect(() => {
+        const defaultDates = [defaultStartDate?.format(storageFormat), defaultEndDate?.format(storageFormat)];
+        dispatch(setDate(defaultDates));
+    }, [dispatch]);
+
     const content = (
         <div>
             <Row gutter={[16, 16]}>
@@ -151,12 +190,13 @@ const HotelList = () => {
     };
     return (
         <div className='container-hotel-hotelSearch'>
-            <div className="search-layout-hotels">
+            <Form className="search-layout-hotels">
                 <div className='body'>
                     <RangePicker
                         className='item'
-                        value={momentDates}
+                        value={dateObjects?.length ? dateObjects?.map(date => dayjs(date, dateFormat)) : undefined}
                         onChange={handleDateChange}
+                        disabledDate={disabledDate}
                         format={dateFormat}
                         placeholder={["Check In", "Check Out"]}
                     />
@@ -193,7 +233,7 @@ const HotelList = () => {
                         <p><SearchOutlined /></p>
                     </div>
                 </Button>
-            </div>
+            </Form>
             <div className="hotel">
                 <Form className="filter">
                     <div className='facilities'>
@@ -217,7 +257,7 @@ const HotelList = () => {
                             <div><Radio value={3}><Rate value={3} disabled /></Radio></div>
                             <div><Radio value={4}><Rate value={4} disabled /></Radio></div>
                             <div><Radio value={5}><Rate value={5} disabled /></Radio></div>
-                            <div><Radio value={null} onClick={handleClearRating}>Do not choose rating</Radio></div>
+                            <div><Radio value={null} onClick={handleClearRating}>Unrated</Radio></div>
                         </Radio.Group>
                     </div>
 
@@ -233,6 +273,7 @@ const HotelList = () => {
                     currentPage={currentPage}
                     pageSize={pageSize}
                     handlePageChange={handlePageChange}
+                    searches={searches}
                 />
 
             </div>

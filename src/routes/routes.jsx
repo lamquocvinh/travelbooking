@@ -47,13 +47,14 @@ const Room = Loadable({ loader: () => import("../pages/partner/ManageRoom/Manage
 const CreateRoom = Loadable({ loader: () => import("../pages/partner/CreateRoom/CreateRoom") });
 const RoomDetails = Loadable({ loader: () => import("../pages/partner/RoomDetail/RoomDetail") });
 const UpdateRoom = Loadable({ loader: () => import("../pages/partner/UpdateRoom/UpdateRoom") });
+const Packet = Loadable({ loader: () => import("../pages/partner/Packet/Packet") });
 
 
 const Admin = Loadable({
   loader: () => import("../pages/admin/Admin"),
 });
 const partner = Loadable({
-  loader: () => import("../pages/partner/partner"),
+  loader: () => import("../pages/partner/Partner"),
 });
 export const router = createBrowserRouter([
   {
@@ -246,6 +247,10 @@ export const router = createBrowserRouter([
               {
                 path: "manage-hotel/:id/edit",
                 element: Edit
+              },
+              {
+                path: "packet",
+                element: Packet
               },
               {
                 path: "manage-hotel/:id/manage-room/room-details/:id",
