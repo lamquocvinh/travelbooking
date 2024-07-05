@@ -1,4 +1,21 @@
 .hotel-details-page-wrapper {
   margin: 100px 10%;
   width: 80%;
+
+  .back-home {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--blue-main-color);
+    background-color: var(--blue-main-color);
+    color: white;
+    font-weight: bold;
+    transition: all ease-in-out 0.2s;
+
+    &:hover {
+      border: 1px solid var(--blue-main-color);
+      background-color: white;
+      color: var(--blue-main-color);
+    }
+  }
 }
