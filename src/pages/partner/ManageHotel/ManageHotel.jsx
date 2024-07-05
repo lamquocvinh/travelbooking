@@ -11,12 +11,17 @@ import {
     MenuOutlined,
     PlusCircleOutlined,
     EditOutlined,
-    BankOutlined
+    BankOutlined,
+    SolutionOutlined
 } from '@ant-design/icons';
 import { useGetHotelForPartnerQuery, useChangeStatusHotelMutation } from "../../../services/hotelAPI";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ManageHotel = () => {
+    const packageId = useSelector((state) => state.auth.packageId);
+    const navigate = useNavigate()
+
     // call api
     const [changeStatus, { isLoading }] = useChangeStatusHotelMutation();
     const { data, refetch } = useGetHotelForPartnerQuery();
@@ -30,6 +35,8 @@ const ManageHotel = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [statusHotel, setStatusHotel] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -331,6 +338,15 @@ const ManageHotel = () => {
                                 <span className='link'>Room</span>
                             </Button>
                         </Link>
+
+                        <Link className='link' to={`booking/${record.id}`}>
+                            <Button
+                                className='action-item'
+                                icon={<SolutionOutlined />}
+                            >
+                                <span className='link'>Booking</span>
+                            </Button>
+                        </Link>
                     </div >
                 } trigger="hover" placement='left'>
                     <Button icon={<MenuOutlined />}></Button>
@@ -338,9 +354,6 @@ const ManageHotel = () => {
             ),
         },
     ];
-    useEffect(() => {
-        refetch();
-    }, [data]);
 
     useEffect(() => {
         if (hasStatusChanged) {
@@ -360,6 +373,15 @@ const ManageHotel = () => {
         }
         return () => clearInterval(interval);
     }, [data, hotelCount, refetch]);
+
+    // useEffect(() => {
+    //     if (packageId == null) {
+    //         notification.error({
+    //             message: "You need to buy package first!"
+    //         });
+    //         navigate('/partner/package')
+    //     }
+    // }, [])
 
     return (
         <div className='partner-manage-hotel-wrapper'>

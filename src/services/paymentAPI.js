@@ -34,9 +34,16 @@ export const paymentApi = createApi({
                 method: "GET",
             }),
         }),
+        getPaymentUrlForPackage: builder.mutation({
+            query: (data) => ({
+                url: `payment/vn-pay?amount=${data.total}&bankCode=${data.bank}&packageId=${data.packageId}&phoneGuest=${data.phone}&nameGuest=${data.fullName}&emailGuest=${data.email}`,
+                method: "GET",
+            }),
+        }),
     }),
 });
 
 export const {
-    useGetPaymentUrlMutation
+    useGetPaymentUrlMutation,
+    useGetPaymentUrlForPackageMutation,
 } = paymentApi;

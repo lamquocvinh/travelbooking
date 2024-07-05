@@ -47,11 +47,22 @@ export const bookingApi = createApi({
                 method: "GET",
             }),
         }),
+        getBookingByHotel: builder.query({
+            query: (hotelId) => {
+                console.log("Received hotelId:", hotelId);
+                return {
+                    url: `bookings/get-bookings-by-hotel/${hotelId}`,
+                    method: "GET",
+                };
+            },
+        }),
+
     }),
 });
 
 export const {
     useCreateBookingMutation,
     useGetBookingQuery,
-    useGetBookingDetailsQuery
+    useGetBookingDetailsQuery,
+    useGetBookingByHotelQuery
 } = bookingApi;

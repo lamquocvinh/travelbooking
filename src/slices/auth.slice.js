@@ -8,7 +8,8 @@ const authSlice = createSlice({
         fullName: null,
         email: null,
         phoneNumber: null,
-        role: null
+        role: null,
+        packageId: null,
     },
     reducers: {
         setToken: (state, action) => {
@@ -34,8 +35,12 @@ const authSlice = createSlice({
             state.phoneNumber = null;
             state.role = null;
             state.token = null;
-            sessionStorage.removeItem("token");
-            localStorage.removeItem("token");
+            state.packageId = null;
+            sessionStorage.clear();
+            localStorage.clear();
+        },
+        setPackageId: (state, action) => {
+            state.packageId = action.payload;
         },
     },
     selectors: {
@@ -43,7 +48,7 @@ const authSlice = createSlice({
     },
 });
 
-export const { setToken, setInfo, setInfoBooking, logOut } = authSlice.actions;
+export const { setToken, setInfo, setInfoBooking, logOut, setPackageId } = authSlice.actions;
 export default authSlice.reducer;
 export const selectCurrentToken = (state) => state.auth.token;
 export const { selectTokens } = authSlice.selectors;
