@@ -16,6 +16,7 @@ const Change = Loadable({ loader: () => import("../pages/user/profile/Components
 const HomePage = Loadable({ loader: () => import("../pages/user/HomePage/HomePage") });
 const User = Loadable({ loader: () => import("../pages/user/profile/index") });
 const Booking = Loadable({ loader: () => import("../pages/user/profile/Components/Booking/Booking") });
+const BookingDetails = Loadable({ loader: () => import("../pages/user/profile/Components/Booking/Components/BookingDetails") });
 const Invoice = Loadable({ loader: () => import("../pages/user/profile/Components/Invoice/Invoice") });
 const Review = Loadable({ loader: () => import("../pages/user/profile/Components/Review/Review") });
 const PaymentPage = Loadable({ loader: () => import("../pages/user/paymentPage") });
@@ -79,7 +80,16 @@ export const router = createBrowserRouter([
               },
               {
                 path: "booking",
-                element: Booking,
+                children: [
+                  {
+                    index: true,
+                    element: Booking,
+                  },
+                  {
+                    path: "booking-details/:bookingId",
+                    element: BookingDetails,
+                  }
+                ]
               },
               {
                 path: "invoice",
