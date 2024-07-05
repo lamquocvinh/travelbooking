@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 const UserManageBookings = () => {
     // hook call api
     const { data, refetch } = useGetBookingQuery();
-    console.log(data);
 
     // search in table
     const [searchText, setSearchText] = useState('');
