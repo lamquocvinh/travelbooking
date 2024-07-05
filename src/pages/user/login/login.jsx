@@ -8,7 +8,7 @@ import { notification } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setInfo, setToken } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
+import { setInfo, setToken, setPackageId } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
 import IMG from "../../../assets/photo-3-1485152074061.jpg";
 
 const schema = yup
@@ -63,6 +63,7 @@ function LoginAdmin() {
                     role: result?.data?.roles?.[0],
                 }));
                 dispatch(setToken(result.data.token));
+                dispatch(setPackageId(result.data.packageId));
                 localStorage.setItem("token", result.data.token);
                 const role = result?.data?.roles?.[0];
                 const defaultPath = navigateByRoles[role] || "/";

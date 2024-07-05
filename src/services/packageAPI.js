@@ -54,6 +54,12 @@ export const packageApi = createApi({
                 body: body.data,
             }),
         }),
+        registerPackage: builder.mutation({
+            query: (packageId) => ({
+                url: `packages/register-package/${packageId}`,
+                method: "POST",
+            }),
+        }),
     }),
 });
 
@@ -61,5 +67,6 @@ export const {
     useGetAllPackagesQuery,
     useGetPackageDetailsQuery,
     useCreatePackageMutation,
-    useEditPackageMutation
+    useEditPackageMutation,
+    useRegisterPackageMutation,
 } = packageApi;

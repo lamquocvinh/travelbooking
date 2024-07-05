@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setGuests, setRooms, setDate, setDestination } from '../../../slices/bookingSlice';
 import { Col, Row, DatePicker, InputNumber, Checkbox, Select, Rate, Button, notification, Popover, Pagination, Spin, Radio } from "antd";
 import { VietnameseProvinces } from "../../../utils/utils";
-import HotelListContent from './component/HotelListConent';
+import HotelListContent from './component/HotelListContent';
 import dayjs from 'dayjs';
 import moment from 'moment';
 const { RangePicker } = DatePicker;

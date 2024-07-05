@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Spin, Rate, Pagination } from 'antd';
-import './HotelListConent.scss';
+import './HotelListContent.scss';
 
 const HotelListItems = ({ data, filters, isLoading, isFiltering, currentPage, pageSize, handlePageChange, searches }) => {
     let content = null;
