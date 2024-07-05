@@ -338,27 +338,26 @@ const ManageHotel = () => {
             ),
         },
     ];
-
-    // sử dụng useEffect để tự động làm mới dữ liệu khi thay đổi trạng thái
     useEffect(() => {
-        if (hasStatusChanged) { // Đúng điều kiện
+        refetch();
+    }, [data]);
+
+    useEffect(() => {
+        if (hasStatusChanged) {
             refetch();
-            setHasStatusChanged(false); // reset trạng thái
+            setHasStatusChanged(false);
         }
     }, [hasStatusChanged, refetch]);
 
-    // tự động làm mới dữ liệu sau mỗi 10 giây và khi số lượng khách sạn thay đổi
     useEffect(() => {
         const interval = setInterval(() => {
             refetch();
         }, 10000);
 
-        // Kiểm tra số lượng khách sạn và cập nhật nếu thay đổi
         if (data?.data?.content?.length !== hotelCount) {
             setHotelCount(data?.data?.content?.length);
             refetch();
         }
-
         return () => clearInterval(interval);
     }, [data, hotelCount, refetch]);
 

@@ -130,11 +130,12 @@ export const hotelApi = createApi({
             }),
         }),
         searchHotels: builder.mutation({
-            query: () => ({
-                url: `hotels/search`,
+            query: (data) => ({
+                url: `hotels/search?province=${data.province}&numPeople=${data.numPeople}&checkInDate=${data.checkInDate}&checkOutDate=${data.checkOutDate}`,
                 method: "GET",
             }),
         }),
+
     }),
 });
 

@@ -8,8 +8,9 @@ import { VietnameseProvinces } from "../../../../../utils/utils";
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Link } from 'react-router-dom';
+import { Form, Link } from 'react-router-dom';
 import { setGuests, setRooms, setDestination, setDate } from '../../../../../slices/bookingSlice';
+import { useSearchHotelsMutation } from '../../../../../services/hotelAPI';
 
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
@@ -26,6 +27,10 @@ const Filter = () => {
     const rooms = useSelector((state) => state.booking.rooms);
     const date = useSelector((state) => state.booking.date);
     const destination = useSelector((state) => state.booking.destination);
+
+    const [searches, setSearches] = useState({});
+
+    const [searchHotels] = useSearchHotelsMutation();
 
     // Calculate default dates for tomorrow and the day after
     const defaultStartDate = dayjs().add(1, 'day');
@@ -56,6 +61,28 @@ const Filter = () => {
             dispatch(setGuests(rooms * 6));
         } else {
             dispatch(setGuests(value));
+        }
+    };
+
+    const handleSearchChange = async () => {
+        if (!destination || !guests || !date || date.length !== 2) {
+            console.log("Invalid search parameters");
+            return;
+        }
+
+        const searchData = {
+            province: destination,
+            numPeople: guests,
+            checkInDate: date[0],
+            checkOutDate: date[1],
+        };
+        try {
+            const response = await searchHotels(searchData).unwrap();
+            console.log("Search with:", searchData, "Response:", response);
+            setSearches(response);
+        } catch (error) {
+            console.log("Error:", error);
+            setSearches({ data: { content: [] } });
         }
     };
 
@@ -95,10 +122,6 @@ const Filter = () => {
         dispatch(setDestination(value));
     };
 
-    const handleSearchChange = () => {
-        console.log("Search button clicked");
-    };
-
     return (
         <Row justify="center" align="middle" className="Home-layout">
             <Col xs={24} md={12} className="Card-container-home">
@@ -110,7 +133,7 @@ const Filter = () => {
             <Col xs={24} md={11} className="Card-container-img">
                 <img src={IMG} />
             </Col>
-            <div className="search-layout-home">
+            <Form className="search-layout-home">
                 <RangePicker
                     className="search-content-container"
                     disabledDate={disabledDate}
@@ -149,7 +172,7 @@ const Filter = () => {
                 <Button onClick={handleSearchChange} className="search-layout-home-btn">
                     <Link to={`/view-hotels`}><SearchOutlined /></Link>
                 </Button>
-            </div>
+            </Form>
         </Row>
     );
 };
