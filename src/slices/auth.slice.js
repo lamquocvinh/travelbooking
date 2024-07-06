@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { PURGE } from 'redux-persist';
 
 const authSlice = createSlice({
     name: "auth",
     initialState: {
-        token: sessionStorage.getItem("token") || null,
+        token: null,
         userId: null,
         fullName: null,
         email: null,
@@ -28,13 +29,13 @@ const authSlice = createSlice({
             state.email = action.payload.email;
             state.phoneNumber = action.payload.phoneNumber;
         },
-        logOut: (state, action) => {
-            state.fullName = null;
+        logOut: (state) => {
+            state.token = null;
             state.userId = null;
+            state.fullName = null;
             state.email = null;
             state.phoneNumber = null;
             state.role = null;
-            state.token = null;
             state.packageId = null;
             sessionStorage.clear();
             localStorage.clear();
@@ -46,6 +47,9 @@ const authSlice = createSlice({
     selectors: {
         selectTokens: (auth) => auth.token,
     },
+    // extraReducers: (builder) => {
+    //     builder.addCase(PURGE, () => initialState);
+    // },
 });
 
 export const { setToken, setInfo, setInfoBooking, logOut, setPackageId } = authSlice.actions;

@@ -55,6 +55,7 @@ function LoginAdmin() {
                 password: dataObj.password,
             }).unwrap();
             if (result) {
+                dispatch(setToken(result?.data?.token));
                 dispatch(setInfo({
                     userId: result?.data?.id,
                     fullName: result?.data?.fullName,
@@ -62,18 +63,17 @@ function LoginAdmin() {
                     phoneNumber: result?.data?.phoneNumber,
                     role: result?.data?.roles?.[0],
                 }));
-                dispatch(setToken(result.data.token));
-                dispatch(setPackageId(result.data.packageId));
-                localStorage.setItem("token", result.data.token);
+                dispatch(setPackageId(result?.data?.package_id));
+                localStorage.setItem("token", result?.data?.token);
                 const role = result?.data?.roles?.[0];
                 const defaultPath = navigateByRoles[role] || "/";
-                const from = location.state?.from?.pathname || defaultPath;
+                const from = defaultPath || location.state?.from?.pathname;
                 navigate(from);
                 notification.success({
                     message: "Login successfully",
                     description:
                         <div>
-                            Welcome {result.data.userName} <SmileOutlined />
+                            Welcome {result?.data?.fullName} <SmileOutlined />
                         </div>,
                 });
             } else {
