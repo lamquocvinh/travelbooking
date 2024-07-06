@@ -14,14 +14,19 @@ import { useDispatch } from "react-redux";
 import { logOut } from "../../../slices/auth.slice";
 
 const { Sider } = Layout;
+import { logOut } from "../../../slices/auth.slice";
+import { useDispatch } from "react-redux";
+import { PURGE } from 'redux-persist';
 
 const Profile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const showModal = () => {
         setIsModalOpen(true);
     };
+
     const handleOk = () => {
         dispatch(logOut());
         notification.success({
@@ -29,8 +34,11 @@ const Profile = () => {
             description: "See you again!",
         });
         setIsModalOpen(false);
+        dispatch(logOut());
+     
         navigate("/login");
     };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
