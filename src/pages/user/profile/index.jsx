@@ -1,24 +1,35 @@
 import "./DashBoard.scss";
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import {
     SolutionOutlined,
     EditOutlined,
     PoweroffOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, notification } from 'antd';
 import { TbPasswordUser } from "react-icons/tb";
 import { Content } from "antd/es/layout/layout";
+import { useDispatch } from "react-redux";
+import { logOut } from "../../../slices/auth.slice";
+
 const { Sider } = Layout;
 
 const Profile = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
         setIsModalOpen(true);
     };
     const handleOk = () => {
+        dispatch(logOut());
+        notification.success({
+            message: "Logout successfully",
+            description: "See you again!",
+        });
         setIsModalOpen(false);
+        navigate("/login");
     };
     const handleCancel = () => {
         setIsModalOpen(false);

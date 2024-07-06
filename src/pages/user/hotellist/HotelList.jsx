@@ -154,6 +154,7 @@ const HotelList = () => {
     const defaultDates = [defaultStartDate, defaultEndDate];
 
     const dateObjects = date?.length ? date.map(dateString => dayjs(dateString, storageFormat)) : defaultDates;
+
     useEffect(() => {
         const defaultDates = [defaultStartDate?.format(storageFormat), defaultEndDate?.format(storageFormat)];
         dispatch(setDate(defaultDates));
@@ -185,9 +186,12 @@ const HotelList = () => {
     const handleRatingChange = (e) => {
         setSelectedRatings(e.target.value);
     };
+
+    //Unrating
     const handleClearRating = () => {
         setSelectedRatings(null);
     };
+
     return (
         <div className='container-hotel-hotelSearch'>
             <Form className="search-layout-hotels">
@@ -200,6 +204,7 @@ const HotelList = () => {
                         format={dateFormat}
                         placeholder={["Check In", "Check Out"]}
                     />
+
                     <Select
                         className='item'
                         value={destination}
@@ -216,6 +221,7 @@ const HotelList = () => {
                             </Select.Option>
                         ))}
                     </Select>
+
                     <Popover
                         content={content}
                         title="Select Guests and Rooms"
@@ -228,11 +234,13 @@ const HotelList = () => {
                         </Button>
                     </Popover>
                 </div>
+
                 <Button type="text" onClick={handleSearchChange} className="search-layout-hotels-btn">
                     <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                         <p><SearchOutlined /></p>
                     </div>
                 </Button>
+
             </Form>
             <div className="hotel">
                 <Form className="filter">
@@ -249,6 +257,7 @@ const HotelList = () => {
                             <div><Checkbox value="laundry">Laundry</Checkbox></div>
                         </Checkbox.Group>
                     </div>
+
                     <div className='facilities'>
                         Rating
                         <Radio.Group className="facilities-check-box" onChange={handleRatingChange} value={selectedRatings}>
@@ -264,6 +273,7 @@ const HotelList = () => {
                     <Button className="btn" type="button" onClick={handleFilter}>
                         Search Room
                     </Button>
+
                 </Form>
                 <HotelListContent
                     data={data}

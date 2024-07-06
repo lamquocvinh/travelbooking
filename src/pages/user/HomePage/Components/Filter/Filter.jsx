@@ -133,7 +133,9 @@ const Filter = () => {
             <Col xs={24} md={11} className="Card-container-img">
                 <img src={IMG} />
             </Col>
-            <Form className="search-layout-home">
+            <Button className="search-layout-home text-gradient"><Link to={`/view-hotels`}>Go to hotel list</Link></Button>
+
+            {/* <Form className="search-layout-home">
                 <RangePicker
                     className="search-content-container"
                     disabledDate={disabledDate}
@@ -172,7 +174,7 @@ const Filter = () => {
                 <Button onClick={handleSearchChange} className="search-layout-home-btn">
                     <Link to={`/view-hotels`}><SearchOutlined /></Link>
                 </Button>
-            </Form>
+            </Form> */}
         </Row>
     );
 };

@@ -4,6 +4,7 @@ import { Spin, Rate, Pagination } from 'antd';
 import './HotelListContent.scss';
 
 const HotelListItems = ({ data, filters, isLoading, isFiltering, currentPage, pageSize, handlePageChange, searches }) => {
+
     let content = null;
 
     if (isFiltering || isLoading) {

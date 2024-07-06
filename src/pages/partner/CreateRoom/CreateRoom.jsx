@@ -122,9 +122,8 @@ function CreateRoom() {
             // Show error notification
             notification.error({
                 message: "Error",
-                description: error.message,
+                description: error?.data?.message,
             });
-            console.error("Error:", error.message);
         }
     };
 

@@ -54,6 +54,7 @@ function LoginAdmin() {
                 login_identifier: dataObj.emailOrPhone,
                 password: dataObj.password,
             }).unwrap();
+            console.log(result);
             if (result) {
                 dispatch(setInfo({
                     userId: result?.data?.id,
@@ -63,7 +64,7 @@ function LoginAdmin() {
                     role: result?.data?.roles?.[0],
                 }));
                 dispatch(setToken(result.data.token));
-                dispatch(setPackageId(result.data.packageId));
+                dispatch(setPackageId(result.data.package_id));
                 localStorage.setItem("token", result.data.token);
                 const role = result?.data?.roles?.[0];
                 const defaultPath = navigateByRoles[role] || "/";

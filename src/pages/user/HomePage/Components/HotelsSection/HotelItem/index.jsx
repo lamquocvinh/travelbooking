@@ -28,6 +28,7 @@ function HotelItem() {
                 </div>
                 <p className="price">From <span className="old">$250</span> $199</p>
             </div>
+
             <span className="discount">20% OFF</span>
         </Card>
     );

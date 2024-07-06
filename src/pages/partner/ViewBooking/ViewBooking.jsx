@@ -223,19 +223,19 @@ const ViewBooking = () => {
                 </div>
             ),
         },
-        // {
-        //     title: 'Action',
-        //     key: 'action',
-        //     width: 100,
-        //     align: "center",
-        //     render: (_, record) => (
-        //         <Tooltip title="View detail">
-        //             <Link to={`booking-details/${record["booking-id"]}`}>
-        //                 <Button icon={<EyeOutlined />}></Button>
-        //             </Link>
-        //         </Tooltip>
-        //     ),
-        // },
+        {
+            title: 'Action',
+            key: 'action',
+            width: 100,
+            align: "center",
+            render: (_, record) => (
+                <Tooltip title="View detail">
+                    <Link to={`booking-details/${record["booking-id"]}`}>
+                        <Button icon={<EyeOutlined />}></Button>
+                    </Link>
+                </Tooltip>
+            ),
+        },
     ];
 
     return (
