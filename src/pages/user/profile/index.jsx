@@ -1,6 +1,6 @@
 import "./DashBoard.scss";
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import {
     SolutionOutlined,
@@ -11,15 +11,30 @@ import { Layout, Menu } from 'antd';
 import { TbPasswordUser } from "react-icons/tb";
 import { Content } from "antd/es/layout/layout";
 const { Sider } = Layout;
+import { logOut } from "../../../slices/auth.slice";
+import { useDispatch } from "react-redux";
+import { PURGE } from 'redux-persist';
 
 const Profile = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const showModal = () => {
         setIsModalOpen(true);
     };
+
     const handleOk = () => {
         setIsModalOpen(false);
+        dispatch(logOut());
+        // dispatch({ type: PURGE });
+        notification.success({
+            message: "Logout successfully",
+            description: "See you again!",
+        });
+        navigate("/login");
     };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
