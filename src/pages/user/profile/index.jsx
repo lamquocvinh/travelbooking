@@ -7,16 +7,19 @@ import {
     EditOutlined,
     PoweroffOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, notification } from 'antd';
 import { TbPasswordUser } from "react-icons/tb";
 import { Content } from "antd/es/layout/layout";
+import { useDispatch } from "react-redux";
+import { logOut } from "../../../slices/auth.slice";
+
 const { Sider } = Layout;
 import { logOut } from "../../../slices/auth.slice";
 import { useDispatch } from "react-redux";
 import { PURGE } from 'redux-persist';
 
 const Profile = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,13 +28,14 @@ const Profile = () => {
     };
 
     const handleOk = () => {
-        setIsModalOpen(false);
         dispatch(logOut());
-        // dispatch({ type: PURGE });
         notification.success({
             message: "Logout successfully",
             description: "See you again!",
         });
+        setIsModalOpen(false);
+        dispatch(logOut());
+     
         navigate("/login");
     };
 

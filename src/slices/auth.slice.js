@@ -29,6 +29,10 @@ const authSlice = createSlice({
             state.email = action.payload.email;
             state.phoneNumber = action.payload.phoneNumber;
         },
+        setPackageId: (state, action) => {
+            state.packageId = action.payload;
+        },
+        
         logOut: (state) => {
             state.token = null;
             state.userId = null;
@@ -40,9 +44,7 @@ const authSlice = createSlice({
             sessionStorage.clear();
             localStorage.clear();
         },
-        setPackageId: (state, action) => {
-            state.packageId = action.payload;
-        },
+
     },
     selectors: {
         selectTokens: (auth) => auth.token,

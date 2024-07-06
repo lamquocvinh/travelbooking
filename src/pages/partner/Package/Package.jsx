@@ -3,19 +3,27 @@ import './Package.scss';
 import { useGetAllPackagesQuery, useRegisterPackageMutation } from '../../../services/packageAPI';
 import { useGetPaymentUrlForPackageMutation } from "../../../services/paymentAPI";
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 import { notification } from "antd";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut } from "../../../slices/auth.slice";
 
 const Packet = () => {
+    //call api
     const { data } = useGetAllPackagesQuery();
     const [register] = useRegisterPackageMutation();
     const [payment] = useGetPaymentUrlForPackageMutation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 
     const [method, setMethod] = useState("");
     const [bank, setBank] = useState("");
     const [selectedPackageId, setSelectedPackageId] = useState(null); // New state for selected package ID
     const [selectedPackagePrice, setSelectedPackagePrice] = useState(0); // New state for selected package price
 
+    //lấy data từ redux
     const phoneNumber = useSelector(state => state.auth.phoneNumber);
     const email = useSelector(state => state.auth.email);
     const fullName = useSelector(state => state.auth.fullName);
@@ -50,8 +58,24 @@ const Packet = () => {
                 console.log(payRes)
                 if (payRes) {
                     const paymentUrl = payRes?.data?.data?.paymentUrl;
-                    window.location.href = paymentUrl;
 
+
+                    // Đợi một khoảng thời gian trước khi đăng xuất
+                    setTimeout(() => {
+                        // Hiện thông báo thành công
+
+                        notification.success({
+                            message: "Success",
+                            description: "You will be redirected to the payment page. After completing the payment, you will be logged out.",
+                        });
+                        // Thực hiện đăng xuất
+                        dispatch(logOut()); // Thay đổi theo logic của bạn
+                        // Chuyển hướng đến trang đăng nhập
+                        navigate('/login');
+                    }, 2000); // Đợi 2 giây trước khi đăng xuất
+
+                    // Chuyển hướng đến URL thanh toán
+                    window.location.href = paymentUrl;
                 } else {
                     throw new Error('Payment failed');
                 }
@@ -83,7 +107,7 @@ const Packet = () => {
                         <div className="description">Unlock features to start trading.</div>
                         <div className="price">{`${pack.price.toLocaleString()} đ`}</div>
                         <div className="description">{`/${pack.duration === 1 ? 'month' : 'year'} for one partner`}</div>
-                        <button onClick={() => handlePackageSelect(pack.id, pack.price)} className="btn">Join with us</button>
+                        <button onClick={() => handlePackageSelect(pack.id, pack.price)} className="btn">Choose package</button>
                     </div>
                 ))}
             </div>
@@ -96,7 +120,7 @@ const Packet = () => {
                             <span>VNPay</span>
                         </div>
                         <img
-                            src="https://scontent.fsgn2-11.fna.fbcdn.net/v/t39.30808-6/202166185_2021396718013233_8499389898242103910_n.png?_nc_cat=1&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=YPBxuAYbS5wQ7kNvgFImShE&_nc_ht=scontent.fsgn2-11.fna&oh=00_AYBz5KPt9eFfR5ui8AOFpmQ09cNyTES9Lwra4U1KKOL4mg&oe=66889B29"
+                            src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png"
                             alt="VNPay"
                         />
                     </div>

@@ -40,6 +40,7 @@ const ManageHotel = () => {
     const showModal = () => {
         setIsModalOpen(true);
     };
+
     const handleOk = async () => {
         try {
             const result = await changeStatus(statusHotel);
@@ -57,9 +58,11 @@ const ManageHotel = () => {
         }
         setIsModalOpen(false);
     };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+
     const searchInput = useRef(null);
 
     // ham xu ly search
@@ -68,10 +71,12 @@ const ManageHotel = () => {
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
+
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
     };
+
     const getColumnSearchProps = (dataIndex, customRender) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div
@@ -355,6 +360,7 @@ const ManageHotel = () => {
         },
     ];
 
+    //render lại trang khi đổi trạng thái
     useEffect(() => {
         if (hasStatusChanged) {
             refetch();
@@ -374,14 +380,15 @@ const ManageHotel = () => {
         return () => clearInterval(interval);
     }, [data, hotelCount, refetch]);
 
-    // useEffect(() => {
-    //     if (packageId == null) {
-    //         notification.error({
-    //             message: "You need to buy package first!"
-    //         });
-    //         navigate('/partner/package')
-    //     }
-    // }, [])
+    // kiểm tra trước khi cho manage hotel
+    useEffect(() => {
+        if (packageId == null) {
+            notification.error({
+                message: "You need to buy package first!"
+            });
+            navigate('/partner/package')
+        }
+    }, [])
 
     return (
         <div className='partner-manage-hotel-wrapper'>

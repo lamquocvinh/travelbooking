@@ -29,7 +29,7 @@ const Profile = () => {
 
     return (
         <>
-            <h1 style={{ marginBottom: 50 }}>Edit Profile</h1>
+            <h1 style={{ margin: 50, marginTop: 10 }}>Edit Profile</h1>
             <Form
                 size='large'
                 form={form}
