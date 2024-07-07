@@ -21,6 +21,9 @@ const Invoice = Loadable({ loader: () => import("../pages/user/profile/Component
 const Review = Loadable({ loader: () => import("../pages/user/profile/Components/Review/Review") });
 const PaymentPage = Loadable({ loader: () => import("../pages/user/paymentPage") });
 const PaymentReturnPage = Loadable({ loader: () => import("../pages/user/paymentReturnPage") });
+const ForgotPasswordPage = Loadable({ loader: () => import("../pages/user/forgotPasswordPage") });
+const VerifyOtp = Loadable({ loader: () => import("../pages/user/forgotPasswordPage/verifyOtp") });
+const ForgotChangePassword = Loadable({ loader: () => import("../pages/user/forgotPasswordPage/changePassword") });
 
 // admin page
 const Dashboard = Loadable({ loader: () => import("../pages/admin/Dashboard") });
@@ -135,6 +138,18 @@ export const router = createBrowserRouter([
       {
         path: "/payment-return/:status",
         element: PaymentReturnPage,
+      },
+      {
+        path: "/forgot-password",
+        element: ForgotPasswordPage,
+      },
+      {
+        path: "/verify-otp/:email",
+        element: VerifyOtp,
+      },
+      {
+        path: "/forgot-password-change-password/:email",
+        element: ForgotChangePassword,
       },
       ////////////// add for more no login
     ]

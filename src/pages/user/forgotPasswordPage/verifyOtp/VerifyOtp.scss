@@ -1,4 +1,4 @@
-.wrapper-login {
+.wrapper-verify-otp {
   display: flex;
   gap: 16px;
   padding: 100px 10% 40px;
@@ -76,28 +76,6 @@
         font-weight: bold;
         font-size: larger;
         cursor: pointer;
-      }
-    }
-
-    .register-section {
-      padding: 40px;
-
-      .login-content-ask {
-        margin: 0 0 16px;
-        text-align: center;
-        font-size: 20px;
-        font-family: var(--font-title);
-      }
-
-      .login-content-signup {
-        color: var(--blue-main-color);
-        font-size: 16px;
-        text-align: center;
-
-        &:hover {
-          text-decoration: underline;
-          text-underline-offset: 4px;
-        }
       }
     }
   }
