@@ -32,6 +32,8 @@ const Profile = () => {
             description: "See you again!",
         });
         setIsModalOpen(false);
+        dispatch(logOut());
+     
         navigate("/login");
     };
 

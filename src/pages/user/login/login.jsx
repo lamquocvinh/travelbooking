@@ -18,7 +18,7 @@ const schema = yup
     })
     .required();
 
-function LoginAdmin() {
+function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
@@ -47,14 +47,12 @@ function LoginAdmin() {
         'ROLE_CUSTOMER': '/',
     };
 
-
     const onSubmit = async (dataObj) => {
         try {
             const result = await login({
                 login_identifier: dataObj.emailOrPhone,
                 password: dataObj.password,
             }).unwrap();
-            console.log(result);
             if (result) {
                 dispatch(setToken(result?.data?.token));
                 dispatch(setInfo({
@@ -67,6 +65,7 @@ function LoginAdmin() {
                 dispatch(setToken(result.data.token));
                 dispatch(setPackageId(result.data.package_id));
                 localStorage.setItem("token", result.data.token);
+
                 const role = result?.data?.roles?.[0];
                 const defaultPath = navigateByRoles[role] || "/";
                 const from = defaultPath || location.state?.from?.pathname;
@@ -125,6 +124,7 @@ function LoginAdmin() {
                             />
                             <p className="error">{errors.password?.message}</p>
                         </div>
+                        <Link className="forgot" to={"/forgot-password"}>Forgot password?</Link>
                     </div>
                     <button className="btn">
                         {isLoading ? "Logging in..." : "Login"}
@@ -144,4 +144,4 @@ function LoginAdmin() {
     );
 }
 
-export default LoginAdmin;
+export default LoginPage;
