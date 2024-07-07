@@ -1,6 +1,6 @@
 import "./DashBoard.scss";
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Modal } from 'antd';
 import {
     SolutionOutlined,
@@ -14,14 +14,17 @@ import { useDispatch } from "react-redux";
 import { logOut } from "../../../slices/auth.slice";
 
 const { Sider } = Layout;
+import { PURGE } from 'redux-persist';
 
 const Profile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const showModal = () => {
         setIsModalOpen(true);
     };
+
     const handleOk = () => {
         dispatch(logOut());
         notification.success({
@@ -31,6 +34,7 @@ const Profile = () => {
         setIsModalOpen(false);
         navigate("/login");
     };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };

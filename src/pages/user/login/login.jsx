@@ -56,6 +56,7 @@ function LoginAdmin() {
             }).unwrap();
             console.log(result);
             if (result) {
+                dispatch(setToken(result?.data?.token));
                 dispatch(setInfo({
                     userId: result?.data?.id,
                     fullName: result?.data?.fullName,
@@ -68,13 +69,13 @@ function LoginAdmin() {
                 localStorage.setItem("token", result.data.token);
                 const role = result?.data?.roles?.[0];
                 const defaultPath = navigateByRoles[role] || "/";
-                const from = location.state?.from?.pathname || defaultPath;
+                const from = defaultPath || location.state?.from?.pathname;
                 navigate(from);
                 notification.success({
                     message: "Login successfully",
                     description:
                         <div>
-                            Welcome {result.data.userName} <SmileOutlined />
+                            Welcome {result?.data?.fullName} <SmileOutlined />
                         </div>,
                 });
             } else {
@@ -128,6 +129,7 @@ function LoginAdmin() {
                     <button className="btn">
                         {isLoading ? "Logging in..." : "Login"}
                     </button>
+
                 </form>
                 <div className="register-section">
                     <h3 className="login-content-ask">

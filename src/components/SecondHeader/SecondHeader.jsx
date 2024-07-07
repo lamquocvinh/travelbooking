@@ -4,6 +4,7 @@ import { Button, Modal, notification } from "antd";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { logOut } from "../../slices/auth.slice";
 import { useDispatch } from "react-redux";
+import { PURGE } from 'redux-persist';
 
 const SecondHeader = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,12 +17,12 @@ const SecondHeader = () => {
     const handleOk = () => {
         setIsModalOpen(false);
         dispatch(logOut());
+        // dispatch({ type: PURGE });
         notification.success({
             message: "Logout successfully",
             description: "See you again!",
         });
-        navigate("/login")
-
+        navigate("/login");
     };
 
     const handleCancel = () => {

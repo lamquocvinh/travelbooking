@@ -88,6 +88,15 @@
   color: rgba(36, 162, 1, 0.819);
 }
 
+.text-gradient::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: rgba(166, 255, 121);
+  z-index: -1;
+}
+
 .text-gradient:hover,
 .text-gradient::selection {
   color: rgba(36, 162, 1, 0.819);
