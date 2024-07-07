@@ -154,7 +154,6 @@ const HotelList = () => {
     const defaultDates = [defaultStartDate, defaultEndDate];
 
     const dateObjects = date?.length ? date.map(dateString => dayjs(dateString, storageFormat)) : defaultDates;
-
     useEffect(() => {
         const defaultDates = [defaultStartDate?.format(storageFormat), defaultEndDate?.format(storageFormat)];
         dispatch(setDate(defaultDates));

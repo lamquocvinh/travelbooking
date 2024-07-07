@@ -40,6 +40,13 @@ export const userApi = createApi({
                 method: "GET",
             }),
         }),
+        updateProfile: builder.mutation({
+            query: (body) => ({
+                url: `users/update-profile`,
+                method: "PUT",
+                body: body,
+            }),
+        }),
     }),
 })
 
@@ -47,5 +54,6 @@ export const {
     useGetUsersQuery,
     useGetPartnersQuery,
     useChangeStatusUserMutation,
-    useGetUserDetailsQuery
+    useGetUserDetailsQuery,
+    useUpdateProfileMutation,
 } = userApi;

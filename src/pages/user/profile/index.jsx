@@ -1,6 +1,6 @@
 import "./DashBoard.scss";
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Modal } from 'antd';
 import {
     SolutionOutlined,
@@ -14,8 +14,6 @@ import { useDispatch } from "react-redux";
 import { logOut } from "../../../slices/auth.slice";
 
 const { Sider } = Layout;
-import { logOut } from "../../../slices/auth.slice";
-import { useDispatch } from "react-redux";
 import { PURGE } from 'redux-persist';
 
 const Profile = () => {

@@ -129,6 +129,7 @@ function LoginPage() {
                     <button className="btn">
                         {isLoading ? "Logging in..." : "Login"}
                     </button>
+
                 </form>
                 <div className="register-section">
                     <h3 className="login-content-ask">

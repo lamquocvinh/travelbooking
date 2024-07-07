@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import "./CreateHotel.scss";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,6 +8,13 @@ import { useDispatch } from "react-redux";
 import { notification, Button, Upload } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { hotelApi } from "../../../services/hotelAPI";
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import { useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet-geosearch/dist/style.css';
+import 'leaflet-geosearch/assets/css/leaflet.css';
 
 const schema = yup.object().shape({
     rating: yup.number("Rating from 1-5").min(1).max(5).required("This field is required"),
@@ -28,12 +36,70 @@ const schema = yup.object().shape({
         address: yup.string().required("This field is required").trim(),
         province: yup.string().required("This field is required").trim(),
     }),
+    position: yup.array().of(yup.number()).required("This field is required"),
 });
+
+// Fix leaflet marker icon issue
+delete L.Icon.Default.prototype._getIconUrl;
+
+
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png'
+});
+
+
+const LocationMarker = ({ setPosition, dataPosition }) => {
+    const [markerPosition, setMarkerPosition] = useState(dataPosition ? dataPosition : null);
+
+    useMapEvents({
+        click(e) {
+            const { lat, lng } = e.latlng;
+            setMarkerPosition([lat, lng]);
+            setPosition([lat, lng]);
+        }
+    });
+
+    return markerPosition === null ? null : (
+        <Marker position={markerPosition}></Marker>
+    );
+};
+
+const SearchField = ({ setPosition }) => {
+    const map = useMap();
+
+    useEffect(() => {
+        const provider = new OpenStreetMapProvider();
+
+        const searchControl = new GeoSearchControl({
+            provider,
+            style: 'bar',
+            showMarker: false,
+            autoClose: true,
+            retainZoomLevel: false,
+        });
+
+        map.addControl(searchControl);
+
+        map.on('geosearch/showlocation', (result) => {
+            const { x, y } = result.location;
+            setPosition([y, x]);
+            map.setView([y, x], 15);
+        });
+
+        return () => map.removeControl(searchControl);
+    }, [map, setPosition]);
+
+    return null;
+};
 
 function CreateHotel() {
     const dispatch = useDispatch();
     const [createHotel, { isLoading }] = hotelApi.useCreateHotelMutation();
     const [putLicense, { isLoading: isLicenseLoading, isSuccess, isError, error }] = hotelApi.usePutLicenseMutation();
+    const [mapCenter, setMapCenter] = useState([10.740321, 106.678499]);
+    const [position, setPosition] = useState(null);
 
     const {
         register,
@@ -48,6 +114,11 @@ function CreateHotel() {
     });
 
     const businessLicense = watch("businessLicense");
+
+    // Cập nhật giá trị position trong form khi state position thay đổi
+    useEffect(() => {
+        setValue('position', position);
+    }, [position, setValue]);
 
     const onSubmit = async (data) => {
         const conveniences = Object.keys(data.conveniences).map(key => ({
@@ -68,24 +139,24 @@ function CreateHotel() {
         businessLicense.forEach(file => {
             formData.append('license', file);
         });
+        console.log(data);
+        // try {
+        //     const response = await createHotel(data).unwrap();
 
-        try {
-            const response = await createHotel(data).unwrap();
+        //     await putLicense({ idHotel: response?.data?.id, license: formData }).unwrap();
 
-            await putLicense({ idHotel: response?.data?.id, license: formData }).unwrap();
-
-            notification.success({
-                message: "Success",
-                description: "Hotel created successfully!",
-            });
-            reset();
-            window.history.back();
-        } catch (error) {
-            notification.error({
-                message: "Error",
-                description: error.message,
-            });
-        }
+        //     notification.success({
+        //         message: "Success",
+        //         description: "Hotel created successfully!",
+        //     });
+        //     reset();
+        //     window.history.back();
+        // } catch (error) {
+        //     notification.error({
+        //         message: "Error",
+        //         description: error.message,
+        //     });
+        // }
     };
 
     return (
@@ -121,13 +192,11 @@ function CreateHotel() {
                             <Upload
                                 listType="picture"
                                 beforeUpload={(file) => {
-                                    // Append the new file to the existing value array
                                     const newValue = [...(value || []), file];
                                     onChange(newValue);
-                                    return false; // Prevent default upload behavior
+                                    return false;
                                 }}
                                 onRemove={(file) => {
-                                    // Remove the file from value array
                                     const newValue = (value || []).filter(
                                         (item) => item.uid !== file.uid
                                     );
@@ -165,6 +234,11 @@ function CreateHotel() {
                         </div>
                     </div>
                 </div>
+                {/* <div className="item-100">
+                    <h3>Position:</h3>
+                    <input className="input" type="text" value={position ? position.join(', ') : ''} readOnly />
+                    <p className="error-message">{errors.position?.message}</p>
+                </div> */}
                 <div className="item-100">
                     <h3>Conveniences:</h3>
                     <div className="conveniences">
@@ -186,6 +260,16 @@ function CreateHotel() {
                             </div>
                         ))}
                     </div>
+                </div>
+                <div className="item-100">
+                    <MapContainer center={mapCenter} zoom={15} style={{ height: '500px', width: '100%' }}>
+                        <TileLayer
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        />
+                        <SearchField setPosition={setPosition} />
+                        <LocationMarker setPosition={setPosition} dataPosition={position} />
+                    </MapContainer>
                 </div>
                 <div className="btn-group">
                     <button className="cancel" type="reset" onClick={() => {

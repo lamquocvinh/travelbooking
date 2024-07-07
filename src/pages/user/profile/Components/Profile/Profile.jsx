@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import {
     Button,
@@ -8,8 +8,13 @@ import {
     Radio,
     DatePicker,
     Select,
+    notification,
 } from 'antd';
-import { Countries } from '../../../../../utils/utils';
+import { VietnameseProvinces } from '../../../../../utils/utils';
+import { useGetUserDetailsQuery, useUpdateProfileMutation } from "../../../../../services/userAPI";
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 const { Option } = Select;
 const normFile = (e) => {
@@ -22,9 +27,49 @@ const normFile = (e) => {
 const Profile = () => {
     const [form] = Form.useForm();
     const dateFormat = 'DD/MM/YYYY';
+    const id = useSelector(state => state.auth.userId);
+
+
+    //call api
+    const { data } = useGetUserDetailsQuery(id);
+    const [updateProfile] = useUpdateProfileMutation();
+
+    console.log(data);
+    const getValueOrDefault = (value) => {
+        return value !== null && value !== undefined ? value : 'null';
+    };
+
+    useEffect(() => {
+        if (data) {
+            form.setFieldsValue({
+                full_name: (data.full_name),
+                phone_number: (data.phone_number),
+                email: (data.email),
+                // date_of_birth: data?.date_of_birth ? moment(data?.date_of_birth, 'YYYY-MM-DD') : null,
+                address: (data.address),
+            });
+        }
+    }, [data, form]);
 
     const handleSubmit = (values) => {
-        console.log('Form values:', values);
+        const formattedValues = {
+            ...values,
+            date_of_birth: values.date_of_birth ? values.date_of_birth.format('YYYY-MM-DD') : null,
+        };
+        console.log(formattedValues);
+        try {
+            updateProfile(formattedValues);
+            notification.success({
+                message: "Success",
+                description: "Profile update successfully!",
+            });
+        } catch (error) {
+            notification.error({
+                message: "Error",
+                description: error.message,
+            });
+        }
+
     };
 
     return (
@@ -60,30 +105,31 @@ const Profile = () => {
                         <Radio value="other">Other</Radio>
                     </Radio.Group>
                 </Form.Item>
-                <Form.Item size='large' label="First Name" name="firstName" rules={[{ required: true, message: 'Please enter your first name!' }]}>
+                <Form.Item size='large' label="Name" name="full_name" rules={[{ required: true, message: 'Please enter your name!' }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item size='large' label="Last Name" name="lastName" rules={[{ required: true, message: 'Please enter your last name!' }]}>
+                <Form.Item size='large' label="Phone" name="phone_number" rules={[{ required: true, message: 'Please enter your phone number!' }]}>
                     <Input />
-                </Form.Item>
-                <Form.Item size='large' label="Birth Date" name="birthDate" rules={[{ required: true, message: 'Please select your birth date!' }]}>
-                    <DatePicker format={dateFormat} />
                 </Form.Item>
                 <Form.Item size='large' label="Email" name="email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email!' }, { type: 'email', message: 'The input is not valid E-mail!' }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item size='large' label="Phone" name="phone" rules={[{ required: true, message: 'Please enter your phone number!' }]}>
+                {/* <Form.Item size='large' label="Birth Date" name="date_of_birth" rules={[{ required: true, message: 'Please select your birth date!' }]}>
+                    <DatePicker format={dateFormat} />
+                </Form.Item> */}
+
+                <Form.Item size='large' label="Address" name="address" rules={[{ required: true, message: 'Please enter your address!' }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item size='large' label="Country" name="country" rules={[{ required: true, message: 'Please select your country!' }]}>
+                {/* <Form.Item size='large' label="City" name="city" rules={[{ required: true, message: 'Please select your City!' }]}>
                     <Select>
-                        {Countries.map((country, index) => (
+                        {VietnameseProvinces.map((country, index) => (
                             <Option key={index} value={country}>
                                 {country}
                             </Option>
                         ))}
                     </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item size='large' wrapperCol={{ offset: 6, span: 16 }}>
                     <Button style={{ marginLeft: "-50px" }} type="primary" htmlType="submit">
                         Submit
