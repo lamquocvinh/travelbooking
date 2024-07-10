@@ -77,10 +77,16 @@ const Packet = () => {
                     // Chuyển hướng đến URL thanh toán
                     window.location.href = paymentUrl;
                 } else {
-                    throw new Error('Payment failed');
+                    notification.error({
+                        message: "Error",
+                        description: 'Payment failed. Please try again!',
+                    });
                 }
             } else {
-                throw new Error('Registration failed');
+                notification.error({
+                    message: "Error",
+                    description: 'Failed to register the package. Please try again!',
+                });
             }
         } catch (error) {
             notification.error({

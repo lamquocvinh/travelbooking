@@ -135,28 +135,31 @@ function CreateHotel() {
             return;
         }
 
+
+
+
         const formData = new FormData();
         businessLicense.forEach(file => {
             formData.append('license', file);
         });
         console.log(data);
-        // try {
-        //     const response = await createHotel(data).unwrap();
+        try {
+            const response = await createHotel(data).unwrap();
 
-        //     await putLicense({ idHotel: response?.data?.id, license: formData }).unwrap();
+            await putLicense({ idHotel: response?.data?.id, license: formData }).unwrap();
 
-        //     notification.success({
-        //         message: "Success",
-        //         description: "Hotel created successfully!",
-        //     });
-        //     reset();
-        //     window.history.back();
-        // } catch (error) {
-        //     notification.error({
-        //         message: "Error",
-        //         description: error.message,
-        //     });
-        // }
+            notification.success({
+                message: "Success",
+                description: "Hotel created successfully!",
+            });
+            reset();
+            window.history.back();
+        } catch (error) {
+            notification.error({
+                message: "Error",
+                description: error.message,
+            });
+        }
     };
 
     return (

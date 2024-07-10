@@ -28,8 +28,10 @@
       font-weight: 400;
       font-family: var(--font-title);
     }
+
     .form {
       padding: 40px;
+      padding-bottom: 20px;
 
       .body {
         .item {
@@ -67,7 +69,7 @@
 
       .btn {
         width: 100%;
-        height: 52px;
+        height: 42px;
         border-radius: 8px;
         outline: none;
         border: none;
@@ -77,10 +79,22 @@
         font-size: larger;
         cursor: pointer;
       }
+
+      .facebook-icon {
+        font-size: 24px;
+        /* Điều chỉnh kích thước biểu tượng tại đây */
+      }
+
+      .google-icon {
+        font-size: 24px;
+        /* Điều chỉnh kích thước biểu tượng tại đây */
+      }
     }
 
     .register-section {
       padding: 40px;
+
+      padding-top: 20px;
 
       .login-content-ask {
         margin: 0 0 16px;
