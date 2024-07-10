@@ -35,8 +35,10 @@ const schema = yup.object().shape({
     location: yup.object().shape({
         address: yup.string().required("This field is required").trim(),
         province: yup.string().required("This field is required").trim(),
+        longitude: yup.string().required("This field is required").trim(),
+        latitude: yup.string().required("This field is required").trim(),
     }),
-    position: yup.array().of(yup.number()).required("This field is required"),
+
 });
 
 // Fix leaflet marker icon issue
@@ -50,14 +52,14 @@ L.Icon.Default.mergeOptions({
 });
 
 
-const LocationMarker = ({ setPosition, dataPosition }) => {
-    const [markerPosition, setMarkerPosition] = useState(dataPosition ? dataPosition : null);
+const LocationMarker = ({ setPosition }) => {
+    const [markerPosition, setMarkerPosition] = useState(null);
 
     useMapEvents({
         click(e) {
             const { lat, lng } = e.latlng;
             setMarkerPosition([lat, lng]);
-            setPosition([lat, lng]);
+            setPosition({ latitude: lat, longitude: lng });
         }
     });
 
@@ -65,6 +67,7 @@ const LocationMarker = ({ setPosition, dataPosition }) => {
         <Marker position={markerPosition}></Marker>
     );
 };
+
 
 const SearchField = ({ setPosition }) => {
     const map = useMap();
@@ -84,7 +87,7 @@ const SearchField = ({ setPosition }) => {
 
         map.on('geosearch/showlocation', (result) => {
             const { x, y } = result.location;
-            setPosition([y, x]);
+            setPosition({ latitude: y, longitude: x });
             map.setView([y, x], 15);
         });
 
@@ -93,6 +96,7 @@ const SearchField = ({ setPosition }) => {
 
     return null;
 };
+
 
 function CreateHotel() {
     const dispatch = useDispatch();
@@ -117,8 +121,12 @@ function CreateHotel() {
 
     // Cập nhật giá trị position trong form khi state position thay đổi
     useEffect(() => {
-        setValue('position', position);
+        if (position) {
+            setValue('location.latitude', position.latitude);
+            setValue('location.longitude', position.longitude);
+        }
     }, [position, setValue]);
+
 
     const onSubmit = async (data) => {
         const conveniences = Object.keys(data.conveniences).map(key => ({
@@ -134,9 +142,6 @@ function CreateHotel() {
             });
             return;
         }
-
-
-
 
         const formData = new FormData();
         businessLicense.forEach(file => {
