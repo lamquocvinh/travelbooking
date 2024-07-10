@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { FloatButton, Result, Spin } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import HeaderHotel from './component/jsx/HeaderHotel';
+import Map from "./component/jsx/Map";
 import HotelAbout from './component/jsx/HotelAbout';
 import Amentites from './component/jsx/Amentites';
 import Roomlist from './component/jsx/Roomlist';
@@ -33,6 +34,15 @@ const RoomlistDetail = () => {
         address: data?.data?.location?.address,
     };
 
+    const MapParams = {
+        position: [
+            data?.data?.location?.latitude,
+            data?.data?.location?.longitude
+        ],
+        hotelName: data?.data?.hotel_name,
+        address: data?.data?.location?.address,
+    };
+
     const AboutParams = {
         description: data?.data?.description,
         images_urls: data?.data?.image_urls
@@ -58,6 +68,7 @@ const RoomlistDetail = () => {
             {data?.data ?
                 <Spin spinning={isLoading}>
                     <HeaderHotel data={HeaderParams} toHotelAbout={scrollToHotelAbout} toRoom={scrollToRoom} />
+                    <Map data={MapParams} />
                     <div ref={hotelAboutRef}>
                         <HotelAbout data={AboutParams} />
                     </div>
