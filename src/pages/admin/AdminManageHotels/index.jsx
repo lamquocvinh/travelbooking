@@ -8,7 +8,8 @@ import {
     ExclamationCircleOutlined,
     SyncOutlined,
     CloseCircleOutlined,
-    MenuOutlined
+    MenuOutlined,
+    BankOutlined
 } from '@ant-design/icons';
 import { useChangeStatusHotelMutation, useGetHotelForAdminQuery } from '../../../services/hotelAPI';
 import { Link } from 'react-router-dom';
@@ -379,6 +380,14 @@ const AdminManageHotels = () => {
                                         </Button>
                                     </div>
                                 }
+                                <Link className='link' to={`${record.id}/manage-room`}>
+                                    <Button
+                                        className='action-item'
+                                        icon={<BankOutlined />}
+                                    >
+                                        <span className='link'>Room</span>
+                                    </Button>
+                                </Link>
                             </div >
                         } trigger="hover" placement='left'>
                             <Button icon={<MenuOutlined />}></Button>

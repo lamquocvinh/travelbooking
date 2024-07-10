@@ -22,7 +22,7 @@ const schema = yup.object().shape({
         wifi: yup.boolean(),
         toiletries: yup.boolean(),
         kitchen: yup.boolean(),
-        wardrobe: yup.boolean(),  // Ensure wardrobe is included in schema
+        wardrobe: yup.boolean(),
     }),
     types: yup.object().shape({
         luxury: yup.boolean(),
@@ -140,16 +140,19 @@ function UpdateRoom() {
                     <input className="input" type="text" {...register('room_price')} placeholder="Enter price" />
                     <p className="error-message">{errors.room_price?.message}</p>
                 </div>
+
                 <div className="item-50">
                     <label>Capacity*:</label>
                     <input className="input" type="text" {...register('capacity_per_room')} placeholder="Enter capacity of each room " />
                     <p className="error-message">{errors.capacity_per_room?.message}</p>
                 </div>
+
                 <div className="item-50">
                     <label>Number of room*:</label>
                     <input className="input" type="text" {...register('number_of_rooms')} placeholder="Enter number of room" />
                     <p className="error-message">{errors.number_of_rooms?.message}</p>
                 </div>
+
                 <div className="item-100">
                     <label>Description*</label>
                     <textarea className="input" type="text" {...register('description')} placeholder="Describe about room" />

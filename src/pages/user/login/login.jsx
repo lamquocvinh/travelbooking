@@ -4,12 +4,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useLoginUserMutation } from "../../../services/authAPI";
 import { useEffect } from "react";
-import { notification } from "antd";
+import { notification, Button } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setInfo, setToken, setPackageId } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
 import IMG from "../../../assets/photo-3-1485152074061.jpg";
+import { FacebookOutlined } from "@ant-design/icons";
+import { FaGoogle } from 'react-icons/fa';
 
 const schema = yup
     .object({
@@ -47,6 +49,17 @@ function LoginPage() {
         'ROLE_CUSTOMER': '/',
     };
 
+    //login with facebook
+    const handleFacebookLogin = () => {
+        console.log('handleFacebookLogin');
+    }
+
+    //login with google
+    const handleGoogleLogin = () => {
+        console.log('handleGoogleLogin');
+    }
+
+    //login with email and password
     const onSubmit = async (dataObj) => {
         try {
             const result = await login({
@@ -129,6 +142,43 @@ function LoginPage() {
                     <button className="btn">
                         {isLoading ? "Logging in..." : "Login"}
                     </button>
+
+                    {/* Facebook Login Button */}
+
+                    <Button
+                        className="btn"
+                        type="primary"
+                        icon={<FacebookOutlined className="facebook-icon" />}
+                        style={{
+                            backgroundColor: '#4267B2',
+                            borderColor: '#4267B2',
+                            marginTop: '10px',
+                            width: '100%',
+                            textAlign: 'center',
+                        }}
+                        onClick={handleFacebookLogin}
+                    >
+                        Login with Facebook
+                    </Button>
+
+                    {/* Google Login Button */}
+
+                    <Button
+                        type="primary"
+                        className="btn"
+                        icon={<FaGoogle className="google-icon" />}
+                        style={{
+                            backgroundColor: '#DB4437',
+                            borderColor: '#DB4437',
+                            marginTop: '10px',
+                            width: '100%',
+                            textAlign: 'center',
+                        }}
+                        onClick={handleGoogleLogin}
+                    >
+                        Login with Google
+                    </Button>
+
 
                 </form>
                 <div className="register-section">

@@ -9,12 +9,15 @@ import {
     DatePicker,
     Select,
     notification,
+    message,
 } from 'antd';
 import { VietnameseProvinces } from '../../../../../utils/utils';
 import { useGetUserDetailsQuery, useUpdateProfileMutation } from "../../../../../services/userAPI";
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import dayjs from 'dayjs';
+
 
 const { Option } = Select;
 const normFile = (e) => {
@@ -45,7 +48,7 @@ const Profile = () => {
                 full_name: (data.full_name),
                 phone_number: (data.phone_number),
                 email: (data.email),
-                // date_of_birth: data?.date_of_birth ? moment(data?.date_of_birth, 'YYYY-MM-DD') : null,
+                date_of_birth: data.date_of_birth ? dayjs(data.date_of_birth) : undefined,
                 address: (data.address),
             });
         }
@@ -54,7 +57,7 @@ const Profile = () => {
     const handleSubmit = (values) => {
         const formattedValues = {
             ...values,
-            date_of_birth: values.date_of_birth ? values.date_of_birth.format('YYYY-MM-DD') : null,
+            date_of_birth: values?.date_of_birth ? values?.date_of_birth.format('YYYY-MM-DD') : null,
         };
         console.log(formattedValues);
         try {
@@ -114,22 +117,34 @@ const Profile = () => {
                 <Form.Item size='large' label="Email" name="email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email!' }, { type: 'email', message: 'The input is not valid E-mail!' }]}>
                     <Input />
                 </Form.Item>
-                {/* <Form.Item size='large' label="Birth Date" name="date_of_birth" rules={[{ required: true, message: 'Please select your birth date!' }]}>
-                    <DatePicker format={dateFormat} />
-                </Form.Item> */}
+                <Form.Item
+                    label="Date of Birth"
+                    name="date_of_birth"
+                    rules={[
+                        { required: true, message: "Please select user date of birth!" },
+                        () => ({
+                            validator(_, value) {
+
+                                const selectedYear = value && value.year();
+                                const currentYear = new Date().getFullYear();
+                                if (selectedYear && currentYear && currentYear - selectedYear >= 18 && currentYear - selectedYear <= 100) {
+                                    return Promise.resolve();
+                                } else {
+                                    form.resetFields(['date_of_birth']);
+                                    if ((currentYear - selectedYear < 18)) {
+                                        message.error("must greater than 18 years old !!!")
+                                    }
+                                    return Promise.reject(new Error("Invalid date of birth!"));
+                                }
+                            },
+                        }),
+                    ]}>
+                    <DatePicker />
+                </Form.Item>
 
                 <Form.Item size='large' label="Address" name="address" rules={[{ required: true, message: 'Please enter your address!' }]}>
                     <Input />
                 </Form.Item>
-                {/* <Form.Item size='large' label="City" name="city" rules={[{ required: true, message: 'Please select your City!' }]}>
-                    <Select>
-                        {VietnameseProvinces.map((country, index) => (
-                            <Option key={index} value={country}>
-                                {country}
-                            </Option>
-                        ))}
-                    </Select>
-                </Form.Item> */}
                 <Form.Item size='large' wrapperCol={{ offset: 6, span: 16 }}>
                     <Button style={{ marginLeft: "-50px" }} type="primary" htmlType="submit">
                         Submit

@@ -17,7 +17,7 @@ const authSlice = createSlice({
             state.token = action.payload;
             sessionStorage.setItem("token", action.payload);
         },
-      
+
         setInfo: (state, action) => {
             state.userId = action.payload.userId;
             state.fullName = action.payload.fullName;
@@ -25,20 +25,24 @@ const authSlice = createSlice({
             state.phoneNumber = action.payload.phoneNumber;
             state.role = action.payload.role;
         },
-      
+
         setInfoBooking: (state, action) => {
             state.fullName = action.payload.fullName;
             state.email = action.payload.email;
             state.phoneNumber = action.payload.phoneNumber;
         },
-      
+
         setPackageId: (state, action) => {
             state.packageId = action.payload;
         },
 
 
-        
+
         logOut: (state) => {
+            sessionStorage.clear();
+            localStorage.clear();
+            localStorage.removeItem('packageId');
+            localStorage.removeItem('token');
             state.token = null;
             state.userId = null;
             state.fullName = null;
@@ -46,9 +50,8 @@ const authSlice = createSlice({
             state.phoneNumber = null;
             state.role = null;
             state.packageId = null;
-            sessionStorage.clear();
-            localStorage.clear();
         },
+
 
     },
     selectors: {

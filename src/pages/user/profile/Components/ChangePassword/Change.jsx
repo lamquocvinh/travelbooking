@@ -1,16 +1,35 @@
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 import React from 'react';
 import './Change.scss';
-
+import { useUpdatePasswordsMutation } from "../../../../../services/userAPI";
+import { useSelector } from 'react-redux';
 const Change = () => {
     const [form] = Form.useForm();
 
+    const id = useSelector(state => state.auth.userId);
+    //call api
+    const [updatePass] = useUpdatePasswordsMutation();
+
     const handleSubmit = (values) => {
         console.log('pass:', values);
+
+        try {
+            updatePass({ id: id, body: values });
+            notification.success({
+                message: "Success",
+                description: "Chage password successfully!",
+            });
+        } catch (error) {
+            notification.error({
+                message: "Error",
+                description: error.message,
+            });
+        }
     };
+
     return (
         <div className="form-container">
-            <h1 className="form-title">Change Password</h1>
+            <h1 style={{ marginLeft: "20px" }} className="form-title">Change Password</h1>
             <Form
                 size='large'
                 form={form}
@@ -24,7 +43,7 @@ const Change = () => {
                     className='form-item'
                     size='large'
                     label="Current Password"
-                    name="currentPassword"
+                    name="old_password"
                     rules={[
                         { required: true, message: 'Please enter your current password!' },
                         { pattern: /^.{6,24}$/, message: 'Password must be between 6 and 24 characters!' }
@@ -36,7 +55,7 @@ const Change = () => {
                     className='form-item'
                     size='large'
                     label="New Password"
-                    name="newPassword"
+                    name="new_password"
                     rules={[
                         { required: true, message: 'Please enter your new password!' },
                         { pattern: /^.{6,24}$/, message: 'Password must be between 6 and 24 characters!' }
@@ -48,7 +67,7 @@ const Change = () => {
                     className='form-item'
                     size='large'
                     label="Confirm Password"
-                    name="confirmPassword"
+                    name="confirm_password"
                     rules={[
                         { required: true, message: 'Please enter your confirm password!' },
                         { pattern: /^.{6,24}$/, message: 'Password must be between 6 and 24 characters!' },
