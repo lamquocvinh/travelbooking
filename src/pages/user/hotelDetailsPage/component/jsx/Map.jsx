@@ -15,20 +15,19 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png'
 });
 
-const Map = ({ position }) => {
-    const defaultCenter = position || [10.740321, 106.678499];
-
+const Map = ({ data }) => {
     return (
         <div className="hotel-details-map">
-            {!position && (
-                <MapContainer center={defaultCenter} zoom={15} style={{ height: '100%', width: '100%' }}>
+            {data?.position && (
+                <MapContainer center={data?.position} zoom={15} style={{ height: '100%', width: '100%' }}>
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
-                    <Marker position={position || defaultCenter}>
+                    <Marker position={data?.position}>
                         <Popup>
-                            A pretty CSS3 popup. <br /> Easily customizable.
+                            <p className="hotel-name">{data?.hotelName}</p>
+                            {data?.address}
                         </Popup>
                     </Marker>
                 </MapContainer>

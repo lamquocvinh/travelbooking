@@ -34,6 +34,15 @@ const RoomlistDetail = () => {
         address: data?.data?.location?.address,
     };
 
+    const MapParams = {
+        position: [
+            data?.data?.location?.latitude,
+            data?.data?.location?.longitude
+        ],
+        hotelName: data?.data?.hotel_name,
+        address: data?.data?.location?.address,
+    };
+
     const AboutParams = {
         description: data?.data?.description,
         images_urls: data?.data?.image_urls
@@ -56,10 +65,10 @@ const RoomlistDetail = () => {
 
     return (
         <div className="hotel-details-page-wrapper">
-            {!data?.data ?
+            {data?.data ?
                 <Spin spinning={isLoading}>
                     <HeaderHotel data={HeaderParams} toHotelAbout={scrollToHotelAbout} toRoom={scrollToRoom} />
-                    <Map />
+                    <Map data={MapParams} />
                     <div ref={hotelAboutRef}>
                         <HotelAbout data={AboutParams} />
                     </div>

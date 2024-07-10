@@ -131,7 +131,7 @@ function Step2({ backStep }) {
 
     return (
         <div className="step-2">
-            <div className="select-pay-method">
+            <div className="select-pay-method-for-guest">
                 <div className="pay-methods">
                     <h2 className="title">How do you want to pay?</h2>
                     <div className="method-item" onClick={() => { setMethod("VNPay") }}>
