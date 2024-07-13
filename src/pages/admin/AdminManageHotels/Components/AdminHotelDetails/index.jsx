@@ -8,6 +8,20 @@ import {
     SyncOutlined,
     CloseCircleOutlined,
 } from '@ant-design/icons';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import 'leaflet-geosearch/dist/style.css';
+import 'leaflet-geosearch/assets/css/leaflet.css';
+
+// Fix marker icon issue in Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png'
+});
 
 function AdminHotelDetails() {
     const params = useParams();
@@ -25,7 +39,7 @@ function AdminHotelDetails() {
 
     return (
         <div className="admin-hotel-details-wrapper">
-            <div className="card">
+            {data?.data && <div className="card">
                 <div className="hotel-info">
                     <h2 className="item">Hotel Details</h2>
                     <div className="item">
@@ -94,6 +108,16 @@ function AdminHotelDetails() {
                         ))}
                     </div>
                     <div className="item-100">
+                        <h3>Conveniences:</h3>
+                        <div className="conveniences">
+                            {finalConveniences?.map((item, index) => (
+                                <span key={index} className="sub-item">
+                                    {item}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="item-100">
                         <h3>Location:</h3>
                         <div className="location">
                             <div className="item-75">
@@ -107,14 +131,18 @@ function AdminHotelDetails() {
                         </div>
                     </div>
                     <div className="item-100">
-                        <h3>Conveniences:</h3>
-                        <div className="conveniences">
-                            {finalConveniences?.map((item, index) => (
-                                <span key={index} className="sub-item">
-                                    {item}
-                                </span>
-                            ))}
-                        </div>
+                        <MapContainer center={[data?.data?.location?.latitude, data?.data?.location?.longitude]} zoom={15} style={{ height: '400px', width: '100%' }}>
+                            <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            />
+                            <Marker position={[data?.data?.location?.latitude, data?.data?.location?.longitude]}>
+                                <Popup>
+                                    <p className="hotel-name">{data?.data?.hotel_name}</p>
+                                    {data?.data?.location?.address}
+                                </Popup>
+                            </Marker>
+                        </MapContainer>
                     </div>
                 </div>
                 <div className="partner-info">
@@ -134,7 +162,7 @@ function AdminHotelDetails() {
                         <p className="input">{data?.data?.partner?.phone_number}</p>
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }
