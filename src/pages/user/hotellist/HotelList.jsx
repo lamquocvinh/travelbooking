@@ -33,7 +33,8 @@ const HotelList = () => {
 
     const [filterOptions, { isLoading: isFiltering }] = usePostFilterHotelMutation();
     const [selectedFacilities, setSelectedFacilities] = useState([]);
-    const [selectedRatings, setSelectedRatings] = useState([]);
+    const [selectedRatings, setSelectedRatings] = useState(null);
+
 
     const [searchHotels] = useSearchHotelsMutation();
 
@@ -84,10 +85,15 @@ const HotelList = () => {
         } catch (error) {
             setFilters({ data: { content: [] } });
         }
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     };
 
     const handleSearchChange = async () => {
-        if (!destination || !guests || !date || date.length !== 2) {
+        if (!destination || !guests || !rooms || !date || date.length !== 2) {
             console.log("Invalid search parameters");
             return;
         }
@@ -97,6 +103,7 @@ const HotelList = () => {
             numPeople: guests,
             checkInDate: date[0],
             checkOutDate: date[1],
+            room: rooms
         };
         try {
             const response = await searchHotels(searchData).unwrap();
@@ -166,13 +173,13 @@ const HotelList = () => {
                     <span>Guests</span>
                 </Col>
                 <Col span={12}>
-                    <InputNumber min={1} max={10} value={guests} onChange={handleGuestsChange} />
+                    <InputNumber min={1} value={guests} onChange={handleGuestsChange} />
                 </Col>
                 <Col span={12}>
                     <span>Rooms</span>
                 </Col>
                 <Col span={12}>
-                    <InputNumber min={1} max={10} value={rooms} onChange={handleRoomsChange} />
+                    <InputNumber min={1} value={rooms} onChange={handleRoomsChange} />
                 </Col>
             </Row>
         </div>
@@ -259,7 +266,7 @@ const HotelList = () => {
 
                     <div className='facilities'>
                         Rating
-                        <Radio.Group className="facilities-check-box" onChange={handleRatingChange} value={selectedRatings}>
+                        <Radio.Group className="facilities-check-box" onChange={handleRatingChange} value={selectedRatings} defaultValue={null}>
                             <div><Radio value={1}><Rate value={1} disabled /></Radio></div>
                             <div><Radio value={2}><Rate value={2} disabled /></Radio></div>
                             <div><Radio value={3}><Rate value={3} disabled /></Radio></div>
