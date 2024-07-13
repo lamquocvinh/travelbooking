@@ -39,6 +39,8 @@ const EditHotel = () => {
                 message: "Success",
                 description: "Hotel image upload successfully!",
             });
+            window.history.back();
+
         } catch (error) {
             notification.error({
                 message: "Error",

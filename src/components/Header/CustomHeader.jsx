@@ -35,7 +35,7 @@ const CustomHeader = () => {
     ];
 
     const renderProfileDropdown = () => (
-        <Dropdown menu={{ items }} trigger={['click']}>
+        <Dropdown menu={{ items }} trigger={['click']} className="drop-down">
             <Space>
                 <Avatar
                     style={{

@@ -12,6 +12,7 @@ import { setInfo, setToken, setPackageId } from "../../../slices/auth.slice"; //
 import IMG from "../../../assets/photo-3-1485152074061.jpg";
 import { FacebookOutlined } from "@ant-design/icons";
 import { FaGoogle } from 'react-icons/fa';
+import GoogleLogin from "react-google-login";
 
 const schema = yup
     .object({
@@ -19,13 +20,12 @@ const schema = yup
         password: yup.string().required("This is required field.").trim(),
     })
     .required();
-
 function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
     const [login, { isLoading }] = useLoginUserMutation();
-
+    const loggingg = import.meta.env.VITE_LOGIN_GOOGLE;
     useEffect(() => {
         const token = sessionStorage.getItem('token') || localStorage.getItem('token');
         if (token) {
@@ -33,6 +33,7 @@ function LoginPage() {
             navigate('/');
         }
     }, [navigate, dispatch]);
+
 
     const {
         register,
@@ -105,6 +106,28 @@ function LoginPage() {
         }
     };
 
+    const onSuccess = async (response) => {
+        console.log('Login Success:', response);
+
+        const token = response.tokenId;
+        // Send token to backend for verification
+        // const res = await fetch('YOUR_BACKEND_API_URL', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json'
+        //   },
+        //   body: JSON.stringify({ token })
+        // });
+
+        // const data = await res.json();
+        // console.log('Backend response:', data);
+        // Handle the response, save the token, etc.
+    };
+
+    const onFailure = (response) => {
+        console.log('Login Failed:', response);
+    };
+
     return (
         <div className="wrapper-login">
             <img className="image" src={IMG} alt="Image" />
@@ -160,10 +183,19 @@ function LoginPage() {
                     >
                         Login with Facebook
                     </Button>
+                    <div style={{ marginTop: '1rem' }}>
+                        <GoogleLogin
+                            clientId={loggingg}
+                            buttonText="Login with Google"
+                            onSuccess={onSuccess}
+                            onFailure={onFailure}
+                            cookiePolicy={'http://localhost:3000'}
+                        />
+                    </div>
 
                     {/* Google Login Button */}
 
-                    <Button
+                    {/* <Button
                         type="primary"
                         className="btn"
                         icon={<FaGoogle className="google-icon" />}
@@ -177,10 +209,11 @@ function LoginPage() {
                         onClick={handleGoogleLogin}
                     >
                         Login with Google
-                    </Button>
+                    </Button> */}
 
 
                 </form>
+
                 <div className="register-section">
                     <h3 className="login-content-ask">
                         Want to become a member?
@@ -190,7 +223,9 @@ function LoginPage() {
                     </p>
                 </div>
             </div>
+
         </div>
+
     );
 }
 

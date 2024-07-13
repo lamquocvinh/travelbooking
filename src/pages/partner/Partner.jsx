@@ -12,7 +12,6 @@ const { Content, Sider } = Layout;
 const Partner = () => {
     const location = useLocation();
     const packageId = useSelector((state) => state.auth.packageId);
-    console.log(packageId);
     const determineActiveKey = (path) => {
         if (path.startsWith('/partner/manage-hotel')) {
             return '/partner/manage-hotel';

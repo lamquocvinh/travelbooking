@@ -68,14 +68,13 @@ const Packet = () => {
                             message: "Success",
                             description: "You will be redirected to the payment page. After completing the payment, you will be logged out.",
                         });
-                        // Thực hiện đăng xuất
-                        dispatch(logOut()); // Thay đổi theo logic của bạn
-                        // Chuyển hướng đến trang đăng nhập
+
                         navigate('/login');
                     }, 2000); // Đợi 2 giây trước khi đăng xuất
 
                     // Chuyển hướng đến URL thanh toán
                     window.location.href = paymentUrl;
+                    dispatch(logOut());
                 } else {
                     notification.error({
                         message: "Error",

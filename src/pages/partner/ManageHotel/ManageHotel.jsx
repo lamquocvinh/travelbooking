@@ -25,7 +25,7 @@ const ManageHotel = () => {
     // call api
     const [changeStatus, { isLoading }] = useChangeStatusHotelMutation();
     const { data, refetch } = useGetHotelForPartnerQuery();
-
+    console.log(data);
     // trạng thái để theo dõi thay đổi trạng thái của khách sạn
     const [hasStatusChanged, setHasStatusChanged] = useState(false);
     const [hotelCount, setHotelCount] = useState(0); // to track number of hotels
@@ -389,7 +389,6 @@ const ManageHotel = () => {
             navigate('/partner/package')
         }
     }, [])
-
     return (
         <div className='partner-manage-hotel-wrapper'>
             <div className="action">
@@ -399,6 +398,15 @@ const ManageHotel = () => {
                     New Hotel
                 </Link>
             </div>
+            <div style={{ marginBottom: "20px" }}>
+                {data?.data?.content?.map((hotel, index) =>
+                    (!hotel.image_urls || hotel.image_urls.length === 0) ? (
+                        <h2 key={index} style={{ color: "red" }}>{hotel.hotel_name} does not have a hotel image yet, added in the edit section</h2>
+                    ) : null
+                )}
+            </div>
+
+
             <Table
                 bordered={true}
                 columns={columns}
