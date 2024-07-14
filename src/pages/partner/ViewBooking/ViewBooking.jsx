@@ -1,15 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import "./ViewBooking.scss"
-import { Table, Tag, Button, Popover, Modal, notification, Input, Space, Tooltip } from 'antd';
+import { Table, Tag, Button, notification, Input, Space, Tooltip } from 'antd';
 import {
     SearchOutlined,
-    PlusCircleOutlined,
     CloseCircleOutlined,
     CheckCircleOutlined,
     SyncOutlined,
     SwapOutlined,
+    LoginOutlined,
+    LogoutOutlined,
 } from '@ant-design/icons';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useGetBookingByHotelQuery, useChangeStatusMutation } from '../../../services/bookingAPI';
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -18,23 +19,19 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 const ViewBooking = () => {
     const { hotelId } = useParams();
-    const { data } = useGetBookingByHotelQuery(hotelId);
+    const { data, refetch } = useGetBookingByHotelQuery(hotelId);
     const [status] = useChangeStatusMutation()
-    const [hasStatusChanged, setHasStatusChanged] = useState(false);
-
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-
     const searchInput = useRef(null);
-    const [statusBooking, setStatusBooking] = useState();
-    console.log(statusBooking);
-    const handleStatusChange = async (record) => {
+
+    const handleStatusChange = async (newStatus, bookingId) => {
         try {
-            await status(statusBooking);
+            await status({ bookingId: bookingId, newStatus: newStatus });
             notification.success({
                 message: 'Status changed successfully!',
             });
-
+            refetch();
         }
         catch (err) {
             notification.error({
@@ -249,12 +246,12 @@ const ViewBooking = () => {
                         </Tag>
                     }
                     {record.status === "CHECKED_IN" &&
-                        <Tag icon={<CloseCircleOutlined />} color="lime">
+                        <Tag icon={<LoginOutlined />} color="lime">
                             CHECKED IN
                         </Tag>
                     }
                     {record.status === "CHECKED_OUT" &&
-                        <Tag icon={<CloseCircleOutlined />} color="cyan">
+                        <Tag icon={<LogoutOutlined />} color="cyan">
                             CHECKED OUT
                         </Tag>
                     }
@@ -267,28 +264,17 @@ const ViewBooking = () => {
             width: 100,
             align: "center",
             render: (_, record) => (
+                (record.status === 'PAID' || record.status === 'CHECKED_IN') &&
                 <Tooltip title="Change status">
-
                     <Button icon={<SwapOutlined />} onClick={() => {
-                        console.log('Booking ID:', record?.["booking-id"]);
                         let newStatus;
                         if (record.status === 'PAID') {
                             newStatus = 'CHECKED_IN';
                         } else if (record.status === 'CHECKED_IN') {
                             newStatus = 'CHECKED_OUT';
-                        } else if (record.status === 'CHECKED_OUT') {
-                            newStatus = 'PAID';
                         }
-
-                        setStatusBooking({
-                            bookingId: record?.["booking-id"],
-                            newStatus: newStatus,
-                        });
-
-                        handleStatusChange(record);
+                        handleStatusChange(newStatus, record?.["booking-id"]);
                     }} ></Button>
-
-
                 </Tooltip>
             ),
         },
@@ -297,7 +283,6 @@ const ViewBooking = () => {
     return (
         <div className='manage-hotel-wrapper'>
             <p><h2 className='title'>Booking</h2></p>
-
             <Table
                 bordered={true}
                 columns={columns}
@@ -307,7 +292,6 @@ const ViewBooking = () => {
                     y: 440,
                 }}
             />
-
         </div>
     )
 }
