@@ -8,6 +8,7 @@ import {
     SyncOutlined,
     CloseCircleOutlined,
     EyeOutlined,
+    ExportOutlined,
 } from '@ant-design/icons';
 import { useGetBookingQuery } from '../../../services/bookingAPI';
 import { Link } from 'react-router-dom';
@@ -245,7 +246,13 @@ const AdminManageBookings = () => {
 
     return (
         <div className='admin-manage-bookings-wrapper'>
-            <h2 className='title'>List of bookings:</h2>
+            <div className='header-actions'>
+                <h2 className='title'>List of bookings:</h2>
+                {transformedData?.length > 0 && <Link className={"export-btn"} to={"/admin/manage-bookings/export"}>
+                    <ExportOutlined />
+                    Export
+                </Link>}
+            </div>
             <Table
                 bordered={true}
                 columns={columns}

@@ -1,5 +1,28 @@
 .admin-manage-bookings-wrapper {
-  .title {
+  .header-actions {
     margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      outline: none;
+      border: var(--blue-main-color) 1px solid;
+      background-color: var(--blue-main-color);
+      color: white;
+      font-weight: bold;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        background-color: white;
+        color: var(--blue-main-color);
+      }
+    }
   }
 }
