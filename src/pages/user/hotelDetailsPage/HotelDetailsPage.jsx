@@ -9,6 +9,7 @@ import Amentites from './component/jsx/Amentites';
 import Roomlist from './component/jsx/Roomlist';
 import { useGetHotelDetailsForGuestQuery } from '../../../services/hotelAPI';
 import { useGetRoomListForUserQuery } from '../../../services/roomAPI';
+import FeedbackPage from "../hotellist/component/Feedback";
 
 const RoomlistDetail = () => {
     const { hotelId } = useParams('hotelId');
@@ -33,6 +34,10 @@ const RoomlistDetail = () => {
         rating: data?.data?.rating,
         address: data?.data?.location?.address,
     };
+
+    const Feedback = {
+        hotel_name: data?.data?.hotel_name,
+    }
 
     const MapParams = {
         position: [
@@ -76,6 +81,7 @@ const RoomlistDetail = () => {
                     <div ref={roomRef}>
                         <Roomlist {...RoomListParams} hotel_name={data?.data?.hotel_name} hotel_Id={hotelId} />
                     </div>
+                    <FeedbackPage dataName={Feedback}></FeedbackPage>
                 </Spin>
                 :
                 <Result

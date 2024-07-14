@@ -49,12 +49,20 @@ export const bookingApi = createApi({
         }),
         getBookingByHotel: builder.query({
             query: (hotelId) => {
-                console.log("Received hotelId:", hotelId);
                 return {
                     url: `bookings/get-bookings-by-hotel/${hotelId}`,
                     method: "GET",
                 };
             },
+        }),
+        changeStatus: builder.mutation({
+            query: ({ bookingId, newStatus }) => ({
+                url: `bookings/update-status/${bookingId}?newStatus=${newStatus}`,
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }),
         }),
 
     }),
@@ -64,5 +72,6 @@ export const {
     useCreateBookingMutation,
     useGetBookingQuery,
     useGetBookingDetailsQuery,
-    useGetBookingByHotelQuery
+    useGetBookingByHotelQuery,
+    useChangeStatusMutation,
 } = bookingApi;

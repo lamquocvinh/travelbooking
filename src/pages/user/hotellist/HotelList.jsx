@@ -103,7 +103,7 @@ const HotelList = () => {
             numPeople: guests,
             checkInDate: date[0],
             checkOutDate: date[1],
-            room: rooms
+            numRoom: rooms
         };
         try {
             const response = await searchHotels(searchData).unwrap();

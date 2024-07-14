@@ -24,8 +24,6 @@ const PaymentReturnPage = Loadable({ loader: () => import("../pages/user/payment
 const ForgotPasswordPage = Loadable({ loader: () => import("../pages/user/forgotPasswordPage") });
 const VerifyOtp = Loadable({ loader: () => import("../pages/user/forgotPasswordPage/verifyOtp") });
 const ForgotChangePassword = Loadable({ loader: () => import("../pages/user/forgotPasswordPage/changePassword") });
-
-// admin page
 const Dashboard = Loadable({ loader: () => import("../pages/admin/Dashboard") });
 const AdminManageBookings = Loadable({ loader: () => import("../pages/admin/AdminManageBookings") });
 const AdminBookingDetails = Loadable({ loader: () => import("../pages/admin/AdminManageBookings/Components/AdminBookingDetails") });
@@ -41,8 +39,6 @@ const AdminPackageCreate = Loadable({ loader: () => import("../pages/admin/Admin
 const AdminPackageEdit = Loadable({ loader: () => import("../pages/admin/AdminManagePackages/Components/AdminPackageEdit") });
 const AdminManageConveniences = Loadable({ loader: () => import("../pages/admin/AdminManageConveniences") });
 const AdminManageRoom = Loadable({ loader: () => import("../pages/admin/AdminManageRoom/AdminManageRoom") });
-
-// partner page
 const ViewBooking = Loadable({ loader: () => import("../pages/partner/ViewBooking/ViewBooking") });
 const ManageHotel = Loadable({ loader: () => import("../pages/partner/ManageHotel/ManageHotel") });
 const PartnerHotelDetails = Loadable({ loader: () => import("../pages/partner/ManageHotel/Components/PartnerHotelDetails") });
