@@ -56,7 +56,27 @@ export const bookingApi = createApi({
                 };
             },
         }),
-
+        exportBookingFull: builder.mutation({
+            query: (body) => ({
+                url: `bookings/export/bookings?partnerId=${body?.partnerId}&year=${body?.year}&month=${body?.month}&day=${body?.day}`,
+                method: "GET",
+                responseHandler: (response) => response.blob(), // Xử lý phản hồi dưới dạng Blob
+            }),
+        }),
+        exportBookingYear: builder.mutation({
+            query: (body) => ({
+                url: `bookings/export/bookings?partnerId=${body?.partnerId}&year=${body?.year}`,
+                method: "GET",
+                responseHandler: (response) => response.blob(), // Xử lý phản hồi dưới dạng Blob
+            }),
+        }),
+        exportBookingMonth: builder.mutation({
+            query: (body) => ({
+                url: `bookings/export/bookings?partnerId=${body?.partnerId}&year=${body?.year}&month=${body?.month}`,
+                method: "GET",
+                responseHandler: (response) => response.blob(), // Xử lý phản hồi dưới dạng Blob
+            }),
+        }),
     }),
 });
 
@@ -64,5 +84,8 @@ export const {
     useCreateBookingMutation,
     useGetBookingQuery,
     useGetBookingDetailsQuery,
-    useGetBookingByHotelQuery
+    useGetBookingByHotelQuery,
+    useExportBookingFullMutation,
+    useExportBookingMonthMutation,
+    useExportBookingYearMutation,
 } = bookingApi;

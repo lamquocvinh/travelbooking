@@ -29,6 +29,7 @@ const ForgotChangePassword = Loadable({ loader: () => import("../pages/user/forg
 const Dashboard = Loadable({ loader: () => import("../pages/admin/Dashboard") });
 const AdminManageBookings = Loadable({ loader: () => import("../pages/admin/AdminManageBookings") });
 const AdminBookingDetails = Loadable({ loader: () => import("../pages/admin/AdminManageBookings/Components/AdminBookingDetails") });
+const AdminBookingExport = Loadable({ loader: () => import("../pages/admin/AdminManageBookings/Components/AdminBookingExport") });
 const AdminManageUsers = Loadable({ loader: () => import("../pages/admin/AdminManageUsers") });
 const AdminUserDetails = Loadable({ loader: () => import("../pages/admin/AdminManageUsers/Components/AdminUserDetails") });
 const AdminManagePartners = Loadable({ loader: () => import("../pages/admin/AdminManagePartners") });
@@ -180,6 +181,10 @@ export const router = createBrowserRouter([
                   {
                     path: "booking-details/:bookingId",
                     element: AdminBookingDetails,
+                  },
+                  {
+                    path: "export",
+                    element: AdminBookingExport,
                   }
                 ]
               },
