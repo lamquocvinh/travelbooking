@@ -203,7 +203,6 @@ const HotelListItems = ({ data, filters, isLoading, isFiltering, currentPage, pa
                     current={currentPage + 1}
                     pageSize={pageSize}
                     onChange={handlePageChange}
-                    showTotal={(total) => `Total ${total} items`}
                 />
             </Spin>
         </div>

@@ -1,13 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_BASE_URL } from "../config";
-import { selectTokens } from "../slices/auth.slice";
 
 const currentUnixTimestamp = Math.floor(Date.now() / 1000);
 
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-        const token = selectTokens(getState());
+        const token = localStorage.getItem("token");
         if (token) {
             headers.append("Authorization", `Bearer ${token}`);
         }

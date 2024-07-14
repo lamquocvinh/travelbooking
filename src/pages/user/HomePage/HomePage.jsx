@@ -8,9 +8,9 @@ function HomePage() {
   return (
     <div className="home-page">
       <Filter />
-      <HotelsSection />
+      {/* <HotelsSection /> */}
       <Rental />
-      <Feedback />
+      {/* <Feedback /> */}
     </div>
   );
 }
