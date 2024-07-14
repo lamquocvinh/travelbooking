@@ -135,7 +135,19 @@ export const hotelApi = createApi({
                 method: "GET",
             }),
         }),
-
+        CreateFeedback: builder.mutation({
+            query: (body) => ({
+                url: `feedbacks/create-feedback`,
+                method: "POST",
+                body: body,
+            }),
+        }),
+        GetFeedback: builder.query({
+            query: (hotelId) => ({
+                url: `feedbacks/get-all-feedback/${hotelId}`,
+                method: "GET",
+            }),
+        }),
     }),
 });
 
@@ -152,4 +164,6 @@ export const {
     usePutHotelImageMutation,
     usePostFilterHotelMutation,
     useSearchHotelsMutation,
+    useCreateFeedbackMutation,
+    useGetFeedbackQuery,
 } = hotelApi;

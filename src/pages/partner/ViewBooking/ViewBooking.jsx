@@ -7,10 +7,10 @@ import {
     CloseCircleOutlined,
     CheckCircleOutlined,
     SyncOutlined,
-    EyeOutlined,
+    SwapOutlined,
 } from '@ant-design/icons';
 import { Link, useParams } from 'react-router-dom';
-import { useGetBookingByHotelQuery } from '../../../services/bookingAPI';
+import { useGetBookingByHotelQuery, useChangeStatusMutation } from '../../../services/bookingAPI';
 
 const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
@@ -19,12 +19,30 @@ const onChange = (pagination, filters, sorter, extra) => {
 const ViewBooking = () => {
     const { hotelId } = useParams();
     const { data } = useGetBookingByHotelQuery(hotelId);
+    const [status] = useChangeStatusMutation()
     const [hasStatusChanged, setHasStatusChanged] = useState(false);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
 
     const searchInput = useRef(null);
+    const [statusBooking, setStatusBooking] = useState();
+    console.log(statusBooking);
+    const handleStatusChange = async (record) => {
+        try {
+            await status(statusBooking);
+            notification.success({
+                message: 'Status changed successfully!',
+            });
+
+        }
+        catch (err) {
+            notification.error({
+                message: 'Status change failed!',
+            });
+        };
+    }
+
     const getColumnSearchProps = (dataIndex, customRender) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div
@@ -134,6 +152,8 @@ const ViewBooking = () => {
         },
     });
 
+
+
     const columns = [
         {
             title: 'Customer Name',
@@ -196,6 +216,14 @@ const ViewBooking = () => {
                     text: 'CANCELLED',
                     value: "CANCELLED",
                 },
+                {
+                    text: 'CHECKED_IN',
+                    value: "CHECKED_IN",
+                },
+                {
+                    text: 'CHECKED_OUT',
+                    value: "CHECKED_OUT",
+                },
             ],
             onFilter: (value, record) => record.status === value,
             render: (_, record) => (
@@ -220,6 +248,16 @@ const ViewBooking = () => {
                             CANCELLED
                         </Tag>
                     }
+                    {record.status === "CHECKED_IN" &&
+                        <Tag icon={<CloseCircleOutlined />} color="lime">
+                            CHECKED IN
+                        </Tag>
+                    }
+                    {record.status === "CHECKED_OUT" &&
+                        <Tag icon={<CloseCircleOutlined />} color="cyan">
+                            CHECKED OUT
+                        </Tag>
+                    }
                 </div>
             ),
         },
@@ -229,10 +267,28 @@ const ViewBooking = () => {
             width: 100,
             align: "center",
             render: (_, record) => (
-                <Tooltip title="View detail">
-                    <Link to={`booking-details/${record["booking-id"]}`}>
-                        <Button icon={<EyeOutlined />}></Button>
-                    </Link>
+                <Tooltip title="Change status">
+
+                    <Button icon={<SwapOutlined />} onClick={() => {
+                        console.log('Booking ID:', record?.["booking-id"]);
+                        let newStatus;
+                        if (record.status === 'PAID') {
+                            newStatus = 'CHECKED_IN';
+                        } else if (record.status === 'CHECKED_IN') {
+                            newStatus = 'CHECKED_OUT';
+                        } else if (record.status === 'CHECKED_OUT') {
+                            newStatus = 'PAID';
+                        }
+
+                        setStatusBooking({
+                            bookingId: record?.["booking-id"],
+                            newStatus: newStatus,
+                        });
+
+                        handleStatusChange(record);
+                    }} ></Button>
+
+
                 </Tooltip>
             ),
         },
