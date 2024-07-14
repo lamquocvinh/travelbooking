@@ -111,7 +111,8 @@ const Packet = () => {
                         <h2>{`Package ${pack.name}`}</h2>
                         <div className="description">Unlock features to start trading.</div>
                         <div className="price">{`${pack.price.toLocaleString()} đ`}</div>
-                        <div className="description">{`/${pack.duration === 1 ? 'month' : 'year'} for one partner`}</div>
+                        <div className="description">{`${pack.description}`}</div>
+                        <div className="description">This package is valid for <strong>{pack.duration}</strong> days </div>
                         <button onClick={() => handlePackageSelect(pack.id, pack.price)} className="btn">Choose package</button>
                     </div>
                 ))}
