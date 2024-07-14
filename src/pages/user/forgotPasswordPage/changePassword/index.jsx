@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { notification, Spin } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setToken } from "../../../../slices/auth.slice"; // Adjust the import according to your project structure
 import IMG from "../../../../assets/photo-3-1485152074061.jpg";
 
 const schema = yup
@@ -24,9 +23,8 @@ function ForgotChangePassword() {
     const [changePassword, { isLoading }] = useChangePasswordByEmailMutation();
 
     useEffect(() => {
-        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+        const token = localStorage.getItem('token');
         if (token) {
-            dispatch(setToken(token));
             navigate('/');
         }
     }, [navigate, dispatch]);
