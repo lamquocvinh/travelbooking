@@ -83,7 +83,13 @@ function LoginPage() {
                 const role = result?.data?.roles?.[0];
                 const defaultPath = navigateByRoles[role] || "/";
                 const from = defaultPath || location.state?.from?.pathname;
-                navigate(from);
+                const fromLink = sessionStorage.getItem("from")
+                if (fromLink) {
+                    sessionStorage.removeItem("from")
+                    navigate(fromLink);
+                } else {
+                    navigate(from);
+                }
                 notification.success({
                     message: "Login successfully",
                     description:
@@ -168,7 +174,7 @@ function LoginPage() {
 
                     {/* Facebook Login Button */}
 
-                    <Button
+                    {/* <Button
                         className="btn"
                         type="primary"
                         icon={<FacebookOutlined className="facebook-icon" />}
@@ -191,7 +197,7 @@ function LoginPage() {
                             onFailure={onFailure}
                             cookiePolicy={'http://localhost:3000'}
                         />
-                    </div>
+                    </div> */}
 
                     {/* Google Login Button */}
 
