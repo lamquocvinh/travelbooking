@@ -59,6 +59,12 @@ export const packageApi = createApi({
                 method: "POST",
             }),
         }),
+        updateStatusPackage: builder.mutation({
+            query: (data) => ({
+                url: `packages/update-status/${data.userId}?newStatus=${data.status}`,
+                method: "PUT",
+            }),
+        }),
     }),
 });
 
@@ -68,4 +74,5 @@ export const {
     useCreatePackageMutation,
     useEditPackageMutation,
     useRegisterPackageMutation,
+    useUpdateStatusPackageMutation
 } = packageApi;

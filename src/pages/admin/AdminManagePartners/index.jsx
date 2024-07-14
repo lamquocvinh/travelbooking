@@ -8,13 +8,17 @@ import {
     ExclamationCircleOutlined,
     LockOutlined,
     UnlockOutlined,
+    SyncOutlined,
+    ClockCircleOutlined,
 } from '@ant-design/icons';
 import { useChangeStatusUserMutation, useGetPartnersQuery } from '../../../services/userAPI';
+import { useUpdateStatusPackageMutation } from '../../../services/packageAPI';
 import { Link } from 'react-router-dom';
 
 const AdminManageUsers = () => {
     // hook call api
     const [changeStatus, { isLoading }] = useChangeStatusUserMutation();
+    const [updateStatus, { isLoading: isUpdate }] = useUpdateStatusPackageMutation();
     const { data, refetch } = useGetPartnersQuery();
 
     // search in table
@@ -24,7 +28,9 @@ const AdminManageUsers = () => {
 
     // active-inactive user
     const [activeUser, setActiveUser] = useState({});
+    const [packageStatus, setPackageStatus] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenPackage, setIsModalOpenPackage] = useState(false);
 
     // ham xu ly modal - active-inactive user
     const showModal = (body) => {
@@ -41,7 +47,6 @@ const AdminManageUsers = () => {
                 refetch();
             }
         } catch (error) {
-            console.log(error);
             notification.error({
                 message: "Some thing wrong!"
             })
@@ -50,6 +55,31 @@ const AdminManageUsers = () => {
     };
     const handleCancel = () => {
         setIsModalOpen(false);
+    };
+
+    // ham xu ly modal - status package
+    const showModalPackage = (body) => {
+        setPackageStatus(body)
+        setIsModalOpenPackage(true);
+    };
+    const handleOkPackage = async () => {
+        try {
+            const result = await updateStatus(packageStatus);
+            if (result?.error?.originalStatus == 200) {
+                notification.success({
+                    message: "Change status successfully!"
+                })
+                refetch();
+            }
+        } catch (error) {
+            notification.error({
+                message: "Some thing wrong!"
+            })
+        }
+        setIsModalOpenPackage(false);
+    };
+    const handleCancelPackage = () => {
+        setIsModalOpenPackage(false);
     };
 
     // ham xu ly search
@@ -163,20 +193,21 @@ const AdminManageUsers = () => {
             title: 'Name',
             dataIndex: 'full_name',
             key: 'full_name',
-            width: "30%",
+            width: "20%",
             ...getColumnSearchProps('full_name'),
         },
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
-            width: "30%",
+            width: "20%",
             ...getColumnSearchProps('email'),
         },
         {
             title: 'Phone',
             dataIndex: 'phone_number',
             key: 'phone_number',
+            width: "20%",
             ...getColumnSearchProps('phone_number'),
         },
         {
@@ -212,12 +243,62 @@ const AdminManageUsers = () => {
             ),
         },
         {
+            title: 'Package Status',
+            key: 'status',
+            dataIndex: 'status',
+            width: 150,
+            align: "center",
+            filters: [
+                {
+                    text: 'PENDING',
+                    value: "PENDING",
+                },
+                {
+                    text: 'ACTIVE',
+                    value: "ACTIVE",
+                },
+                {
+                    text: 'INACTIVE',
+                    value: "INACTIVE",
+                },
+                {
+                    text: 'EXPIRED',
+                    value: "EXPIRED",
+                },
+            ],
+            onFilter: (value, record) => record.status === value,
+            render: (_, record) => (
+                <div>
+                    {record.status === "PENDING" &&
+                        <Tag icon={<SyncOutlined spin />} color="processing">
+                            PENDING
+                        </Tag>
+                    }
+                    {record.status === "ACTIVE" &&
+                        <Tag icon={<CheckCircleOutlined />} color="success">
+                            ACTIVE
+                        </Tag>
+                    }
+                    {record.status === "INACTIVE" &&
+                        <Tag icon={<ExclamationCircleOutlined />} color="warning">
+                            INACTIVE
+                        </Tag>
+                    }
+                    {record.status === "EXPIRED" &&
+                        <Tag icon={<ClockCircleOutlined />} color="cyan">
+                            EXPIRED
+                        </Tag>
+                    }
+                </div>
+            ),
+        },
+        {
             title: 'Action',
             key: 'action',
             width: 100,
             align: "center",
             render: (_, record) => (
-                <div>
+                <Space>
                     {
                         record.is_active === true
                             ?
@@ -244,7 +325,30 @@ const AdminManageUsers = () => {
                                     }} ></Button>
                             </Tooltip>
                     }
-                </div>
+                    {record.status === "PENDING" &&
+                        <Tooltip title="ACTIVE PACKAGE" color='green'>
+                            <Button
+                                icon={<UnlockOutlined />}
+                                danger
+                                onClick={() => {
+                                    showModalPackage({
+                                        userId: record.id,
+                                        status: "ACTIVE"
+                                    })
+                                }} />
+                        </Tooltip>}
+                    {record.status === "ACTIVE" &&
+                        <Tooltip title="EXPIRED PACKAGE" color='cyan'>
+                            <Button
+                                icon={<ClockCircleOutlined />}
+                                onClick={() => {
+                                    showModalPackage({
+                                        userId: record.id,
+                                        status: "EXPIRED"
+                                    })
+                                }} ></Button>
+                        </Tooltip>}
+                </Space>
             ),
         },
     ];
@@ -273,6 +377,20 @@ const AdminManageUsers = () => {
                 onOk={handleOk}
                 confirmLoading={isLoading}
                 onCancel={handleCancel}
+                centered
+                width={"400px"}
+                style={{
+                    zIndex: "9999",
+                }}
+            >
+                <p>Are you sure to do that?</p>
+            </Modal>
+            <Modal
+                title="Change Status Of Package"
+                open={isModalOpenPackage}
+                onOk={handleOkPackage}
+                confirmLoading={isUpdate}
+                onCancel={handleCancelPackage}
                 centered
                 width={"400px"}
                 style={{
