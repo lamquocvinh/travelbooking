@@ -10,6 +10,7 @@
 
   .rooms-list {
     .room-card {
+      position: relative;
       display: flex;
       align-items: center;
       margin: 0 0 40px;
@@ -113,6 +114,17 @@
             }
           }
         }
+      }
+
+      .number-rooms {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
       }
     }
   }

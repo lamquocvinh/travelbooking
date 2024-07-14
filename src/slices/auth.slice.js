@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { PURGE } from 'redux-persist';
 
 const authSlice = createSlice({
     name: "auth",
     initialState: {
-        token: null,
         userId: null,
         fullName: null,
         email: null,
@@ -13,11 +11,6 @@ const authSlice = createSlice({
         packageId: null,
     },
     reducers: {
-        setToken: (state, action) => {
-            state.token = action.payload;
-            sessionStorage.setItem("token", action.payload);
-        },
-
         setInfo: (state, action) => {
             state.userId = action.payload.userId;
             state.fullName = action.payload.fullName;
@@ -25,25 +18,19 @@ const authSlice = createSlice({
             state.phoneNumber = action.payload.phoneNumber;
             state.role = action.payload.role;
         },
-
         setInfoBooking: (state, action) => {
             state.fullName = action.payload.fullName;
             state.email = action.payload.email;
             state.phoneNumber = action.payload.phoneNumber;
         },
-
         setPackageId: (state, action) => {
             state.packageId = action.payload;
         },
-
-
-
         logOut: (state) => {
             sessionStorage.clear();
             localStorage.clear();
             localStorage.removeItem('packageId');
             localStorage.removeItem('token');
-            state.token = null;
             state.userId = null;
             state.fullName = null;
             state.email = null;
@@ -51,18 +38,8 @@ const authSlice = createSlice({
             state.role = null;
             state.packageId = null;
         },
-
-
     },
-    selectors: {
-        selectTokens: (auth) => auth.token,
-    },
-    // extraReducers: (builder) => {
-    //     builder.addCase(PURGE, () => initialState);
-    // },
 });
 
-export const { setToken, setInfo, setInfoBooking, logOut, setPackageId } = authSlice.actions;
+export const { setInfo, setInfoBooking, logOut, setPackageId } = authSlice.actions;
 export default authSlice.reducer;
-export const selectCurrentToken = (state) => state.auth.token;
-export const { selectTokens } = authSlice.selectors;

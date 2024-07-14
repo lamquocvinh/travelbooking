@@ -1,7 +1,7 @@
 import "./BookingForm.scss";
 import React, { useState } from 'react';
 import { Modal } from 'antd';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setRoomInfo } from "../../../../../slices/bookingSlice";
 
@@ -9,6 +9,7 @@ function BookingForm({ data }) {
     const token = useSelector(state => state?.auth?.token);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleClickBooking = () => {
@@ -28,12 +29,12 @@ function BookingForm({ data }) {
         <>
             <div className="form-booking" >
                 <span className="title">Book Your Room</span>
-                <button
+                {/* <button
                     className="btn add-to-cart"
                     type="button"
                 >
                     ADD TO CART
-                </button>
+                </button> */}
                 <button
                     className="btn"
                     onClick={handleClickBooking}
@@ -56,11 +57,15 @@ function BookingForm({ data }) {
                 <div className="member">
                     <div className="item">
                         <h3 className="sub-title">ALREADY A MEMBER?</h3>
-                        <Link className="btn" to={"/login"}>Sign In!</Link>
+                        <Link className="btn" to={"/login"} onClick={() => {
+                            sessionStorage.setItem("from", location.pathname)
+                        }}>Sign In!</Link>
                     </div>
                     <div className="item">
                         <h3 className="sub-title">DON'T HAVE AN ACCOUNT? CREATE ONE.</h3>
-                        <Link className="btn sign-up" to={"/register"}>Sign Up</Link>
+                        <Link className="btn sign-up" to={"/register"} onClick={() => {
+                            sessionStorage.setItem("from", location.pathname)
+                        }}> Sign Up</Link>
                     </div>
                 </div>
                 <div className="border"></div>
@@ -68,7 +73,7 @@ function BookingForm({ data }) {
                     <h3 className="sub-title">OR CONTINUE AS GUEST</h3>
                     <Link className="btn" to={"/payment"}>Continue As Guest</Link>
                 </div>
-            </Modal>
+            </Modal >
         </>
     );
 }

@@ -15,7 +15,6 @@ const Rental = () => {
                 </p>
                 <Link to={"/register"}><button className="button" >Discover more</button></Link>
             </div>
-
             <div className="img-rental">
                 <img className='img' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4CTQo_YrIea8Dfle4Jjh4Hf9aYTGxNePgCw&s" alt="rental" />
             </div>
