@@ -5,7 +5,6 @@ import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../slices/auth.slice";
-import { PURGE } from 'redux-persist';
 
 const CustomHeader = () => {
     const dispatch = useDispatch();
@@ -13,11 +12,10 @@ const CustomHeader = () => {
     const navigate = useNavigate();
     const selectedKey = location.pathname;
     const fullName = useSelector(state => state.auth.fullName);
-    const token = useSelector(state => state.auth.token);
+    const token = localStorage.getItem("token");
 
     const handleLogout = () => {
         dispatch(logOut());
-        // dispatch({ type: PURGE });
         notification.success({
             message: "Logout successfully",
             description: "See you again!",

@@ -8,7 +8,7 @@ import { notification, Button } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setInfo, setToken, setPackageId } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
+import { setInfo, setPackageId } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
 import IMG from "../../../assets/photo-3-1485152074061.jpg";
 import { FacebookOutlined } from "@ant-design/icons";
 import { FaGoogle } from 'react-icons/fa';
@@ -27,9 +27,8 @@ function LoginPage() {
     const [login, { isLoading }] = useLoginUserMutation();
     const loggingg = import.meta.env.VITE_LOGIN_GOOGLE;
     useEffect(() => {
-        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+        const token = localStorage.getItem('token');
         if (token) {
-            dispatch(setToken(token));
             navigate('/');
         }
     }, [navigate, dispatch]);
@@ -68,7 +67,6 @@ function LoginPage() {
                 password: dataObj.password,
             }).unwrap();
             if (result) {
-                dispatch(setToken(result?.data?.token));
                 dispatch(setInfo({
                     userId: result?.data?.id,
                     fullName: result?.data?.fullName,
@@ -76,7 +74,6 @@ function LoginPage() {
                     phoneNumber: result?.data?.phoneNumber,
                     role: result?.data?.roles?.[0],
                 }));
-                dispatch(setToken(result.data.token));
                 dispatch(setPackageId(result.data.package_id));
                 localStorage.setItem("token", result.data.token);
 

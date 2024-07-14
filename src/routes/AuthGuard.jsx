@@ -1,12 +1,10 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { selectCurrentToken } from "../slices/auth.slice";
 import { useSelector } from "react-redux";
 
 const AuthGuard = ({ allowedRoles, children }) => {
-  const tokenFromRedux = useSelector(selectCurrentToken);
   const role = useSelector(state => state.auth.role);
   const location = useLocation();
-  const token = tokenFromRedux || sessionStorage.getItem('token') || localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
   if (!token) {
     return <Navigate to="/login" state={{ from: location }} replace />;
