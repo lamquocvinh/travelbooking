@@ -1,17 +1,18 @@
 import React from 'react';
 import {
     SolutionOutlined,
-    EditOutlined,
     DollarOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useCheckExpirationQuery } from '../../services/packageAPI';
+
 const { Content, Sider } = Layout;
 
 const Partner = () => {
     const location = useLocation();
-    const packageId = useSelector((state) => state.auth.packageId);
+    const { data } = useCheckExpirationQuery();
+    const checkPackage = data?.status
     const determineActiveKey = (path) => {
         if (path.startsWith('/partner/manage-hotel')) {
             return '/partner/manage-hotel';
@@ -51,7 +52,7 @@ const Partner = () => {
                             <Link to="/partner/package">Buy Package</Link>
                         </Menu.Item>
                         <Menu.Divider />
-                        {packageId != null &&
+                        {checkPackage === "OK" &&
                             <Menu.Item className="dashboard-content-sider-menu-item" key="/partner/manage-hotel" icon={<SolutionOutlined style={{ fontSize: '20px' }} />}>
                                 <Link to="/partner/manage-hotel">Manage Hotel</Link>
                             </Menu.Item>

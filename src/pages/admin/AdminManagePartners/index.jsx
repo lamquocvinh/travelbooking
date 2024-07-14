@@ -337,7 +337,7 @@ const AdminManageUsers = () => {
                                     })
                                 }} />
                         </Tooltip>}
-                    {record.status === "ACTIVE" &&
+                    {/* {record.status === "ACTIVE" &&
                         <Tooltip title="EXPIRED PACKAGE" color='cyan'>
                             <Button
                                 icon={<ClockCircleOutlined />}
@@ -347,7 +347,7 @@ const AdminManageUsers = () => {
                                         status: "EXPIRED"
                                     })
                                 }} ></Button>
-                        </Tooltip>}
+                        </Tooltip>} */}
                 </Space>
             ),
         },
