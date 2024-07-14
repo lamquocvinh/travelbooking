@@ -65,6 +65,12 @@ export const packageApi = createApi({
                 method: "PUT",
             }),
         }),
+        checkExpiration: builder.query({
+            query: () => ({
+                url: `packages/check-package-expiration`,
+                method: "POST",
+            }),
+        }),
     }),
 });
 
@@ -74,5 +80,6 @@ export const {
     useCreatePackageMutation,
     useEditPackageMutation,
     useRegisterPackageMutation,
-    useUpdateStatusPackageMutation
+    useUpdateStatusPackageMutation,
+    useCheckExpirationQuery,
 } = packageApi;
