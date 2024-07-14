@@ -272,6 +272,8 @@ const ViewBooking = () => {
                             newStatus = 'CHECKED_IN';
                         } else if (record.status === 'CHECKED_IN') {
                             newStatus = 'CHECKED_OUT';
+                        } else if (record.status === 'PENDING') {
+                            newStatus = 'PAID';
                         }
                         handleStatusChange(newStatus, record?.["booking-id"]);
                     }} ></Button>
