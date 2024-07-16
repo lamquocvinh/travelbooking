@@ -1,57 +1,35 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import "./AdminManageRoom.scss"
-import { Table, Tag, Button, Popover, Modal, notification, Input, Space } from 'antd';
+import { Table, Tag, Button, Input, Space, Tooltip } from 'antd';
+import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
-    PlusCircleOutlined,
     CloseCircleOutlined,
     CheckCircleOutlined,
     SyncOutlined,
-    EditOutlined,
-    DeleteOutlined,
-    MenuOutlined
+    EyeOutlined
 } from '@ant-design/icons';
 import { Link, useParams } from 'react-router-dom';
 import { roomApi } from '../../../services/roomAPI';
 
-const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-};
-
 const AdminManageRoom = () => {
     const { hotelId } = useParams();
-    const { data, refetch } = roomApi.useGetAllRoomQuery(hotelId);
-    const [changeStatus, { isLoading }] = roomApi.useUpdateStatusMutation();
-    const [hasStatusChanged, setHasStatusChanged] = useState(false);
+    const searchInput = useRef(null);
+    const { data, isLoading: isFetching } = roomApi.useGetAllRoomQuery(hotelId);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [statusRoom, setStatusRoom] = useState({});
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-        setIsModalOpen(true);
+
+    // ham xu ly search
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
     };
-    const handleOk = async () => {
-        try {
-            const result = await changeStatus(statusRoom);
-            if (result.data.status === "OK") {
-                notification.success({
-                    message: "Change status successfully!"
-                });
-                setHasStatusChanged(true);
-            }
-        } catch (error) {
-            console.log(error);
-            notification.error({
-                message: "Some thing wrong!"
-            });
-        }
-        setIsModalOpen(false);
+    const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText('');
     };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-    const searchInput = useRef(null);
     const getColumnSearchProps = (dataIndex, customRender) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div
@@ -166,27 +144,29 @@ const AdminManageRoom = () => {
             title: 'Room Type',
             dataIndex: 'room_type_name',
             key: 'room_type_name',
-            ...getColumnSearchProps('room_type_name', (text, record) => (
-                <Link to={`room-details/${record.id}`}>{text}</Link>
-            )),
+            width: "40%",
+            ...getColumnSearchProps('room_type_name', (text, record) => record.room_type_name),
         },
-
         {
-            title: 'Number Of Rooms',
+            title: 'Quantity',
             dataIndex: 'number_of_rooms',
             key: 'number_of_rooms',
+            width: 150,
             sorter: (a, b) => a.number_of_rooms - b.number_of_rooms,
         },
         {
             title: 'Price',
             dataIndex: 'room_price',
             key: 'room_price',
-            ...getColumnSearchProps('room_price', (text, record) => record.room_price),
+            width: 150,
+            ...getColumnSearchProps('room_price', (text, record) => record?.room_price?.toLocaleString()),
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            width: 150,
+            align: "center",
             filters: [
                 {
                     text: 'UNAVAILABLE',
@@ -225,97 +205,45 @@ const AdminManageRoom = () => {
         {
             title: 'Action',
             key: 'action',
-            width: '15%',
+            width: 100,
+            align: "center",
             render: (_, record) => (
-                < Popover content={
-                    < div >
-                        <Link className='link' to={`${record.id}/update`}>
-                            <Button
-                                className='action-item'
-                                icon={<EditOutlined />}
-                            >
-                                <span className='link'>Update</span>
-                            </Button>
-                        </Link>
-
-                        {
-                            record.status === "DISABLED" && <div>
-                                <Button
-                                    className='action-item'
-                                    style={{ marginTop: '5px' }}
-                                    icon={<CheckCircleOutlined />}
-                                    onClick={() => {
-                                        setStatusRoom({
-                                            roomTypeId: record.id,
-                                            status: `"AVAILABLE"`
-                                        });
-                                        showModal();
-                                    }}
-                                >
-                                    <span className='link'>Available</span>
-                                </Button>
-                            </div>
-                        }
-                        {
-                            record.status === "AVAILABLE" && <div>
-                                <Button
-                                    className='action-item'
-                                    style={{ marginTop: '5px' }}
-                                    icon={<CloseCircleOutlined />}
-                                    onClick={() => {
-                                        setStatusRoom({
-                                            roomTypeId: record.id,
-                                            status: `"DISABLED"`
-                                        });
-                                        showModal();
-                                    }}
-                                >
-                                    <span className='link'>Disabled</span>
-                                </Button>
-                            </div>
-                        }
-                    </div >
-                } trigger="hover" placement='left'>
-                    <Button icon={<MenuOutlined />}></Button>
-                </Popover>
+                <Tooltip title="View Details" color='blue'>
+                    <Link to={`room-details/${record.id}`}>
+                        <Button
+                            icon={<EyeOutlined />}
+                        >
+                        </Button>
+                    </Link>
+                </Tooltip>
             ),
         },
     ];
-
-    useEffect(() => {
-        if (hasStatusChanged) { // Đúng điều kiện
-            refetch();
-            setHasStatusChanged(false); // reset trạng thái
-        }
-    }, [hasStatusChanged, refetch]);
+    const transformedData = data?.data?.content?.map((item, index) => ({
+        ...item,
+        key: index, // add key property
+    }));
+    const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+    };
 
     return (
-        <div className='manage-hotel-wrapper'>
-            <p><h2 className='title'>List of Rooms</h2></p>
-
+        <div className='admin-manage-room-wrapper'>
+            <div className='header-admin-room'>
+                <h2 className='title'>List of Rooms</h2>
+                <button className="item cancel" type="reset" onClick={() => {
+                    window.history.back();
+                }}>
+                    <CloseCircleOutlined />
+                </button>
+            </div>
             <Table
+                loading={isFetching}
                 bordered={true}
                 columns={columns}
-                dataSource={data?.data?.content || []}
+                dataSource={transformedData}
                 onChange={onChange}
-                scroll={{
-                    y: 440,
-                }}
             />
-            <Modal
-                title="Change Status Of Room"
-                open={isModalOpen}
-                confirmLoading={isLoading}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                centered
-                width={"400px"}
-                style={{
-                    zIndex: "9999",
-                }}
-            >
-                <p>Are you sure to do that?</p>
-            </Modal>
         </div>
     )
 }

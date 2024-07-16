@@ -1,6 +1,5 @@
-import {  Spin } from "antd";
+import { Spin } from "antd";
 import { lazy, Suspense } from "react";
-// import LoadingScreen from "../components/Loading";
 
 const Loadable = ({ loader }) => {
   const Component = lazy(loader);
