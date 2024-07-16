@@ -35,6 +35,7 @@ const schema = yup.object().shape({
 function UpdateRoom() {
     const dispatch = useDispatch();
     const { id } = useParams();
+    const params = useParams();
     const { data } = roomApi.useGetRoomDetailQuery(id);
     const [Update] = roomApi.useUpdateRoomMutation();
     const {
@@ -98,6 +99,7 @@ function UpdateRoom() {
                 capacity_per_room: formData.capacity_per_room,
                 conveniences: [conveniences],
                 types: types,
+                hotel_id: params.hotelId,
             };
 
             // Call API to update room

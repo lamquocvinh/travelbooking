@@ -290,11 +290,11 @@ export const router = createBrowserRouter([
               },
 
               {
-                path: "manage-hotel/:id/manage-room/room-details/:id",
+                path: "manage-hotel/:hotelId/manage-room/room-details/:id",
                 element: RoomDetails
               },
               {
-                path: "manage-hotel/:id/manage-room/:id/update",
+                path: "manage-hotel/:hotelId/manage-room/:id/update",
                 element: UpdateRoom
               },
               {
