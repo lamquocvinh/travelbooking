@@ -1,0 +1,20 @@
+.admin-manage-room-wrapper {
+  .header-admin-room {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      margin: 0 0 16px 0;
+    }
+
+    .cancel {
+      padding: 12px;
+      background-color: white;
+      border: none;
+      color: var(--blue-main-color);
+      font-size: x-large;
+      cursor: pointer;
+    }
+  }
+}

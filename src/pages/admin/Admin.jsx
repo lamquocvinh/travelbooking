@@ -5,7 +5,6 @@ import {
     BankOutlined,
     UserOutlined,
     UsergroupAddOutlined,
-    WifiOutlined,
     InboxOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
@@ -55,13 +54,6 @@ const items = [
         ),
         key: "/admin/manage-packages",
         icon: <InboxOutlined style={{ fontSize: '20px' }} />,
-    },
-    {
-        label: (
-            <Link to="/admin/manage-conveniences">Conveniences</Link>
-        ),
-        key: "/admin/manage-conveniences",
-        icon: <WifiOutlined style={{ fontSize: '20px' }} />,
     },
 ];
 
