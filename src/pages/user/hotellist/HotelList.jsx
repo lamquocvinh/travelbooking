@@ -120,18 +120,18 @@ const HotelList = () => {
 
     const handleRoomsChange = (value) => {
         dispatch(setRooms(value));
-        if (guests > value * 6) {
-            dispatch(setGuests(value * 6));
+        if (guests > value * 10) {
+            dispatch(setGuests(value * 10));
         }
     };
 
     const handleGuestsChange = (value) => {
-        if (value > rooms * 6) {
+        if (value > rooms * 10) {
             notification.warning({
                 message: "Warning!",
-                description: "Mỗi phòng tối đa 6 người."
+                description: "Mỗi phòng tối đa 10 người."
             });
-            dispatch(setGuests(rooms * 6));
+            dispatch(setGuests(rooms * 10));
         } else {
             dispatch(setGuests(value));
         }

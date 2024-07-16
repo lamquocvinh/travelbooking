@@ -318,19 +318,7 @@ const AdminManageHotels = () => {
                                         >
                                             <span className='link'>INACTIVE</span>
                                         </Button>
-                                        <Button
-                                            className='action-item rejected'
-                                            icon={<CloseCircleOutlined />}
-                                            onClick={() => {
-                                                setStatusHotel({
-                                                    hotelId: record.id,
-                                                    status: `"CLOSED"`
-                                                })
-                                                showModal()
-                                            }}
-                                        >
-                                            <span className='link'>CLOSED</span>
-                                        </Button>
+
                                     </div>
                                 }
                                 {
@@ -348,19 +336,7 @@ const AdminManageHotels = () => {
                                         >
                                             <span className='link'>ACTIVE</span>
                                         </Button>
-                                        <Button
-                                            className='action-item rejected'
-                                            icon={<CloseCircleOutlined />}
-                                            onClick={() => {
-                                                setStatusHotel({
-                                                    hotelId: record.id,
-                                                    status: `"CLOSED"`
-                                                })
-                                                showModal()
-                                            }}
-                                        >
-                                            <span className='link'>CLOSED</span>
-                                        </Button>
+
                                     </div>
                                 }
                                 {
