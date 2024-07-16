@@ -10,6 +10,7 @@ import {
     UnlockOutlined,
     SyncOutlined,
     ClockCircleOutlined,
+    EyeOutlined,
 } from '@ant-design/icons';
 import { useChangeStatusUserMutation, useGetPartnersQuery } from '../../../services/userAPI';
 import { useUpdateStatusPackageMutation } from '../../../services/packageAPI';
@@ -19,7 +20,7 @@ const AdminManageUsers = () => {
     // hook call api
     const [changeStatus, { isLoading }] = useChangeStatusUserMutation();
     const [updateStatus, { isLoading: isUpdate }] = useUpdateStatusPackageMutation();
-    const { data, refetch } = useGetPartnersQuery();
+    const { data, isLoading: isFetching, refetch } = useGetPartnersQuery();
 
     // search in table
     const [searchText, setSearchText] = useState('');
@@ -183,7 +184,7 @@ const AdminManageUsers = () => {
                     textToHighlight={text ? text.toString() : ''}
                 />
             ) : (
-                dataIndex === "full_name" ? <Link to={`partner-details/${record.id}`}>{text}</Link> : text
+                text
             ),
     });
 
@@ -299,32 +300,30 @@ const AdminManageUsers = () => {
             align: "center",
             render: (_, record) => (
                 <Space>
-                    {
-                        record.is_active === true
-                            ?
-                            <Tooltip title="INACTIVE USER" color='red'>
-                                <Button
-                                    icon={<LockOutlined />}
-                                    danger
-                                    onClick={() => {
-                                        showModal({
-                                            userId: record.id,
-                                            status: 0
-                                        })
-                                    }} />
-                            </Tooltip>
-                            :
-                            <Tooltip title="ACTIVE USER" color='green'>
-                                <Button
-                                    icon={<UnlockOutlined />}
-                                    onClick={() => {
-                                        showModal({
-                                            userId: record.id,
-                                            status: 1
-                                        })
-                                    }} ></Button>
-                            </Tooltip>
-                    }
+                    {record.is_active === true
+                        ?
+                        <Tooltip title="INACTIVE USER" color='red'>
+                            <Button
+                                icon={<LockOutlined />}
+                                danger
+                                onClick={() => {
+                                    showModal({
+                                        userId: record.id,
+                                        status: 0
+                                    })
+                                }} />
+                        </Tooltip>
+                        :
+                        <Tooltip title="ACTIVE USER" color='green'>
+                            <Button
+                                icon={<UnlockOutlined />}
+                                onClick={() => {
+                                    showModal({
+                                        userId: record.id,
+                                        status: 1
+                                    })
+                                }} ></Button>
+                        </Tooltip>}
                     {record.status === "PENDING" &&
                         <Tooltip title="ACTIVE PACKAGE" color='green'>
                             <Button
@@ -348,6 +347,14 @@ const AdminManageUsers = () => {
                                     })
                                 }} ></Button>
                         </Tooltip>} */}
+                    <Tooltip title="View Details" color='blue'>
+                        <Link to={`partner-details/${record.id}`}>
+                            <Button
+                                icon={<EyeOutlined />}
+                            >
+                            </Button>
+                        </Link>
+                    </Tooltip>
                 </Space>
             ),
         },
@@ -366,6 +373,7 @@ const AdminManageUsers = () => {
         <div className='admin-manage-users-wrapper'>
             <h2 className='title'>List of partners:</h2>
             <Table
+                loading={isFetching}
                 bordered={true}
                 columns={columns}
                 dataSource={transformedData}
@@ -399,7 +407,7 @@ const AdminManageUsers = () => {
             >
                 <p>Are you sure to do that?</p>
             </Modal>
-        </div>
+        </div >
     )
 }
 

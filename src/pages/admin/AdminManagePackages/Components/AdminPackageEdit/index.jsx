@@ -20,7 +20,7 @@ const schema = yup.object().shape({
 function AdminPackageEdit() {
     const navigate = useNavigate()
     const params = useParams();
-    const { data } = useGetPackageDetailsQuery(params.packageId);
+    const { data, isFetching } = useGetPackageDetailsQuery(params.packageId);
     const [edit, { isLoading }] = useEditPackageMutation();
 
     const {
@@ -78,28 +78,30 @@ function AdminPackageEdit() {
                             <CloseCircleOutlined />
                         </button>
                     </div>
-                    <div className="details">
-                        <div className="item-50">
-                            <label>Package name</label>
-                            <input className="input" {...register("name")}></input>
-                            <p className="error-message">{errors.name?.message}</p>
+                    <Spin spinning={isFetching}>
+                        <div className="details">
+                            <div className="item-50">
+                                <label>Package name</label>
+                                <input className="input" {...register("name")}></input>
+                                <p className="error-message">{errors.name?.message}</p>
+                            </div>
+                            <div className="item-25">
+                                <label>Duration (Days)</label>
+                                <input className="input" type="number" {...register("duration")} defaultValue={0}></input>
+                                <p className="error-message">{errors.duration?.message}</p>
+                            </div>
+                            <div className="item-25">
+                                <label>Price (VND)</label>
+                                <input className="input" type="number" {...register("price")} defaultValue={0}></input>
+                                <p className="error-message">{errors.price?.message}</p>
+                            </div>
+                            <div className="item-100">
+                                <label>Description</label>
+                                <input className="input" {...register("description")}></input>
+                                <p className="error-message">{errors.description?.message}</p>
+                            </div>
                         </div>
-                        <div className="item-25">
-                            <label>Duration (Days)</label>
-                            <input className="input" type="number" {...register("duration")} defaultValue={0}></input>
-                            <p className="error-message">{errors.duration?.message}</p>
-                        </div>
-                        <div className="item-25">
-                            <label>Price (VND)</label>
-                            <input className="input" type="number" {...register("price")} defaultValue={0}></input>
-                            <p className="error-message">{errors.price?.message}</p>
-                        </div>
-                        <div className="item-100">
-                            <label>Description</label>
-                            <input className="input" {...register("description")}></input>
-                            <p className="error-message">{errors.description?.message}</p>
-                        </div>
-                    </div>
+                    </Spin>
                     <div className="btn-group">
                         <button className="cancel" type="reset" onClick={() => {
                             reset();
