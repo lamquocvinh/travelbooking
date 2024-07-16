@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import "./AdminManageHotels.scss";
-import { Table, Tag, Button, Popover, Modal, notification, Input, Space } from 'antd';
+import { Table, Tag, Button, Popover, Modal, notification, Input, Space, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
@@ -9,7 +9,8 @@ import {
     SyncOutlined,
     CloseCircleOutlined,
     MenuOutlined,
-    BankOutlined
+    BankOutlined,
+    EyeOutlined
 } from '@ant-design/icons';
 import { useChangeStatusHotelMutation, useGetHotelForAdminQuery } from '../../../services/hotelAPI';
 import { Link } from 'react-router-dom';
@@ -177,9 +178,7 @@ const AdminManageHotels = () => {
             title: 'Hotel Name',
             dataIndex: 'hotel_name',
             key: 'hotel_name',
-            ...getColumnSearchProps('hotel_name', (text, record) => (
-                <Link to={`hotel-details/${record.id}`}>{text}</Link>
-            )),
+            ...getColumnSearchProps('hotel_name'),
         },
         {
             title: 'Address',
@@ -268,7 +267,7 @@ const AdminManageHotels = () => {
             width: 100,
             align: "center",
             render: (_, record) => (
-                <>
+                <Space>
                     {
                         (record.status === "APPROVED" || record.status === "REJECTED") ||
                         < Popover content={
@@ -369,7 +368,12 @@ const AdminManageHotels = () => {
                             <Button icon={<MenuOutlined />}></Button>
                         </Popover >
                     }
-                </>
+                    <Tooltip title="Details" color='blue'>
+                        <Link to={`hotel-details/${record["id"]}`}>
+                            <Button icon={<EyeOutlined />}></Button>
+                        </Link>
+                    </Tooltip>
+                </Space>
             ),
         },
     ];
