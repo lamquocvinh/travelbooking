@@ -19,7 +19,7 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 const ViewBooking = () => {
     const { hotelId } = useParams();
-    const { data, refetch } = useGetBookingByHotelQuery(hotelId);
+    const { data, refetch, isLoading } = useGetBookingByHotelQuery(hotelId);
     const [status] = useChangeStatusMutation()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -288,6 +288,7 @@ const ViewBooking = () => {
             <Table
                 bordered={true}
                 columns={columns}
+                loading={isLoading}
                 dataSource={data?.data?.content || []}
                 onChange={onChange}
                 scroll={{

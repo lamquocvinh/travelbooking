@@ -1,7 +1,7 @@
 import "./PartnerHotelDetails.scss";
 import { useGetHotelDetailsForAdminQuery } from '../../../../../services/hotelAPI';
 import { useParams } from "react-router-dom";
-import { Rate, Tag } from 'antd';
+import { Rate, Tag, Spin } from 'antd';
 import {
     CheckCircleOutlined,
     ExclamationCircleOutlined,
@@ -11,7 +11,7 @@ import {
 
 function PartnerHotelDetails() {
     const params = useParams();
-    const { data } = useGetHotelDetailsForAdminQuery(params.hotelId);
+    const { data, isLoading } = useGetHotelDetailsForAdminQuery(params.hotelId);
 
     // Sử dụng reduce để gộp các key có giá trị là true thành một mảng duy nhất
     const finalConveniences = data?.data?.conveniences.reduce((acc, convenience) => {
@@ -22,6 +22,10 @@ function PartnerHotelDetails() {
         });
         return acc;
     }, []);
+
+    if (isLoading) {
+        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin>;</div>
+    }
 
     return (
         <div className="partner-hotel-details-wrapper">

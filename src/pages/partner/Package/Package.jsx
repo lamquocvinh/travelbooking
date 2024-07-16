@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Package.scss';
 import { useGetAllPackagesQuery, useRegisterPackageMutation } from '../../../services/packageAPI';
 import { useGetPaymentUrlForPackageMutation } from "../../../services/paymentAPI";
@@ -9,7 +9,7 @@ import {
     CloseCircleOutlined,
 } from '@ant-design/icons';
 
-import { notification } from "antd";
+import { notification, Spin } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from "../../../slices/auth.slice";
 
@@ -25,6 +25,7 @@ const Packet = () => {
     const [bank, setBank] = useState("");
     const [selectedPackageId, setSelectedPackageId] = useState(null); // New state for selected package ID
     const [selectedPackagePrice, setSelectedPackagePrice] = useState(0); // New state for selected package price
+    const [isLoading, setIsLoading] = useState(true);
 
     //lấy data từ redux
     const phoneNumber = useSelector(state => state.auth.phoneNumber);
@@ -35,6 +36,12 @@ const Packet = () => {
     const packageEnd = useSelector(state => state.auth.package_end_date);
     const { data: check } = packageIdCheck ? useCheckExpirationQuery() : { data: null };
     const { data: dataDetails } = useGetPackageDetailsQuery(packageIdCheck);
+
+    useEffect(() => {
+        if (data && (!packageIdCheck || check)) {
+            setIsLoading(false);
+        }
+    }, [data, check, packageIdCheck]);
 
     const handleRegister = async () => {
         if (!selectedPackageId || !selectedPackagePrice) {
@@ -70,11 +77,13 @@ const Packet = () => {
                             description: "You will be redirected to the payment page. After completing the payment, you will be logged out.",
                         });
 
-                        navigate('/login');
+
                     }, 2000);
 
                     window.location.href = paymentUrl;
+                    navigate('/login');
                     dispatch(logOut());
+
                 } else {
                     notification.error({
                         message: "Error",
@@ -99,6 +108,10 @@ const Packet = () => {
         setSelectedPackageId(packageId);
         setSelectedPackagePrice(packagePrice);
     };
+
+    if (isLoading) {
+        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin>;</div>
+    }
 
 
     if (check?.message === "Package is still valid") {

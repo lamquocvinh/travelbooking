@@ -24,10 +24,8 @@ const ManageHotel = () => {
     const navigate = useNavigate()
 
     // call api
-    const [changeStatus, { isLoading }] = useChangeStatusHotelMutation();
-    const { data, refetch } = useGetHotelForPartnerQuery();
-    // trạng thái để theo dõi thay đổi trạng thái của khách sạn
-    const [hasStatusChanged, setHasStatusChanged] = useState(false);
+    const [changeStatus] = useChangeStatusHotelMutation();
+    const { data, refetch, isLoading } = useGetHotelForPartnerQuery();
     const [hotelCount, setHotelCount] = useState(0); // to track number of hotels
 
     // search in table
@@ -56,7 +54,7 @@ const ManageHotel = () => {
                 notification.success({
                     message: "Change status successfully!"
                 });
-                setHasStatusChanged(true); // cập nhật trạng thái đã thay đổi
+                refetch // cập nhật trạng thái đã thay đổi
             }
         } catch (error) {
             console.log(error);
@@ -368,13 +366,7 @@ const ManageHotel = () => {
         },
     ];
 
-    //render lại trang khi đổi trạng thái
-    useEffect(() => {
-        if (hasStatusChanged) {
-            refetch();
-            setHasStatusChanged(false);
-        }
-    }, [hasStatusChanged, refetch]);
+
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -411,6 +403,7 @@ const ManageHotel = () => {
                 bordered={true}
                 columns={columns}
                 dataSource={data?.data?.content}
+                loading={isLoading}
             />
             <Modal
                 title="Change Status Of Hotel"

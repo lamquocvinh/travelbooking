@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { VietnameseProvinces } from "../../../utils/utils";
 import { useDispatch } from "react-redux";
-import { notification, Button, Upload, Form } from "antd";
+import { notification, Button, Upload, Form, Spin } from "antd";
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { hotelApi } from "../../../services/hotelAPI";
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -116,7 +116,7 @@ function CreateHotel() {
     const [position, setPosition] = useState(null);
 
     const [fileList, setFileList] = useState([]);
-    const [putImage] = hotelApi.usePutHotelImageMutation();
+    const [putImage, { isLoading: isImageLaoding }] = hotelApi.usePutHotelImageMutation();
     const [form] = Form.useForm(); // Tạo instance của form
     const handleReset = () => {
         form.resetFields(); // Reset form về trạng thái ban đầu
@@ -191,6 +191,10 @@ function CreateHotel() {
             });
         }
     };
+
+    if (isLoading || isLicenseLoading || isImageLaoding) {
+        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin>;</div>
+    }
 
     return (
         <div className="create-hotel-wrapper">
