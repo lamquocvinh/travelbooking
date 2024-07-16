@@ -1,32 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Spin, Rate, Pagination, notification } from 'antd';
 import './HotelListContent.scss';
 
 const HotelListItems = ({ data, filters, isLoading, isFiltering, currentPage, pageSize, handlePageChange, searches }) => {
-
-
     const renderContent = () => {
-        const [notificationShown, setNotificationShown] = useState(false);
         useEffect(() => {
-            if (!notificationShown) {
-                if (filters?.data?.content?.length === 0) {
-                    notification.warning({
-                        message: "Error",
-                        description: "There are no hotels match your require.",
-                    });
-                } else if (searches?.data?.content?.length === 0) {
-                    notification.warning({
-                        message: "Error",
-                        description: "There are no hotels match your require.",
-                    });
-                }
+            if (filters?.data?.content?.length === 0) {
+                notification.warning({
+                    message: "Error",
+                    description: "There are no hotels match your require.",
+                });
+            } else if (searches?.data?.content?.length === 0) {
+                notification.warning({
+                    message: "Error",
+                    description: "There are no hotels match your require.",
+                });
             }
-        }, [filters, searches, notificationShown]);
+        }, [filters, searches]);
         switch (true) {
-            case isFiltering || isLoading:
-                return <Spin spinning={true}>Loading...</Spin>;
-
             case filters?.data?.content?.length > 0:
                 return filters.data.content.map((hotel) => (
                     <div key={hotel?.id} className="hotel-item">
@@ -80,7 +72,6 @@ const HotelListItems = ({ data, filters, isLoading, isFiltering, currentPage, pa
                         </div>
                     </div>
                 ));
-
             case searches?.data?.content?.length > 0:
                 return searches.data.content.map((hotel) => (
                     <div key={hotel?.id} className="hotel-item">
@@ -134,7 +125,6 @@ const HotelListItems = ({ data, filters, isLoading, isFiltering, currentPage, pa
                         </div>
                     </div>
                 ));
-
             case data?.data?.content?.length > 0:
                 return data.data.content.map((hotel) => (
                     <div key={hotel?.id} className="hotel-item">
@@ -188,9 +178,8 @@ const HotelListItems = ({ data, filters, isLoading, isFiltering, currentPage, pa
                         </div>
                     </div>
                 ));
-
             default:
-                return <p className="no-data">No hotel available</p>;
+                return <p className="no-data">{(isLoading || isFiltering) || "No hotel available"}</p>;
         }
     };
 

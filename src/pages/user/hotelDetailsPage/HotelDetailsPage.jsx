@@ -84,12 +84,15 @@ const RoomlistDetail = () => {
                     <FeedbackPage dataName={Feedback}></FeedbackPage>
                 </Spin>
                 :
-                <Result
-                    status="404"
-                    title="404"
-                    subTitle="Sorry, the page you visited does not exist."
-                    extra={<Link to={"/"} className="back-home">Back Home</Link>}
-                />
+                <Spin spinning={isLoading}>
+                    {isLoading ||
+                        <Result
+                            status="404"
+                            title="404"
+                            subTitle="Sorry, the page you visited does not exist."
+                            extra={<Link to={"/"} className="back-home">Back Home</Link>}
+                        />}
+                </Spin>
             }
             <FloatButton.BackTop visibilityHeight={800} />
         </div>
