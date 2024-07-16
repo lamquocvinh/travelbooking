@@ -23,13 +23,24 @@ const schema = yup.object().shape({
         toiletries: yup.boolean(),
         kitchen: yup.boolean(),
         wardrobe: yup.boolean(),
-    }),
+    }).test(
+        'at-least-one-true',
+        'At least one convenience must be selected',
+        value => Object.values(value).some(v => v === true)
+    ),
     types: yup.object().shape({
         luxury: yup.boolean(),
         single_bedroom: yup.boolean(),
         twin_bedroom: yup.boolean(),
         double_bedroom: yup.boolean(),
-    }),
+    }).test(
+        'at-least-one-bedroom',
+        'At least one of single_bedroom, twin_bedroom, or double_bedroom must be selected',
+        value => {
+            const { luxury, ...bedrooms } = value;
+            return Object.values(bedrooms).some(v => v === true);
+        }
+    ),
 });
 
 function CreateRoom() {
