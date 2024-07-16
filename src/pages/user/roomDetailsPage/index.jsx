@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import "./RoomDetailsPage.scss";
-import { Rate, Avatar, FloatButton, Spin, Result } from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import { FloatButton, Spin, Result } from "antd";
 import BookingForm from "./Components/BookingForm";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetRoomDetailQuery } from "../../../services/roomAPI";
@@ -27,10 +26,6 @@ function RoomDetailsPage() {
                     <div className="container">
                         <div className="heading">
                             <h1 className="name">{data?.data?.room_type_name}</h1>
-                            {/* <div className="feedback">
-                            <Rate className="rate" value={5} />
-                            <span className="review">(1 review)</span>
-                        </div> */}
                         </div>
                         <div className="overview">
                             <span className="item">Max: {data?.data?.capacity_per_room} Guests</span>
@@ -77,52 +72,19 @@ function RoomDetailsPage() {
                             <p className="description">There are still many other options waiting for you. There are countless other hotels and accommodations available.</p>
                             <button className="see-more" onClick={() => { navigate(-1) }}>Let's see more rooms.</button>
                         </div>
-                        {/* <div className="feedback">
-                        <div className="total">
-                            <div className="review">
-                                <span className="count">2 Reviews</span>
-                                <Rate className="rate" value={5} disabled />
-                            </div>
-                            <div className="sort">
-                                <span className="title">Sort By:</span>
-                                <button className="btn">Rating</button>
-                                <button className="btn">Date</button>
-                            </div>
-                        </div>
-                        <div className="list">
-                            <div className="item">
-                                <div className="user">
-                                    <Avatar className="avatar" size={90} icon={<UserOutlined />} />
-                                    <span className="name">Jane Smith</span>
-                                </div>
-                                <div className="review">
-                                    <p className="content">Nice room!</p>
-                                    <Rate className="rate" value={5} disabled />
-                                    <p className="date">August 9, 2022</p>
-                                </div>
-                            </div>
-                            <div className="item">
-                                <div className="user">
-                                    <Avatar className="avatar" size={90} icon={<UserOutlined />} />
-                                    <span className="name">Jane Smith</span>
-                                </div>
-                                <div className="review">
-                                    <p className="content">Nice room!</p>
-                                    <Rate className="rate" value={5} disabled />
-                                    <p className="date">August 9, 2022</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
                     </div>
                 </Spin>
                 :
-                <Result
-                    status="404"
-                    title="404"
-                    subTitle="Sorry, the page you visited does not exist."
-                    extra={<Link to={"/"} className="back-home">Back Home</Link>}
-                />
+                <Spin spinning={isLoading}>
+                    {isLoading ||
+                        <Result
+                            status="404"
+                            title="404"
+                            subTitle="Sorry, the page you visited does not exist."
+                            extra={<Link to={"/"} className="back-home">Back Home</Link>}
+                        />}
+                </Spin>
+
             }
             <FloatButton.BackTop visibilityHeight={800} />
         </div >

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGetHotelWithPageQuery, usePostFilterHotelMutation, useSearchHotelsMutation } from '../../../services/hotelAPI';
-import { Form, Link } from 'react-router-dom';
+import { Form } from 'react-router-dom';
 import './HotelList.scss';
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +9,7 @@ import { Col, Row, DatePicker, InputNumber, Checkbox, Select, Rate, Button, noti
 import { VietnameseProvinces } from "../../../utils/utils";
 import HotelListContent from './component/HotelListContent';
 import dayjs from 'dayjs';
-import moment from 'moment';
+
 const { RangePicker } = DatePicker;
 const dateFormat = 'DD/MM/YYYY';
 const storageFormat = 'YYYY-MM-DD';
@@ -32,11 +32,9 @@ const HotelList = () => {
     const { data, isLoading } = useGetHotelWithPageQuery({ pageNumber: currentPage, pageSize });
 
     const [filterOptions, { isLoading: isFiltering }] = usePostFilterHotelMutation();
-    const [selectedFacilities, setSelectedFacilities] = useState([]);
-    const [selectedRatings, setSelectedRatings] = useState(null);
-
-
     const [searchHotels] = useSearchHotelsMutation();
+    const [selectedFacilities, setSelectedFacilities] = useState([]);
+    const [selectedRatings, setSelectedRatings] = useState(0);
 
     const handlePageChange = (page) => {
         setCurrentPage(page - 1);
@@ -97,7 +95,6 @@ const HotelList = () => {
             console.log("Invalid search parameters");
             return;
         }
-
         const searchData = {
             province: destination,
             numPeople: guests,
@@ -115,8 +112,6 @@ const HotelList = () => {
             setSearches({ data: { content: [] } });
         }
     };
-
-
 
     const handleRoomsChange = (value) => {
         dispatch(setRooms(value));
@@ -150,8 +145,6 @@ const HotelList = () => {
         dispatch(setDestination(value));
     };
 
-
-
     const handleVisibleChange = (visible) => {
         setVisible(visible);
     };
@@ -159,8 +152,8 @@ const HotelList = () => {
     const defaultStartDate = dayjs().add(1, 'day');
     const defaultEndDate = dayjs().add(2, 'day');
     const defaultDates = [defaultStartDate, defaultEndDate];
-
     const dateObjects = date?.length ? date.map(dateString => dayjs(dateString, storageFormat)) : defaultDates;
+
     useEffect(() => {
         const defaultDates = [defaultStartDate?.format(storageFormat), defaultEndDate?.format(storageFormat)];
         dispatch(setDate(defaultDates));
@@ -210,7 +203,6 @@ const HotelList = () => {
                         format={dateFormat}
                         placeholder={["Check In", "Check Out"]}
                     />
-
                     <Select
                         className='item'
                         value={destination}
@@ -227,7 +219,6 @@ const HotelList = () => {
                             </Select.Option>
                         ))}
                     </Select>
-
                     <Popover
                         content={content}
                         title="Select Guests and Rooms"
@@ -240,13 +231,11 @@ const HotelList = () => {
                         </Button>
                     </Popover>
                 </div>
-
                 <Button type="text" onClick={handleSearchChange} className="search-layout-hotels-btn">
                     <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                         <p><SearchOutlined /></p>
                     </div>
                 </Button>
-
             </Form>
             <div className="hotel">
                 <Form className="filter">
@@ -263,7 +252,6 @@ const HotelList = () => {
                             <div><Checkbox value="laundry">Laundry</Checkbox></div>
                         </Checkbox.Group>
                     </div>
-
                     <div className='facilities'>
                         Rating
                         <Radio.Group className="facilities-check-box" onChange={handleRatingChange} value={selectedRatings} defaultValue={null}>
@@ -272,14 +260,12 @@ const HotelList = () => {
                             <div><Radio value={3}><Rate value={3} disabled /></Radio></div>
                             <div><Radio value={4}><Rate value={4} disabled /></Radio></div>
                             <div><Radio value={5}><Rate value={5} disabled /></Radio></div>
-                            <div><Radio value={null} onClick={handleClearRating}>Unrated</Radio></div>
+                            <div><Radio value={0} onClick={handleClearRating}>Unrated</Radio></div>
                         </Radio.Group>
                     </div>
-
                     <Button className="btn" type="button" onClick={handleFilter}>
-                        Search Room
+                        Search
                     </Button>
-
                 </Form>
                 <HotelListContent
                     data={data}
@@ -291,7 +277,6 @@ const HotelList = () => {
                     handlePageChange={handlePageChange}
                     searches={searches}
                 />
-
             </div>
         </div>
     );

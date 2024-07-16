@@ -143,7 +143,7 @@ function Step1({ nextStep }) {
                     <div className="date-range">
                         <div className="check-in">
                             <p className="title">Check in</p>
-                            <p className="date">{date?.[0]?.slice(8, 10)}-{date?.[0]?.slice(5, 7)}-{date?.[0]?.slice(0, 4)}</p>
+                            <p className="date-in-payment">{date?.[0]?.slice(8, 10)}-{date?.[0]?.slice(5, 7)}-{date?.[0]?.slice(0, 4)}</p>
                             <p className="time">From 14:00</p>
                         </div>
                         <div className="night">
@@ -152,7 +152,7 @@ function Step1({ nextStep }) {
                         </div>
                         <div className="check-out">
                             <p className="title">Check out</p>
-                            <p className="date">{date?.[1]?.slice(8, 10)}-{date?.[1]?.slice(5, 7)}-{date?.[1]?.slice(0, 4)}</p>
+                            <p className="date-in-payment">{date?.[1]?.slice(8, 10)}-{date?.[1]?.slice(5, 7)}-{date?.[1]?.slice(0, 4)}</p>
                             <p className="time">Before 12:00</p>
                         </div>
                     </div>
