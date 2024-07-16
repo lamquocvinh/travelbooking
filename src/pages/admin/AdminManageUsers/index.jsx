@@ -8,6 +8,7 @@ import {
     ExclamationCircleOutlined,
     LockOutlined,
     UnlockOutlined,
+    EyeOutlined,
 } from '@ant-design/icons';
 import { useChangeStatusUserMutation, useGetUsersQuery } from '../../../services/userAPI';
 import { Link } from 'react-router-dom';
@@ -15,7 +16,7 @@ import { Link } from 'react-router-dom';
 const AdminManageUsers = () => {
     // hook call api
     const [changeStatus, { isLoading }] = useChangeStatusUserMutation();
-    const { data, refetch } = useGetUsersQuery();
+    const { data, isLoading: isFetching, refetch } = useGetUsersQuery();
 
     // search in table
     const [searchText, setSearchText] = useState('');
@@ -25,6 +26,7 @@ const AdminManageUsers = () => {
     // active-inactive user
     const [activeUser, setActiveUser] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     // ham xu ly modal - active-inactive user
     const showModal = (body) => {
         setActiveUser(body)
@@ -153,7 +155,7 @@ const AdminManageUsers = () => {
                     textToHighlight={text ? text.toString() : ''}
                 />
             ) : (
-                dataIndex === "full_name" ? <Link to={`user-details/${record.id}`}>{text}</Link> : text
+                text
             ),
     });
 
@@ -217,7 +219,7 @@ const AdminManageUsers = () => {
             width: 100,
             align: "center",
             render: (_, record) => (
-                <div>
+                <Space>
                     {
                         record.is_active === true
                             ?
@@ -244,7 +246,15 @@ const AdminManageUsers = () => {
                                     }} ></Button>
                             </Tooltip>
                     }
-                </div>
+                    <Tooltip title="View Details" color='blue'>
+                        <Link to={`user-details/${record.id}`}>
+                            <Button
+                                icon={<EyeOutlined />}
+                            >
+                            </Button>
+                        </Link>
+                    </Tooltip>
+                </Space >
             ),
         },
     ];
@@ -262,6 +272,7 @@ const AdminManageUsers = () => {
         <div className='admin-manage-users-wrapper'>
             <h2 className='title'>List of users:</h2>
             <Table
+                loading={isFetching}
                 bordered={true}
                 columns={columns}
                 dataSource={transformedData}

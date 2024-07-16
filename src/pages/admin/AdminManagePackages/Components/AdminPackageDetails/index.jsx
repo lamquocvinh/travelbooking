@@ -4,10 +4,11 @@ import { useParams } from "react-router-dom";
 import {
     CloseCircleOutlined,
 } from '@ant-design/icons';
+import { Spin } from "antd";
 
 function AdminPackageDetails() {
     const params = useParams();
-    const { data } = useGetPackageDetailsQuery(params.packageId);
+    const { data, isLoading } = useGetPackageDetailsQuery(params.packageId);
 
     return (
         <div className="admin-package-details-wrapper">
@@ -20,28 +21,30 @@ function AdminPackageDetails() {
                         <CloseCircleOutlined />
                     </button>
                 </div>
-                <div className="details">
-                    <div className="item-25">
-                        <label>Package ID</label>
-                        <p className="input">{data?.data["id"]}</p>
+                <Spin spinning={isLoading}>
+                    <div className="details">
+                        <div className="item-50">
+                            <label>Package ID</label>
+                            <p className="input">{data?.data["id"]}</p>
+                        </div>
+                        <div className="item-50">
+                            <label>Package name</label>
+                            <p className="input">{data?.data["name"]}</p>
+                        </div>
+                        <div className="item-50">
+                            <label>Duration</label>
+                            <p className="input">{data?.data["duration"].toLocaleString()} Days</p>
+                        </div>
+                        <div className="item-50">
+                            <label>Price</label>
+                            <p className="input">{data?.data["price"].toLocaleString()} VND</p>
+                        </div>
+                        <div className="item-100">
+                            <label>Description</label>
+                            <p className="input">{data?.data["description"]}</p>
+                        </div>
                     </div>
-                    <div className="item-25">
-                        <label>Package name</label>
-                        <p className="input">{data?.data["name"]}</p>
-                    </div>
-                    <div className="item-25">
-                        <label>Duration</label>
-                        <p className="input">{data?.data["duration"].toLocaleString()} Days</p>
-                    </div>
-                    <div className="item-25">
-                        <label>Price</label>
-                        <p className="input">{data?.data["price"].toLocaleString()} VND</p>
-                    </div>
-                    <div className="item-100">
-                        <label>Description</label>
-                        <p className="input">{data?.data["description"]}</p>
-                    </div>
-                </div>
+                </Spin>
             </div>
         </div>
     );

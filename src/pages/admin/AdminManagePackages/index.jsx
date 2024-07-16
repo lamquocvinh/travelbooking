@@ -13,8 +13,7 @@ import { Link } from 'react-router-dom';
 
 const AdminManagePackages = () => {
     // hook call api
-    // const { data, refetch } = useGetBookingQuery();
-    const { data, refetch } = useGetAllPackagesQuery();
+    const { data, isLoading: isFetching, refetch } = useGetAllPackagesQuery();
 
     // search in table
     const [searchText, setSearchText] = useState('');
@@ -208,7 +207,9 @@ const AdminManagePackages = () => {
                     <PlusCircleOutlined />
                     New package
                 </Link>
-            </div>            <Table
+            </div>
+            <Table
+                loading={isFetching}
                 bordered={true}
                 columns={columns}
                 dataSource={transformedData}
