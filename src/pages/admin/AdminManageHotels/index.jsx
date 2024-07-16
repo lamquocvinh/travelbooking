@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 const AdminManageHotels = () => {
     // hook call api
     const [changeStatus, { isLoading }] = useChangeStatusHotelMutation()
-    const { data, refetch } = useGetHotelForAdminQuery();
+    const { data, isLoading: isFetching, refetch } = useGetHotelForAdminQuery();
 
     // search in table
     const [searchText, setSearchText] = useState('');
@@ -411,6 +411,7 @@ const AdminManageHotels = () => {
         <div className='admin-manage-hotels-wrapper'>
             <h2 className='title'>List of hotels:</h2>
             <Table
+                loading={isFetching}
                 bordered={true}
                 columns={columns}
                 dataSource={transformedData}
