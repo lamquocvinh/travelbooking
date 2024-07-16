@@ -41,7 +41,7 @@ function Step2({ backStep }) {
     const roomName = useSelector(state => state.booking.roomTypeName);
     const roomTypeId = useSelector(state => state.booking.roomTypeId);
     const roomPrice = useSelector(state => state.booking.roomPrice);
-
+    console.log(fullName, email)
     const [method, setMethod] = useState("");
     const [bank, setBank] = useState("");
 
@@ -140,7 +140,7 @@ function Step2({ backStep }) {
                             <span>VNPay</span>
                         </div>
                         <img
-                            src="https://scontent.fsgn2-11.fna.fbcdn.net/v/t39.30808-6/202166185_2021396718013233_8499389898242103910_n.png?_nc_cat=1&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=YPBxuAYbS5wQ7kNvgFImShE&_nc_ht=scontent.fsgn2-11.fna&oh=00_AYBz5KPt9eFfR5ui8AOFpmQ09cNyTES9Lwra4U1KKOL4mg&oe=66889B29"
+                            src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png"
                             alt="VNPay"
                         />
                     </div>

@@ -73,7 +73,7 @@ const ReviewPage = ({ dataName }) => {
         } catch (error) {
             notification.error({
                 message: 'Đánh giá của bạn xảy ra lỗi',
-                description: 'Làm ơn thử lại sau',
+                description: 'Bạn chỉ được feedback sau khi check-out',
             });
         }
     };

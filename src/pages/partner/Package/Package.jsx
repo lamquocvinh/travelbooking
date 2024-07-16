@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import './Package.scss';
 import { useGetAllPackagesQuery, useRegisterPackageMutation } from '../../../services/packageAPI';
 import { useGetPaymentUrlForPackageMutation } from "../../../services/paymentAPI";
+import { useCheckExpirationQuery, useGetPackageDetailsQuery } from '../../../services/packageAPI';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import {
+    CloseCircleOutlined,
+} from '@ant-design/icons';
 
 import { notification } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,10 +18,9 @@ const Packet = () => {
     const { data } = useGetAllPackagesQuery();
     const [register] = useRegisterPackageMutation();
     const [payment] = useGetPaymentUrlForPackageMutation();
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-
     const [method, setMethod] = useState("");
     const [bank, setBank] = useState("");
     const [selectedPackageId, setSelectedPackageId] = useState(null); // New state for selected package ID
@@ -27,9 +30,11 @@ const Packet = () => {
     const phoneNumber = useSelector(state => state.auth.phoneNumber);
     const email = useSelector(state => state.auth.email);
     const fullName = useSelector(state => state.auth.fullName);
-
-    // console.log(phoneNumber, email, fullName);
-    // console.log(selectedPackageId, selectedPackagePrice, bank)
+    const packageIdCheck = useSelector(state => state.auth.packageId);
+    const packageStart = useSelector(state => state.auth.package_start_date);
+    const packageEnd = useSelector(state => state.auth.package_end_date);
+    const { data: check } = packageIdCheck ? useCheckExpirationQuery() : { data: null };
+    const { data: dataDetails } = useGetPackageDetailsQuery(packageIdCheck);
 
     const handleRegister = async () => {
         if (!selectedPackageId || !selectedPackagePrice) {
@@ -55,14 +60,10 @@ const Packet = () => {
                     "fullName": fullName,
                     "email": email
                 });
-                console.log(payRes)
                 if (payRes) {
                     const paymentUrl = payRes?.data?.data?.paymentUrl;
 
-
-                    // Đợi một khoảng thời gian trước khi đăng xuất
                     setTimeout(() => {
-                        // Hiện thông báo thành công
 
                         notification.success({
                             message: "Success",
@@ -70,9 +71,8 @@ const Packet = () => {
                         });
 
                         navigate('/login');
-                    }, 2000); // Đợi 2 giây trước khi đăng xuất
+                    }, 2000);
 
-                    // Chuyển hướng đến URL thanh toán
                     window.location.href = paymentUrl;
                     dispatch(logOut());
                 } else {
@@ -100,8 +100,30 @@ const Packet = () => {
         setSelectedPackagePrice(packagePrice);
     };
 
+
+    if (check?.message === "Package is still valid") {
+        return (
+            <div className="card">
+                <div className="package-info">
+                    <h2 className="item">Purchased Package Details.</h2>
+                </div>
+                <div className="packet-page">
+                    <div className="packet">
+                        <h2>{`Package ${dataDetails?.data["name"]}`}</h2>
+                        <div className="price">{`${dataDetails?.data["price"].toLocaleString()} VNĐ`}</div>
+                        <div className="description">{`${dataDetails?.data["description"]}`}</div>
+                        <div className="description">This package is valid for <strong>{dataDetails?.data["duration"].toLocaleString()}</strong> days </div>
+                        <div className="description">Package start date: <strong>{packageStart[2]}/{packageStart[1]}/{packageStart[0]}</strong></div>
+                        <div className="description">Package end date: <strong>{packageEnd[2]}/{packageEnd[1]}/{packageEnd[0]}</strong></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="packet-page">
+            <h2>Package List</h2>
             <div className="banner-content">
                 Save from 15% when paying annually.
             </div>
@@ -117,6 +139,7 @@ const Packet = () => {
                     </div>
                 ))}
             </div>
+            <div style={{ color: "red", textAlign: "center", margin: "20px 0" }}>You must purchase a package to use partner's services</div>
             <div className="select-pay-method">
                 <div className="pay-methods">
                     <h2 className="title">How do you want to pay?</h2>

@@ -6,13 +6,16 @@ import {
 import { Layout, Menu, theme } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useCheckExpirationQuery } from '../../services/packageAPI';
+import { useSelector } from 'react-redux';
 
 const { Content, Sider } = Layout;
 
 const Partner = () => {
+
     const location = useLocation();
-    const { data } = useCheckExpirationQuery();
-    const checkPackage = data?.status
+    const packageId = useSelector(state => state.auth.packageId);
+    const { data } = packageId !== null ? useCheckExpirationQuery() : { data: {} };
+    const checkPackage = data?.message;
     const determineActiveKey = (path) => {
         if (path.startsWith('/partner/manage-hotel')) {
             return '/partner/manage-hotel';
@@ -52,7 +55,7 @@ const Partner = () => {
                             <Link to="/partner/package">Buy Package</Link>
                         </Menu.Item>
                         <Menu.Divider />
-                        {checkPackage === "OK" &&
+                        {checkPackage !== null && checkPackage === "Package is still valid" &&
                             <Menu.Item className="dashboard-content-sider-menu-item" key="/partner/manage-hotel" icon={<SolutionOutlined style={{ fontSize: '20px' }} />}>
                                 <Link to="/partner/manage-hotel">Manage Hotel</Link>
                             </Menu.Item>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "./ManageHotel.scss";
-import { Table, Tag, Button, Popover, Modal, notification, Input, Space } from 'antd';
+import { Table, Tag, Button, Popover, Modal, notification, Input, Space, Badge, Tour } from 'antd';
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
@@ -12,7 +12,8 @@ import {
     PlusCircleOutlined,
     EditOutlined,
     BankOutlined,
-    SolutionOutlined
+    SolutionOutlined,
+    BellOutlined
 } from '@ant-design/icons';
 import { useGetHotelForPartnerQuery, useChangeStatusHotelMutation } from "../../../services/hotelAPI";
 import { Link, useNavigate } from 'react-router-dom';
@@ -34,8 +35,16 @@ const ManageHotel = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [statusHotel, setStatusHotel] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
+    const notificationCount = data?.data?.content?.filter(hotel => !hotel.image_urls || hotel.image_urls.length === 0)?.length || 0;
 
+    const handleOk1 = () => {
+        setOpen(false);
+    };
+    const handleCancel1 = () => {
+        setOpen(false);
+    };
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -285,7 +294,7 @@ const ManageHotel = () => {
             width: '10%',
             align: "center",
             render: (_, record) => (
-                record.status !== "PENDING" &&
+                record.status !== "PENDING" && record.status !== "REJECTED" &&
                 < Popover content={
                     < div >
                         {
@@ -397,14 +406,6 @@ const ManageHotel = () => {
                     New Hotel
                 </Link>
             </div>
-            <div style={{ marginBottom: "20px" }}>
-                {data?.data?.content?.map((hotel, index) =>
-                    (!hotel.image_urls || hotel.image_urls.length === 0) ? (
-                        <h2 key={index} style={{ color: "red" }}>{hotel.hotel_name} does not have a hotel image yet, added in the Edit section</h2>
-                    ) : null
-                )}
-            </div>
-
 
             <Table
                 bordered={true}

@@ -9,6 +9,8 @@ const authSlice = createSlice({
         phoneNumber: null,
         role: null,
         packageId: null,
+        package_start_date: null,
+        package_end_date: null,
     },
     reducers: {
         setInfo: (state, action) => {
@@ -26,6 +28,12 @@ const authSlice = createSlice({
         setPackageId: (state, action) => {
             state.packageId = action.payload;
         },
+        setPackageStart: (state, action) => {
+            state.package_start_date = action.payload;
+        },
+        setPackageEnd: (state, action) => {
+            state.package_end_date = action.payload;
+        },
         logOut: (state) => {
             sessionStorage.clear();
             localStorage.clear();
@@ -41,5 +49,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { setInfo, setInfoBooking, logOut, setPackageId } = authSlice.actions;
+export const { setInfo, setInfoBooking, logOut, setPackageId, setPackageStart, setPackageEnd } = authSlice.actions;
 export default authSlice.reducer;

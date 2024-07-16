@@ -8,7 +8,7 @@ import { notification, Button } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setInfo, setPackageId } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
+import { setInfo, setPackageId, setPackageEnd, setPackageStart } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
 import IMG from "../../../assets/photo-3-1485152074061.jpg";
 import { FacebookOutlined } from "@ant-design/icons";
 import { FaGoogle } from 'react-icons/fa';
@@ -75,6 +75,8 @@ function LoginPage() {
                     role: result?.data?.roles?.[0],
                 }));
                 dispatch(setPackageId(result.data.package_id));
+                dispatch(setPackageStart(result.data.package_start_date));
+                dispatch(setPackageEnd(result.data.package_end_date));
                 localStorage.setItem("token", result.data.token);
 
                 const role = result?.data?.roles?.[0];
