@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import "./AdminManageHotels.scss";
-import { Table, Tag, Button, Popover, Modal, notification, Input, Space } from 'antd';
+import { Table, Tag, Button, Popover, Modal, notification, Input, Space, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
@@ -9,7 +9,8 @@ import {
     SyncOutlined,
     CloseCircleOutlined,
     MenuOutlined,
-    BankOutlined
+    BankOutlined,
+    EyeOutlined
 } from '@ant-design/icons';
 import { useChangeStatusHotelMutation, useGetHotelForAdminQuery } from '../../../services/hotelAPI';
 import { Link } from 'react-router-dom';
@@ -17,7 +18,7 @@ import { Link } from 'react-router-dom';
 const AdminManageHotels = () => {
     // hook call api
     const [changeStatus, { isLoading }] = useChangeStatusHotelMutation()
-    const { data, refetch } = useGetHotelForAdminQuery();
+    const { data, isLoading: isFetching, refetch } = useGetHotelForAdminQuery();
 
     // search in table
     const [searchText, setSearchText] = useState('');
@@ -177,9 +178,7 @@ const AdminManageHotels = () => {
             title: 'Hotel Name',
             dataIndex: 'hotel_name',
             key: 'hotel_name',
-            ...getColumnSearchProps('hotel_name', (text, record) => (
-                <Link to={`hotel-details/${record.id}`}>{text}</Link>
-            )),
+            ...getColumnSearchProps('hotel_name'),
         },
         {
             title: 'Address',
@@ -268,7 +267,7 @@ const AdminManageHotels = () => {
             width: 100,
             align: "center",
             render: (_, record) => (
-                <>
+                <Space>
                     {
                         (record.status === "APPROVED" || record.status === "REJECTED") ||
                         < Popover content={
@@ -369,7 +368,12 @@ const AdminManageHotels = () => {
                             <Button icon={<MenuOutlined />}></Button>
                         </Popover >
                     }
-                </>
+                    <Tooltip title="Details" color='blue'>
+                        <Link to={`hotel-details/${record["id"]}`}>
+                            <Button icon={<EyeOutlined />}></Button>
+                        </Link>
+                    </Tooltip>
+                </Space>
             ),
         },
     ];
@@ -387,6 +391,7 @@ const AdminManageHotels = () => {
         <div className='admin-manage-hotels-wrapper'>
             <h2 className='title'>List of hotels:</h2>
             <Table
+                loading={isFetching}
                 bordered={true}
                 columns={columns}
                 dataSource={transformedData}

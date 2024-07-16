@@ -3,6 +3,7 @@ import Loadable from "./Loadable";
 import MainLayout from "../layout/MainLayout";
 import SecondLayout from "../layout/SecondLayout";
 import AuthGuard from "./AuthGuard";
+import CheckRole from "./CheckRole";
 
 const Login = Loadable({ loader: () => import("../pages/user/login/login") });
 const errorPage = Loadable({ loader: () => import("../pages/error/Error") });
@@ -10,7 +11,6 @@ const RoomDetailsPage = Loadable({ loader: () => import("../pages/user/roomDetai
 const HotelList = Loadable({ loader: () => import("../pages/user/hotellist/HotelList") });
 const HotelDetail = Loadable({ loader: () => import("../pages/user/hotelDetailsPage/HotelDetailsPage") });
 const Register = Loadable({ loader: () => import("../pages/user/register/Register") });
-
 const Profile = Loadable({ loader: () => import("../pages/user/profile/Components/Profile/Profile") });
 const Change = Loadable({ loader: () => import("../pages/user/profile/Components/ChangePassword/Change") });
 const HomePage = Loadable({ loader: () => import("../pages/user/HomePage/HomePage") });
@@ -40,6 +40,7 @@ const AdminPackageCreate = Loadable({ loader: () => import("../pages/admin/Admin
 const AdminPackageEdit = Loadable({ loader: () => import("../pages/admin/AdminManagePackages/Components/AdminPackageEdit") });
 const AdminManageConveniences = Loadable({ loader: () => import("../pages/admin/AdminManageConveniences") });
 const AdminManageRoom = Loadable({ loader: () => import("../pages/admin/AdminManageRoom/AdminManageRoom") });
+const AdminRoomDetails = Loadable({ loader: () => import("../pages/admin/AdminManageRoom/Components/AdminRoomDetails") });
 const ViewBooking = Loadable({ loader: () => import("../pages/partner/ViewBooking/ViewBooking") });
 const ManageHotel = Loadable({ loader: () => import("../pages/partner/ManageHotel/ManageHotel") });
 const PartnerHotelDetails = Loadable({ loader: () => import("../pages/partner/ManageHotel/Components/PartnerHotelDetails") });
@@ -51,13 +52,13 @@ const RoomDetails = Loadable({ loader: () => import("../pages/partner/RoomDetail
 const UpdateRoom = Loadable({ loader: () => import("../pages/partner/UpdateRoom/UpdateRoom") });
 const Package = Loadable({ loader: () => import("../pages/partner/Package/Package") });
 
-
 const Admin = Loadable({
   loader: () => import("../pages/admin/Admin"),
 });
 const partner = Loadable({
   loader: () => import("../pages/partner/Partner"),
 });
+
 export const router = createBrowserRouter([
   {
     element: <MainLayout />,
@@ -107,35 +108,44 @@ export const router = createBrowserRouter([
             ]
           },
         ],
-
       },
       {
-        index: true,
-        element: HomePage,
-      },
-      {
-        path: "/view-hotels",
-        element: HotelList,
-      },
-      {
-        path: "/hotel-detail/:hotelId",
-        element: HotelDetail,
-      },
-      {
-        path: "/room-details/:roomId",
-        element: RoomDetailsPage,
-      },
-      {
-        path: "/register",
-        element: Register
-      },
-      {
-        path: "/payment",
-        element: PaymentPage,
-      },
-      {
-        path: "/payment-return/:status",
-        element: PaymentReturnPage,
+        path: "/",
+        element: <CheckRole />,
+        children: [
+          {
+            index: true,
+            element: HomePage,
+          },
+          {
+            path: "/view-hotels",
+            element: HotelList,
+          },
+          {
+            path: "/view-hotels",
+            element: HotelList,
+          },
+          {
+            path: "/hotel-detail/:hotelId",
+            element: HotelDetail,
+          },
+          {
+            path: "/room-details/:roomId",
+            element: RoomDetailsPage,
+          },
+          {
+            path: "/register",
+            element: Register
+          },
+          {
+            path: "/payment",
+            element: PaymentPage,
+          },
+          {
+            path: "/payment-return/:status",
+            element: PaymentReturnPage,
+          },
+        ],
       },
       {
         path: "/forgot-password",
@@ -224,6 +234,10 @@ export const router = createBrowserRouter([
                   {
                     path: ":hotelId/manage-room",
                     element: AdminManageRoom,
+                  },
+                  {
+                    path: ":hotelId/manage-room/room-details/:roomId",
+                    element: AdminRoomDetails,
                   },
                 ]
               },

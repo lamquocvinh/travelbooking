@@ -5,13 +5,57 @@ import {
     BankOutlined,
     UserOutlined,
     UsergroupAddOutlined,
-    WifiOutlined,
     InboxOutlined
 } from '@ant-design/icons';
-
 import { Layout, Menu, theme } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+
 const { Content, Sider } = Layout;
+
+const items = [
+    {
+        label: (
+            <Link to="/admin/">Dashboard</Link>
+        ),
+        key: "/admin/",
+        icon: <BarChartOutlined style={{ fontSize: '20px' }} />,
+    },
+    {
+        label: (
+            <Link to="/admin/manage-bookings">Bookings</Link>
+        ),
+        key: "/admin/manage-bookings",
+        icon: <SolutionOutlined style={{ fontSize: '20px' }} />,
+    },
+    {
+        label: (
+            <Link to="/admin/manage-users">Users</Link>
+        ),
+        key: "/admin/manage-users",
+        icon: <UserOutlined style={{ fontSize: '20px' }} />,
+    },
+    {
+        label: (
+            <Link to="/admin/manage-partners">Partners</Link>
+        ),
+        key: "/admin/manage-partners",
+        icon: <UsergroupAddOutlined style={{ fontSize: '20px' }} />,
+    },
+    {
+        label: (
+            <Link to="/admin/manage-hotels">Hotels</Link>
+        ),
+        key: "/admin/manage-hotels",
+        icon: <BankOutlined style={{ fontSize: '20px' }} />,
+    },
+    {
+        label: (
+            <Link to="/admin/manage-packages">Packages</Link>
+        ),
+        key: "/admin/manage-packages",
+        icon: <InboxOutlined style={{ fontSize: '20px' }} />,
+    },
+];
 
 const Admin = () => {
     const location = useLocation();
@@ -19,6 +63,7 @@ const Admin = () => {
     const {
         token: { colorBgContainer, borderRadiusLG, ...other },
     } = theme.useToken();
+
     return (
         <div>
             <Layout
@@ -36,42 +81,9 @@ const Admin = () => {
                 >
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
                         selectedKeys={[selectedKey]}
-                        style={{
-                            height: '100%',
-                        }}
-                    >
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/" icon={<BarChartOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/admin/">Dashboard</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-bookings" icon={<SolutionOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/admin/manage-bookings">Bookings</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-users" icon={<UserOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/admin/manage-users">Users</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-partners" icon={<UsergroupAddOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/admin/manage-partners">Partners</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-hotels" icon={<BankOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/admin/manage-hotels">Hotels</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-packages" icon={<InboxOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/admin/manage-packages">Packages</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/admin/manage-conveniences" icon={<WifiOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/admin/manage-conveniences">Conveniences</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                    </Menu>
+                        items={items}
+                    />
                 </Sider>
                 <Content
                     style={{
