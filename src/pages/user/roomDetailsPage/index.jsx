@@ -13,6 +13,7 @@ function RoomDetailsPage() {
     const { data, isLoading } = useGetRoomDetailQuery(params.roomId);
 
     useEffect(() => {
+        sessionStorage.removeItem("paymentAccess")
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
