@@ -127,5 +127,16 @@
         font-weight: bold;
       }
     }
+
+    .no-data {
+      padding: 8px;
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      background-color: white;
+      color: gray;
+      font-size: 16px;
+      text-align: center;
+    }
   }
 }
