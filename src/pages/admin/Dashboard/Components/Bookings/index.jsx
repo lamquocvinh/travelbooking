@@ -2,10 +2,10 @@ import React from 'react';
 import "./Bookings.scss"
 import { SolutionOutlined, } from '@ant-design/icons';
 import { Card, Skeleton, Statistic } from 'antd';
-import { useGetHotelForAdminQuery } from "../../../../../services/hotelAPI";
+import { useGetBookingQuery } from "../../../../../services/bookingAPI";
 
 const Bookings = () => {
-    const { data, isLoading } = useGetHotelForAdminQuery();
+    const { data, isLoading } = useGetBookingQuery();
 
     return (
         <div className='bookings-stats'>
