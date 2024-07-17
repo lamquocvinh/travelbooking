@@ -24,8 +24,7 @@ const schema = yup.object().shape({
     brand: yup.string().min(2).required("This field is required"),
     hotel_name: yup.string().required("This field is required").trim(),
     businessLicense: yup.array().of(yup.mixed().required("This field is required")).min(2, "2 pages of business license documents are required"),
-    images: yup.array()
-        .min(4, "You must upload at least 4 images."),
+    images: yup.array().min(4, "You must upload at least 4 images."),
     conveniences: yup.object().required("At least one convenience must be selected").shape({
         free_breakfast: yup.boolean(),
         pick_up_drop_off: yup.boolean(),
@@ -178,6 +177,8 @@ function CreateHotel() {
 
             await putImage({ idHotel: response?.data?.id, images: fileList }).unwrap();
 
+
+
             notification.success({
                 message: "Success",
                 description: "Hotel created successfully!",
@@ -251,6 +252,7 @@ function CreateHotel() {
                         )}
                     />
                     <p className="error-message">{errors.businessLicense?.message}</p>
+
                 </div>
                 <div className="item-100">
                     <label>Image Hotel*</label>
@@ -272,7 +274,13 @@ function CreateHotel() {
                             <p className="ant-upload-hint">Support for a single or bulk upload.</p>
                         </Upload.Dragger>
                     </Form.Item>
-                    <p className="error-message">{errors.businessLicense?.message}</p>
+                    <ErrorMessage
+                        console={error}
+                        errors={errors}
+                        name="images"
+                        render={({ message }) => <p style={{ color: 'red' }}>{message}</p>}
+                    />
+                    <p className="error-message">{errors.images?.message}</p>
                 </div>
 
                 <div className="item-100">
@@ -315,12 +323,7 @@ function CreateHotel() {
                             </div>
                         ))}
                     </div>
-                    <ErrorMessage
-                        console={error}
-                        errors={errors}
-                        name="conveniences"
-                        render={({ message }) => <p style={{ color: 'red' }}>{message}</p>}
-                    />
+
                     <p className="error-message">{errors.conveniences?.root?.message}</p>
                 </div>
                 <div className="item-100">

@@ -13,7 +13,7 @@ const ReviewPage = ({ dataName }) => {
     const [feedback] = useCreateFeedbackMutation();
     const { data, refetch } = useGetFeedbackQuery(hotelId);
     const [ratingStats, setRatingStats] = useState({});
-
+    console.log(data)
     useEffect(() => {
         if (data?.data?.content) {
             const totalReviews = data.data.totalElements;
@@ -140,12 +140,12 @@ const ReviewPage = ({ dataName }) => {
                 <Card key={index} className="review-card">
                     <div className="review-header">
                         <UserOutlined />
-                        <span className="username">{review.username}</span>
-                        <span className="rating">
+                        <span style={{ marginLeft: "8px", fontWeight: "bold" }} className="username">{review.username}</span>
+                        <span style={{ marginLeft: "auto", display: "flex", alignItems: "center" }} className="rating">
                             <Rate disabled value={review.rating / 2} />
                         </span>
                     </div>
-                    <div className="review-content">{review.comment}</div>
+                    <div style={{ marginTop: "10px" }} className="review-content">{review.comment}</div>
                 </Card>
             ))}
         </div>

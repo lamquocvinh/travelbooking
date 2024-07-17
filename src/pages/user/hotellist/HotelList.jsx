@@ -111,7 +111,6 @@ const HotelList = () => {
             setFilters();
             setSearches(response);
         } catch (error) {
-            console.log("Error:", error);
             notification.warning({
                 message: "Warning!",
                 description: error?.data?.message,
@@ -164,11 +163,6 @@ const HotelList = () => {
     useEffect(() => {
         const defaultDates = [defaultStartDate?.format(storageFormat), defaultEndDate?.format(storageFormat)];
         dispatch(setDate(defaultDates));
-        sessionStorage.removeItem("paymentAccess")
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        })
     }, [dispatch]);
 
     const content = (
@@ -220,6 +214,7 @@ const HotelList = () => {
                         value={destination}
                         onChange={handleDestinationChange}
                         showSearch
+                        defaultValue="An Giang"
                         placeholder="Location"
                         optionFilterProp="children"
                         filterOption={(input, option) => (option?.children ?? '').toLowerCase().indexOf(input.toLowerCase()) >= 0}
