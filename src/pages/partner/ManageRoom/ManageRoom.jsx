@@ -20,9 +20,9 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 const ManageRoom = () => {
     const { id } = useParams();
-    const { data, refetch } = roomApi.useGetAllRoomQuery(id);
-    const [changeStatus, { isLoading }] = roomApi.useUpdateStatusMutation();
-    const [hasStatusChanged, setHasStatusChanged] = useState(false);
+    const { data, refetch, isLoading } = roomApi.useGetAllRoomQuery(id);
+    const [changeStatus] = roomApi.useUpdateStatusMutation();
+    const [hotelCount, setHotelCount] = useState(0);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -38,8 +38,8 @@ const ManageRoom = () => {
                 notification.success({
                     message: "Change status successfully!"
                 });
-                setHasStatusChanged(true);
             }
+            refetch
         } catch (error) {
             console.log(error);
             notification.error({
@@ -283,11 +283,16 @@ const ManageRoom = () => {
     ];
 
     useEffect(() => {
-        if (hasStatusChanged) { // Đúng điều kiện
+        const interval = setInterval(() => {
             refetch();
-            setHasStatusChanged(false); // reset trạng thái
+        }, 10000);
+
+        if (data?.data?.content?.length !== hotelCount) {
+            setHotelCount(data?.data?.content?.length);
+            refetch();
         }
-    }, [hasStatusChanged, refetch]);
+        return () => clearInterval(interval);
+    }, [data, hotelCount, refetch]);
 
     return (
         <div className='manage-hotel-wrapper'>
@@ -303,6 +308,7 @@ const ManageRoom = () => {
                 columns={columns}
                 dataSource={data?.data?.content || []}
                 onChange={onChange}
+                loading={isLoading}
                 scroll={{
                     y: 440,
                 }}

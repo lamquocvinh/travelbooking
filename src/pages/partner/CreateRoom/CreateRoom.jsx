@@ -3,7 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
-import { notification, Upload, Button } from "antd";
+import { notification, Upload, Button, Spin } from "antd";
 import { roomApi } from "../../../services/roomAPI";
 import { UploadOutlined } from '@ant-design/icons';
 import { useParams } from "react-router-dom";
@@ -137,6 +137,10 @@ function CreateRoom() {
             });
         }
     };
+
+    if (createRoomLoading || putRoomImageLoading) {
+        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin>;</div>
+    }
 
     return (
         <div className="create-hotel-wrapper">

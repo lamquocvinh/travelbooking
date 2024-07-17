@@ -1,7 +1,7 @@
 import "./RoomDetail.scss";
 import { roomApi } from '../../../services/roomAPI';
 import { useParams } from "react-router-dom";
-import { Rate, Tag } from 'antd';
+import { Rate, Spin, Tag } from 'antd';
 import {
     CheckCircleOutlined,
     ExclamationCircleOutlined,
@@ -12,7 +12,7 @@ import {
 function RoomDetail() {
     const { id } = useParams();
 
-    const { data } = roomApi.useGetRoomDetailQuery(id);
+    const { data, isLoading } = roomApi.useGetRoomDetailQuery(id);
 
     // Sử dụng reduce để gộp các key có giá trị là true thành một mảng duy nhất
     const finalConveniences = data?.data?.conveniences.reduce((acc, convenience) => {
@@ -31,6 +31,10 @@ function RoomDetail() {
         });
         return acc;
     }, []);
+
+    if (isLoading) {
+        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin>;</div>
+    }
 
     return (
         <div className="partner-hotel-details-wrapper">
