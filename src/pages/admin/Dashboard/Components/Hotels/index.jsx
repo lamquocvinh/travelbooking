@@ -8,7 +8,7 @@ const Hotels = () => {
     const { data, isLoading } = useGetHotelForAdminQuery();
 
     return (
-        <div className='users-stats'>
+        <div className='hotels-stats'>
             {isLoading ?
                 <Skeleton active />
                 :

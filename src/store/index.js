@@ -11,6 +11,7 @@ import { userApi } from "../services/userAPI";
 import { bookingApi } from "../services/bookingAPI";
 import { paymentApi } from "../services/paymentAPI";
 import { packageApi } from "../services/packageAPI";
+import { dashboardApi } from "../services/dashboardAPI";
 
 const persistConfig = {
   key: "root",
@@ -35,6 +36,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [paymentApi.reducerPath]: paymentApi.reducer,
     [packageApi.reducerPath]: packageApi.reducer,
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -45,6 +47,7 @@ export const store = configureStore({
       bookingApi.middleware,
       paymentApi.middleware,
       packageApi.middleware,
+      dashboardApi.middleware,
     ),
 });
 

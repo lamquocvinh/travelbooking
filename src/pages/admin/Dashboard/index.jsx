@@ -5,6 +5,7 @@ import Partners from './Components/Partners';
 import Hotels from './Components/Hotels';
 import Bookings from './Components/Bookings';
 import Packages from './Components/Packages';
+import Revenues from './Components/Revenues';
 
 const Dashboard = () => {
     return (
@@ -13,7 +14,10 @@ const Dashboard = () => {
                 <Users />
                 <Partners />
                 <Hotels />
+            </div>
+            <div className='stats'>
                 <Bookings />
+                <Revenues />
             </div>
             <Packages />
         </div>

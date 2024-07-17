@@ -1,5 +1,6 @@
 .bookings-stats {
-  width: 25%;
+  flex: 1;
+  min-width: 248px;
   border-radius: 12px;
 
   .card {
