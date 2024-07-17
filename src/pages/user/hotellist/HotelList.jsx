@@ -14,8 +14,11 @@ const { RangePicker } = DatePicker;
 const dateFormat = 'DD/MM/YYYY';
 const storageFormat = 'YYYY-MM-DD';
 const disabledDate = (current) => {
-    return current && current < dayjs().startOf('day');
+    const today = dayjs().startOf('day');
+    const oneYearLater = today.add(1, 'year');
+    return current && (current < today || current > oneYearLater);
 };
+
 
 const HotelList = () => {
     const dispatch = useDispatch();
@@ -109,6 +112,10 @@ const HotelList = () => {
             setSearches(response);
         } catch (error) {
             console.log("Error:", error);
+            notification.warning({
+                message: "Warning!",
+                description: error?.data?.message,
+            });
             setSearches({ data: { content: [] } });
         }
     };

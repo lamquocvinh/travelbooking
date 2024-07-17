@@ -34,38 +34,38 @@ body {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 400px;
+        }
 
-            .packet h2 {
-                margin: 10px 0;
-                font-size: 24px;
-                color: #333;
-            }
+        .packet h2 {
+            margin: 10px 0;
+            font-size: 24px;
+            color: #333;
+        }
 
-            .packet .price {
-                font-size: 24px;
-                color: #333;
-                margin: 15px 0;
-            }
+        .packet .price {
+            font-size: 24px;
+            color: #333;
+            margin: 15px 0;
+        }
 
-            .packet .description {
-                font-size: 14px;
-                color: #666;
-                margin: 15px 0;
-            }
+        .packet .description {
+            font-size: 14px;
+            color: #666;
+            margin: 15px 0;
+        }
 
-            .packet .btn {
-                display: inline-block;
-                padding: 10px 20px;
-                background-color: #805df5;
-                color: #fff;
-                border-radius: 5px;
-                text-decoration: none;
-                margin-top: 20px;
-            }
+        .packet .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #805df5;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
 
-            .packet .btn:hover {
-                background-color: #6741c7;
-            }
+        .packet .btn:hover {
+            background-color: #6741c7;
         }
     }
 
