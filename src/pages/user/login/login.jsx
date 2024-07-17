@@ -2,17 +2,20 @@ import "./Login.scss";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useLoginUserMutation } from "../../../services/authAPI";
+import {
+    useFacebookLoginMutation,
+    useGoogleLoginMutation,
+    useLoginUserMutation,
+} from "../../../services/authAPI";
 import { useEffect } from "react";
-import { notification, Button } from "antd";
-import { SmileOutlined } from "@ant-design/icons";
+import { notification, Space, Spin } from "antd";
+import { FacebookOutlined, GoogleOutlined, SmileOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setInfo, setPackageId, setPackageEnd, setPackageStart } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
+import { setInfo, setPackageEnd, setPackageId, setPackageStart } from "../../../slices/auth.slice"; // Adjust the import according to your project structure
 import IMG from "../../../assets/photo-3-1485152074061.jpg";
-import { FacebookOutlined } from "@ant-design/icons";
-import { FaGoogle } from 'react-icons/fa';
-import GoogleLogin from "react-google-login";
+import { useGoogleLogin } from "@react-oauth/google";
+import FacebookLogin from "react-facebook-login";
 
 const schema = yup
     .object({
@@ -20,19 +23,21 @@ const schema = yup
         password: yup.string().required("This is required field.").trim(),
     })
     .required();
+
 function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
     const [login, { isLoading }] = useLoginUserMutation();
-    const loggingg = import.meta.env.VITE_LOGIN_GOOGLE;
+    const [googleLogin, { isLoading: isLoginGoogle }] = useGoogleLoginMutation();
+    const [facebookLogin, { isLoading: isLoginFacebook }] = useFacebookLoginMutation();
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (token) {
-            navigate('/');
+            navigate("/");
         }
     }, [navigate, dispatch]);
-
 
     const {
         register,
@@ -48,16 +53,6 @@ function LoginPage() {
         'ROLE_PARTNER': '/partner',
         'ROLE_CUSTOMER': '/',
     };
-
-    //login with facebook
-    const handleFacebookLogin = () => {
-        console.log('handleFacebookLogin');
-    }
-
-    //login with google
-    const handleGoogleLogin = () => {
-        console.log('handleGoogleLogin');
-    }
 
     //login with email and password
     const onSubmit = async (dataObj) => {
@@ -111,126 +106,166 @@ function LoginPage() {
         }
     };
 
-    const onSuccess = async (response) => {
-        console.log('Login Success:', response);
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: async (codeResponse) => {
+            try {
+                const result = await googleLogin(codeResponse.access_token).unwrap();
+                console.log("Google login result:", result);
+                if (result && result.token) {
+                    handleLoginSuccess(result);
+                } else {
+                    console.error("Google login failed:", result);
+                    notification.error({
+                        message: "Login error",
+                        description:
+                            result?.message || "Google login failed. Please try again.",
+                    }); pons
+                }
+            } catch (error) {
+                console.error("Google login error:", error);
+                notification.error({
+                    message: "Login error",
+                    description:
+                        error.message ||
+                        "An error occurred during Google login. Please try again.",
+                });
+            }
+        },
+    })
 
-        const token = response.tokenId;
-        // Send token to backend for verification
-        // const res = await fetch('YOUR_BACKEND_API_URL', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   },
-        //   body: JSON.stringify({ token })
-        // });
-
-        // const data = await res.json();
-        // console.log('Backend response:', data);
-        // Handle the response, save the token, etc.
+    const handleFacebookLogin = async (response) => {
+        console.log("Raw Facebook rese:", response);
+        try {
+            if (!response.accessToken) {
+                throw new Error("No access token provided by Facebook");
+            }
+            console.log(
+                "Attempting to login with Facebook access token:",
+                response.accessToken
+            );
+            const result = await facebookLogin(response.accessToken).unwrap();
+            console.log("Facebook login result:", result);
+            if (result) {
+                handleLoginSuccess(result);
+            } else {
+                throw new Error("No result from facebookLogin");
+            }
+        } catch (error) {
+            console.error("Facebook login error:", error);
+            notification.error({
+                message: "Login error",
+                description: `Facebook login failed: ${error.message}. Please try again or contact support.`,
+            });
+        }
     };
 
-    const onFailure = (response) => {
-        console.log('Login Failed:', response);
+    const handleLoginSuccess = (data) => {
+        dispatch(setInfo({
+            userId: data.id,
+            fullName: data.fullName,
+            email: data.email,
+            phoneNumber: data.phoneNumber,
+            role: data.roles[0],
+        })
+        );
+        dispatch(setPackageId(data.package_id));
+        dispatch(setPackageStart(data.package_start_date));
+        dispatch(setPackageEnd(data.package_end_date));
+        localStorage.setItem("token", data.token);
+
+        const role = data.roles[0];
+        const defaultPath = navigateByRoles[role] || "/";
+        const from = defaultPath || location.state?.from?.pathname;
+        const fromLink = sessionStorage.getItem("from");
+        if (fromLink) {
+            sessionStorage.removeItem("from");
+            navigate(fromLink);
+        } else {
+            navigate(from);
+        }
+        notification.success({
+            message: "Login successful",
+            description: (
+                <div>
+                    Welcome {data.fullName} <SmileOutlined />
+                </div>
+            ),
+        });
     };
 
     return (
         <div className="wrapper-login">
             <img className="image" src={IMG} alt="Image" />
             <div className="container">
-                <form
-                    className="form"
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    <h1 className="title">Login</h1>
-
-                    <div className="body">
-                        {/* Email */}
-                        <div className="item">
-                            <p className="label">Email or Phone number</p>
-                            <input
-                                {...register("emailOrPhone")}
-                                className="input"
-                                placeholder="Enter email or phone number"
-                            />
-                            <p className="error">{errors.emailOrPhone?.message}</p>
+                <Spin spinning={isLoading || isLoginFacebook || isLoginGoogle}>
+                    <form
+                        className="form"
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
+                        <h1 className="title">Login</h1>
+                        <div className="body">
+                            {/* Email */}
+                            <div className="item">
+                                <p className="label">Email or Phone number</p>
+                                <input
+                                    {...register("emailOrPhone")}
+                                    className="input"
+                                    placeholder="Enter email or phone number"
+                                />
+                                <p className="error">{errors.emailOrPhone?.message}</p>
+                            </div>
+                            {/* Password */}
+                            <div className="item">
+                                <p className="label">Password</p>
+                                <input
+                                    {...register("password")}
+                                    className="input"
+                                    type="password"
+                                    placeholder="Enter password"
+                                />
+                                <p className="error">{errors.password?.message}</p>
+                            </div>
+                            <Link className="forgot" to={"/forgot-password"}>Forgot password?</Link>
                         </div>
-                        {/* Password */}
-                        <div className="item">
-                            <p className="label">Password</p>
-                            <input
-                                {...register("password")}
-                                className="input"
-                                type="password"
-                                placeholder="Enter password"
-                            />
-                            <p className="error">{errors.password?.message}</p>
+                        <button className="btn">
+                            Login
+                        </button>
+                        <div style={{ marginTop: "1rem" }}>
+                            <button type="button" className="google" onClick={() => loginWithGoogle()}>
+                                <Space>
+                                    <GoogleOutlined style={{ fontSize: "24px" }} />
+                                    Login with Google
+                                </Space>
+                            </button>
                         </div>
-                        <Link className="forgot" to={"/forgot-password"}>Forgot password?</Link>
+                        <div style={{ marginTop: "1rem" }}>
+                            <FacebookLogin
+                                cssClass="facebook"
+                                appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                callback={handleFacebookLogin}
+                                autoLoad={false}
+                                fields="name,email,picture"
+                                scope="public_profile,email"
+                                icon={<FacebookOutlined style={{ marginRight: "8px", fontSize: "24px" }} />}
+                                render={(renderProps) => (
+                                    <button onClick={renderProps.onClick}>
+                                        Login with Facebook
+                                    </button>
+                                )}
+                            />
+                        </div>
+                    </form>
+                    <div className="register-section">
+                        <h3 className="login-content-ask">
+                            Want to become a member?
+                        </h3>
+                        <p className="login-content-signup">
+                            <Link to={`/register`}>Register now</Link>
+                        </p>
                     </div>
-                    <button className="btn">
-                        {isLoading ? "Logging in..." : "Login"}
-                    </button>
-
-                    {/* Facebook Login Button */}
-
-                    {/* <Button
-                        className="btn"
-                        type="primary"
-                        icon={<FacebookOutlined className="facebook-icon" />}
-                        style={{
-                            backgroundColor: '#4267B2',
-                            borderColor: '#4267B2',
-                            marginTop: '10px',
-                            width: '100%',
-                            textAlign: 'center',
-                        }}
-                        onClick={handleFacebookLogin}
-                    >
-                        Login with Facebook
-                    </Button>
-                    <div style={{ marginTop: '1rem' }}>
-                        <GoogleLogin
-                            clientId={loggingg}
-                            buttonText="Login with Google"
-                            onSuccess={onSuccess}
-                            onFailure={onFailure}
-                            cookiePolicy={'http://localhost:3000'}
-                        />
-                    </div> */}
-
-                    {/* Google Login Button */}
-
-                    {/* <Button
-                        type="primary"
-                        className="btn"
-                        icon={<FaGoogle className="google-icon" />}
-                        style={{
-                            backgroundColor: '#DB4437',
-                            borderColor: '#DB4437',
-                            marginTop: '10px',
-                            width: '100%',
-                            textAlign: 'center',
-                        }}
-                        onClick={handleGoogleLogin}
-                    >
-                        Login with Google
-                    </Button> */}
-
-
-                </form>
-
-                <div className="register-section">
-                    <h3 className="login-content-ask">
-                        Want to become a member?
-                    </h3>
-                    <p className="login-content-signup">
-                        <Link to={`/register`}>Register now</Link>
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
+                </Spin>
+            </div >
+        </div >
     );
 }
 

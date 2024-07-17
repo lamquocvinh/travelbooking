@@ -47,6 +47,20 @@ export const authApi = createApi({
         };
       },
     }),
+    googleLogin: builder.mutation({
+      query: (access_token) => ({
+        url: "users/oauth2/google",
+        method: "GET",
+        params: { accessToken: access_token },
+      }),
+    }),
+    facebookLogin: builder.mutation({
+      query: (accessToken) => ({
+        url: "users/oauth2/facebook",
+        method: "POST",
+        params: { accessToken: accessToken },
+      }),
+    }),
     // refreshToken: builder.mutation({
     //   query: ({ refreshToken }) => ({
     //     url: `users/refresh-token`,
@@ -62,5 +76,7 @@ export const {
   useRegisterUserMutation,
   useGetOtpMutation,
   useVerifyOtpMutation,
-  useChangePasswordByEmailMutation
+  useChangePasswordByEmailMutation,
+  useGoogleLoginMutation,
+  useFacebookLoginMutation
 } = authApi;
