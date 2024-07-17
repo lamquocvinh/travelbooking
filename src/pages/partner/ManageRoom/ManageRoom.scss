@@ -3,72 +3,65 @@ $font-title: DM Serif Display, sans-serif;
 $blue-main-color: #5c98f2;
 
 .manage-hotel-wrapper {
-    .title {
-        margin: 0 0 16px 0;
+  .action {
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .search {
+      position: relative;
+      width: 60%;
+      border-radius: 8px;
+      border: 1px solid #797979;
+
+      .icon {
+        position: absolute;
+        padding: 12px;
+        font-size: large;
+      }
+
+      .input {
+        padding: 12px 8px 12px 42px;
+        width: 100%;
+        border-radius: 8px;
+        border: none;
+
+        &:focus-visible {
+          outline: 2px solid $blue-main-color;
+        }
+      }
     }
 
-    .action {
-        margin: 0 0 16px 0;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
+    .new-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      outline: none;
+      border: none;
+      background-color: var(--blue-main-color);
+      color: white;
+      font-weight: bold;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
 
-        .search {
-            position: relative;
-            width: 60%;
-            border-radius: 8px;
-            border: 1px solid #797979;
-
-            .icon {
-                position: absolute;
-                padding: 12px;
-                font-size: large;
-            }
-
-            .input {
-                padding: 12px 8px 12px 42px;
-                width: 100%;
-                border-radius: 8px;
-                border: none;
-
-                &:focus-visible {
-                    outline: 2px solid $blue-main-color;
-                }
-            }
-        }
-
-
-
-        .new-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            outline: none;
-            border: none;
-            background-color: var(--blue-main-color);
-            color: white;
-            font-weight: bold;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-
-            &:hover {
-                transform: scale(1.02);
-            }
-        }
+      &:hover {
+        transform: scale(1.02);
+      }
     }
+  }
 
-    .action-item {
-        display: block;
-        margin: 4px 0;
-        margin-bottom: 20px;
-        width: 120px;
-        padding-top: 20px;
+  .action-item {
+    display: block;
+    margin: 4px 0;
+    margin-bottom: 20px;
+    width: 120px;
+    padding-top: 20px;
 
-        .link {
-            margin-left: 8px;
-        }
-
+    .link {
+      margin-left: 8px;
     }
+  }
 }

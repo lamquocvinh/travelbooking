@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux';
 const { Content, Sider } = Layout;
 
 const Partner = () => {
-
     const location = useLocation();
     const packageId = useSelector(state => state.auth.packageId);
     const { data } = packageId !== null ? useCheckExpirationQuery() : { data: {} };
@@ -22,11 +21,33 @@ const Partner = () => {
         }
         return path;
     };
-
     const selectedKey = determineActiveKey(location.pathname);
     const {
         token: { colorBgContainer, borderRadiusLG, ...other },
     } = theme.useToken();
+
+    const items = [
+        {
+            label: (
+                <Link to="/partner/package">Buy Package</Link>
+            ),
+            key: "/partner/package",
+            icon: <DollarOutlined style={{ fontSize: '20px' }} />,
+        },
+        {
+            label: (
+                checkPackage !== null && checkPackage === "Package is still valid" &&
+                <Link to="/partner/manage-hotel">Manage Hotel</Link>
+            ),
+            key: "/partner/manage-hotel",
+            icon: (
+                checkPackage !== null && checkPackage === "Package is still valid" &&
+                <SolutionOutlined style={{ fontSize: '20px' }} />
+            ),
+            disabled: (checkPackage === null && checkPackage !== "Package is still valid")
+        },
+    ];
+
     return (
         <div>
             <Layout
@@ -44,23 +65,9 @@ const Partner = () => {
                 >
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
                         selectedKeys={[selectedKey]}
-                        style={{
-                            height: '100%',
-                        }}
-                    >
-                        <Menu.Item className="dashboard-content-sider-menu-item" key="/partner/package" icon={<DollarOutlined style={{ fontSize: '20px' }} />}>
-                            <Link to="/partner/package">Buy Package</Link>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        {checkPackage !== null && checkPackage === "Package is still valid" &&
-                            <Menu.Item className="dashboard-content-sider-menu-item" key="/partner/manage-hotel" icon={<SolutionOutlined style={{ fontSize: '20px' }} />}>
-                                <Link to="/partner/manage-hotel">Manage Hotel</Link>
-                            </Menu.Item>
-                        }
-                    </Menu>
+                        items={items}
+                    />
                 </Sider>
                 <Content
                     style={{
@@ -71,7 +78,6 @@ const Partner = () => {
                     <Outlet />
                 </Content>
             </Layout>
-
         </div>
     )
 }

@@ -3,12 +3,7 @@ import './Package.scss';
 import { useGetAllPackagesQuery, useRegisterPackageMutation } from '../../../services/packageAPI';
 import { useGetPaymentUrlForPackageMutation } from "../../../services/paymentAPI";
 import { useCheckExpirationQuery, useGetPackageDetailsQuery } from '../../../services/packageAPI';
-import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import {
-    CloseCircleOutlined,
-} from '@ant-design/icons';
-
 import { notification, Spin } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from "../../../slices/auth.slice";
@@ -110,9 +105,8 @@ const Packet = () => {
     };
 
     if (isLoading) {
-        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin>;</div>
+        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin></div>
     }
-
 
     if (check?.message === "Package is still valid") {
         return (
@@ -214,7 +208,6 @@ const Packet = () => {
                     >
                         Pay
                     </button>
-
                 </div>
             </div>
         </div>

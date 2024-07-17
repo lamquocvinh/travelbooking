@@ -302,7 +302,6 @@ export const router = createBrowserRouter([
                 path: "manage-hotel/:id/edit",
                 element: Edit
               },
-
               {
                 path: "manage-hotel/:hotelId/manage-room/room-details/:id",
                 element: RoomDetails
@@ -319,7 +318,6 @@ export const router = createBrowserRouter([
                 path: "manage-hotel/:id/manage-room/create-room",
                 element: CreateRoom
               },
-
               {
                 path: "create-hotel",
                 element: CreateHotel,
