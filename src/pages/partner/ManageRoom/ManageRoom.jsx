@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import "./ManageRoom.scss"
-import { Table, Tag, Button, Popover, Modal, notification, Input, Space } from 'antd';
+import { Table, Tag, Button, Popover, Modal, notification, Input, Space, Tooltip } from 'antd';
+import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
     PlusCircleOutlined,
@@ -8,15 +9,11 @@ import {
     CheckCircleOutlined,
     SyncOutlined,
     EditOutlined,
-    DeleteOutlined,
-    MenuOutlined
+    MenuOutlined,
+    EyeOutlined
 } from '@ant-design/icons';
 import { Link, useParams } from 'react-router-dom';
 import { roomApi } from '../../../services/roomAPI';
-
-const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-};
 
 const ManageRoom = () => {
     const { id } = useParams();
@@ -28,6 +25,7 @@ const ManageRoom = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [statusRoom, setStatusRoom] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -51,7 +49,18 @@ const ManageRoom = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+
+    // ham xu ly search
     const searchInput = useRef(null);
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+    const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText('');
+    };
     const getColumnSearchProps = (dataIndex, customRender) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div
@@ -166,13 +175,11 @@ const ManageRoom = () => {
             title: 'Room Type',
             dataIndex: 'room_type_name',
             key: 'room_type_name',
-            ...getColumnSearchProps('room_type_name', (text, record) => (
-                <Link to={`room-details/${record.id}`}>{text}</Link>
-            )),
+            width: "30%",
+            ...getColumnSearchProps('room_type_name', (text, record) => record?.room_type_name),
         },
-
         {
-            title: 'Number Of Rooms',
+            title: 'Quantity',
             dataIndex: 'number_of_rooms',
             key: 'number_of_rooms',
             sorter: (a, b) => a.number_of_rooms - b.number_of_rooms,
@@ -181,12 +188,14 @@ const ManageRoom = () => {
             title: 'Price',
             dataIndex: 'room_price',
             key: 'room_price',
-            ...getColumnSearchProps('room_price', (text, record) => record.room_price),
+            ...getColumnSearchProps('room_price', (text, record) => record?.room_price?.toLocaleString()),
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            width: 120,
+            align: "center",
             filters: [
                 {
                     text: 'UNAVAILABLE',
@@ -225,62 +234,80 @@ const ManageRoom = () => {
         {
             title: 'Action',
             key: 'action',
-            width: '15%',
+            width: 100,
+            align: "center",
             render: (_, record) => (
-                < Popover content={
-                    < div >
-                        <Link className='link' to={`${record.id}/update`}>
+                <Space>
+                    < Popover content={
+                        < div >
+                            <Link className='link' to={`${record.id}/update`}>
+                                <Button
+                                    className='action-item'
+                                    icon={<EditOutlined />}
+                                >
+                                    <span className='link'>Update</span>
+                                </Button>
+                            </Link>
+
+                            {
+                                record.status === "DISABLED" && <div>
+                                    <Button
+                                        className='action-item'
+                                        style={{ marginTop: '5px' }}
+                                        icon={<CheckCircleOutlined />}
+                                        onClick={() => {
+                                            setStatusRoom({
+                                                roomTypeId: record.id,
+                                                status: `"AVAILABLE"`
+                                            });
+                                            showModal();
+                                        }}
+                                    >
+                                        <span className='link'>Available</span>
+                                    </Button>
+                                </div>
+                            }
+                            {
+                                record.status === "AVAILABLE" && <div>
+                                    <Button
+                                        className='action-item'
+                                        style={{ marginTop: '5px' }}
+                                        icon={<CloseCircleOutlined />}
+                                        onClick={() => {
+                                            setStatusRoom({
+                                                roomTypeId: record.id,
+                                                status: `"DISABLED"`
+                                            });
+                                            showModal();
+                                        }}
+                                    >
+                                        <span className='link'>Disabled</span>
+                                    </Button>
+                                </div>
+                            }
+                        </div >
+                    } trigger="hover" placement='left'>
+                        <Button icon={<MenuOutlined />}></Button>
+                    </Popover>
+                    <Tooltip title="View Details" color='blue'>
+                        <Link to={`room-details/${record.id}`}>
                             <Button
-                                className='action-item'
-                                icon={<EditOutlined />}
+                                icon={<EyeOutlined />}
                             >
-                                <span className='link'>Update</span>
                             </Button>
                         </Link>
-
-                        {
-                            record.status === "DISABLED" && <div>
-                                <Button
-                                    className='action-item'
-                                    style={{ marginTop: '5px' }}
-                                    icon={<CheckCircleOutlined />}
-                                    onClick={() => {
-                                        setStatusRoom({
-                                            roomTypeId: record.id,
-                                            status: `"AVAILABLE"`
-                                        });
-                                        showModal();
-                                    }}
-                                >
-                                    <span className='link'>Available</span>
-                                </Button>
-                            </div>
-                        }
-                        {
-                            record.status === "AVAILABLE" && <div>
-                                <Button
-                                    className='action-item'
-                                    style={{ marginTop: '5px' }}
-                                    icon={<CloseCircleOutlined />}
-                                    onClick={() => {
-                                        setStatusRoom({
-                                            roomTypeId: record.id,
-                                            status: `"DISABLED"`
-                                        });
-                                        showModal();
-                                    }}
-                                >
-                                    <span className='link'>Disabled</span>
-                                </Button>
-                            </div>
-                        }
-                    </div >
-                } trigger="hover" placement='left'>
-                    <Button icon={<MenuOutlined />}></Button>
-                </Popover>
+                    </Tooltip>
+                </Space>
             ),
         },
     ];
+    const transformedData = data?.data?.content?.map((item, index) => ({
+        ...item,
+        key: index, // add key property
+    }));
+    const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -296,22 +323,19 @@ const ManageRoom = () => {
 
     return (
         <div className='manage-hotel-wrapper'>
-            <p><h2 className='title'>Manage Rooms</h2></p>
             <div className="action">
+                <h2 className='title'>Manage Rooms</h2>
                 <Link className="new-btn" to={"create-room"}>
                     <PlusCircleOutlined />
                     New Room
                 </Link>
             </div>
             <Table
+                loading={isLoading}
                 bordered={true}
                 columns={columns}
-                dataSource={data?.data?.content || []}
+                dataSource={transformedData}
                 onChange={onChange}
-                loading={isLoading}
-                scroll={{
-                    y: 440,
-                }}
             />
             <Modal
                 title="Change Status Of Room"

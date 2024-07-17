@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import "./ViewBooking.scss"
 import { Table, Tag, Button, notification, Input, Space, Tooltip } from 'antd';
+import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
     CloseCircleOutlined,
@@ -12,10 +13,6 @@ import {
 } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useGetBookingByHotelQuery, useChangeStatusMutation } from '../../../services/bookingAPI';
-
-const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-};
 
 const ViewBooking = () => {
     const { hotelId } = useParams();
@@ -40,6 +37,15 @@ const ViewBooking = () => {
         };
     }
 
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+    const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText('');
+    };
     const getColumnSearchProps = (dataIndex, customRender) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div
@@ -149,8 +155,6 @@ const ViewBooking = () => {
         },
     });
 
-
-
     const columns = [
         {
             title: 'Customer Name',
@@ -158,7 +162,6 @@ const ViewBooking = () => {
             key: 'full-name',
             ...getColumnSearchProps('user.full_name', (text, record) => record["full-name"]),
         },
-
         {
             title: 'Total Price',
             dataIndex: 'total-price',
@@ -183,7 +186,6 @@ const ViewBooking = () => {
             key: 'check-out-date',
             ...getColumnSearchProps('check-out-date', (text, record) => `${record["check-out-date"][2]}/${record["check-out-date"][1]}/${record["check-out-date"][0]}`),
         },
-
         {
             title: 'Payment Method',
             dataIndex: 'payment-method',
@@ -281,19 +283,23 @@ const ViewBooking = () => {
             ),
         },
     ];
+    const transformedData = data?.data?.content?.map((item, index) => ({
+        ...item,
+        key: index, // add key property
+    }));
+    const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+    };
 
     return (
         <div className='manage-hotel-wrapper'>
-            <p><h2 className='title'>Booking</h2></p>
+            <h2 className='title'>Booking</h2>
             <Table
                 bordered={true}
                 columns={columns}
                 loading={isLoading}
-                dataSource={data?.data?.content || []}
+                dataSource={transformedData}
                 onChange={onChange}
-                scroll={{
-                    y: 440,
-                }}
             />
         </div>
     )

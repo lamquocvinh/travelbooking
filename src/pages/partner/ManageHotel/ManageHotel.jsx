@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "./ManageHotel.scss";
-import { Table, Tag, Button, Popover, Modal, notification, Input, Space, Badge, Tour } from 'antd';
+import { Table, Tag, Button, Popover, Modal, notification, Input, Space, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
@@ -13,7 +13,7 @@ import {
     EditOutlined,
     BankOutlined,
     SolutionOutlined,
-    BellOutlined
+    EyeOutlined
 } from '@ant-design/icons';
 import { useGetHotelForPartnerQuery, useChangeStatusHotelMutation } from "../../../services/hotelAPI";
 import { Link, useNavigate } from 'react-router-dom';
@@ -33,16 +33,7 @@ const ManageHotel = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [statusHotel, setStatusHotel] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [open, setOpen] = useState(false);
 
-    const notificationCount = data?.data?.content?.filter(hotel => !hotel.image_urls || hotel.image_urls.length === 0)?.length || 0;
-
-    const handleOk1 = () => {
-        setOpen(false);
-    };
-    const handleCancel1 = () => {
-        setOpen(false);
-    };
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -198,16 +189,14 @@ const ManageHotel = () => {
             title: 'Hotel Name',
             dataIndex: 'hotel_name',
             key: 'hotel_name',
-            width: '35%',
-            ...getColumnSearchProps('hotel_name', (text, record) => (
-                <Link to={`hotel-details/${record.id}`}>{text}</Link>
-            )),
+            width: '30%',
+            ...getColumnSearchProps('hotel_name', (text, record) => record?.hotel_name),
         },
         {
             title: 'Address',
             dataIndex: 'location.address',
             key: 'location.address',
-            width: '20%',
+            width: '30%',
             ...getColumnSearchProps('location.address', (text, record) => record?.location?.address),
 
         },
@@ -215,7 +204,6 @@ const ManageHotel = () => {
             title: 'Province',
             dataIndex: 'location.province',
             key: 'location.province',
-            width: '20%',
             ...getColumnSearchProps('location.province', (text, record) => record?.location?.province),
         },
         {
@@ -289,84 +277,94 @@ const ManageHotel = () => {
         {
             title: 'Action',
             key: 'action',
-            width: '10%',
+            width: 150,
             align: "center",
             render: (_, record) => (
-                record.status !== "PENDING" && record.status !== "REJECTED" &&
-                < Popover content={
-                    < div >
-                        {
-                            record.status === "ACTIVE" && <div>
-                                <Button
-                                    className='action-item approved'
-                                    icon={<ExclamationCircleOutlined />}
-                                    onClick={() => {
-                                        setStatusHotel({
-                                            hotelId: record.id,
-                                            status: `"INACTIVE"`
-                                        });
-                                        showModal();
-                                    }}
-                                >
-                                    <span className='link'>INACTIVE</span>
-                                </Button>
+                <Space>
+                    {record.status !== "PENDING" && record.status !== "REJECTED" &&
+                        < Popover content={
+                            < div >
+                                {
+                                    record.status === "ACTIVE" && <div>
+                                        <Button
+                                            className='action-item approved'
+                                            icon={<ExclamationCircleOutlined />}
+                                            onClick={() => {
+                                                setStatusHotel({
+                                                    hotelId: record.id,
+                                                    status: `"INACTIVE"`
+                                                });
+                                                showModal();
+                                            }}
+                                        >
+                                            <span className='link'>INACTIVE</span>
+                                        </Button>
 
-                            </div>
-                        }
-                        {
-                            record.status === "INACTIVE" && <div>
-                                <Button
-                                    className='action-item approved'
-                                    icon={<CheckCircleOutlined />}
-                                    onClick={() => {
-                                        setStatusHotel({
-                                            hotelId: record.id,
-                                            status: `"ACTIVE"`
-                                        });
-                                        showModal();
-                                    }}
-                                >
-                                    <span className='link'>ACTIVE</span>
-                                </Button>
+                                    </div>
+                                }
+                                {
+                                    record.status === "INACTIVE" && <div>
+                                        <Button
+                                            className='action-item approved'
+                                            icon={<CheckCircleOutlined />}
+                                            onClick={() => {
+                                                setStatusHotel({
+                                                    hotelId: record.id,
+                                                    status: `"ACTIVE"`
+                                                });
+                                                showModal();
+                                            }}
+                                        >
+                                            <span className='link'>ACTIVE</span>
+                                        </Button>
 
-                            </div>
-                        }
-
-                        <Link className='link' to={`${record.id}/edit`}>
+                                    </div>
+                                }
+                                <Link className='link' to={`${record.id}/edit`}>
+                                    <Button
+                                        className='action-item'
+                                        icon={<EditOutlined />}
+                                    >
+                                        <span className='link'>Edit</span>
+                                    </Button>
+                                </Link>
+                                <Link className='link' to={`${record.id}/manage-room`}>
+                                    <Button
+                                        className='action-item'
+                                        icon={<BankOutlined />}
+                                    >
+                                        <span className='link'>Room</span>
+                                    </Button>
+                                </Link>
+                                <Link className='link' to={`booking/${record.id}`}>
+                                    <Button
+                                        className='action-item'
+                                        icon={<SolutionOutlined />}
+                                    >
+                                        <span className='link'>Booking</span>
+                                    </Button>
+                                </Link>
+                            </div >
+                        } trigger="hover" placement='left'>
+                            <Button icon={<MenuOutlined />}></Button>
+                        </Popover>}
+                    <Tooltip title="View Details" color='blue'>
+                        <Link to={`hotel-details/${record.id}`}>
                             <Button
-                                className='action-item'
-                                icon={<EditOutlined />}
+                                icon={<EyeOutlined />}
                             >
-                                <span className='link'>Edit</span>
                             </Button>
                         </Link>
-
-                        <Link className='link' to={`${record.id}/manage-room`}>
-                            <Button
-                                className='action-item'
-                                icon={<BankOutlined />}
-                            >
-                                <span className='link'>Room</span>
-                            </Button>
-                        </Link>
-
-                        <Link className='link' to={`booking/${record.id}`}>
-                            <Button
-                                className='action-item'
-                                icon={<SolutionOutlined />}
-                            >
-                                <span className='link'>Booking</span>
-                            </Button>
-                        </Link>
-                    </div >
-                } trigger="hover" placement='left'>
-                    <Button icon={<MenuOutlined />}></Button>
-                </Popover>
+                    </Tooltip>
+                </Space>
             ),
         },
     ];
 
-
+    const transformedData = data?.data?.content?.map((item, index) => ({
+        ...item,
+        key: index, // add key property
+    }));
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -389,6 +387,7 @@ const ManageHotel = () => {
             navigate('/partner/package')
         }
     }, [])
+
     return (
         <div className='partner-manage-hotel-wrapper'>
             <div className="action">
@@ -398,11 +397,10 @@ const ManageHotel = () => {
                     New Hotel
                 </Link>
             </div>
-
             <Table
                 bordered={true}
                 columns={columns}
-                dataSource={data?.data?.content}
+                dataSource={transformedData}
                 loading={isLoading}
             />
             <Modal
