@@ -15,7 +15,7 @@ const Revenues = () => {
                 <Card bordered={false} className='card'>
                     <Statistic
                         title="Revenues"
-                        value={data}
+                        value={data || 0}
                         valueStyle={{
                             color: '#3f8600',
                         }}

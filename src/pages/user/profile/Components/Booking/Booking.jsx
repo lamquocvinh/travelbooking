@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 const UserManageBookings = () => {
     // hook call api
-    const { data, refetch } = useGetBookingQuery();
+    const { data, refetch, isLoading } = useGetBookingQuery();
 
     // search in table
     const [searchText, setSearchText] = useState('');
@@ -269,6 +269,7 @@ const UserManageBookings = () => {
                 columns={columns}
                 dataSource={transformedData}
                 onChange={onChange}
+                loading={isLoading}
             />
         </div>
     )
