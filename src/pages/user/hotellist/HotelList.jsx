@@ -164,6 +164,11 @@ const HotelList = () => {
     useEffect(() => {
         const defaultDates = [defaultStartDate?.format(storageFormat), defaultEndDate?.format(storageFormat)];
         dispatch(setDate(defaultDates));
+        sessionStorage.removeItem("paymentAccess")
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
     }, [dispatch]);
 
     const content = (
