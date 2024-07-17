@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../scss/RoomList.scss"
 import { Link } from 'react-router-dom';
 import { setHotelInfo } from "../../../../../slices/bookingSlice";
@@ -6,13 +6,15 @@ import { Badge } from "antd";
 
 const RoomList = ({ roomTypes, hotel_name, hotel_Id }) => {
   const dispatch = useDispatch();
+  const rooms = useSelector(state => state.booking.rooms);
+  const availableRoom = roomTypes?.filter((room) => room.number_of_rooms >= rooms)
 
   return (
     <div className="rooms-section-wrapper">
       <p className='rooms-section-title'>Room List</p>
-      {roomTypes?.length > 0 ?
+      {availableRoom?.length > 0 ?
         <div className='rooms-list'>
-          {roomTypes?.map((roomType, index) => (
+          {availableRoom?.map((roomType, index) => (
             <Badge.Ribbon key={index} text={`${roomType?.number_of_rooms} room(s) left.`} color="red" >
               <div className="room-card">
                 <img

@@ -1,5 +1,5 @@
 import "./HotelDetailsPage.scss";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FloatButton, Result, Spin } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import HeaderHotel from './component/jsx/HeaderHotel';
@@ -10,14 +10,11 @@ import Roomlist from './component/jsx/Roomlist';
 import { useGetHotelDetailsForGuestQuery } from '../../../services/hotelAPI';
 import { useGetRoomListForUserQuery } from '../../../services/roomAPI';
 import FeedbackPage from "../hotellist/component/Feedback";
-import { useSelector } from "react-redux";
 
 const RoomlistDetail = () => {
     const { hotelId } = useParams('hotelId');
-    const rooms = useSelector(state => state.booking.rooms);
     const { data, isLoading } = useGetHotelDetailsForGuestQuery(hotelId);
     const { data: RoomList } = useGetRoomListForUserQuery(hotelId);
-    const [availableRoom, setAvailableRoom] = useState([]);
 
     // scroll to About page
     const hotelAboutRef = useRef(null);
@@ -61,14 +58,12 @@ const RoomlistDetail = () => {
     }
 
     useEffect(() => {
-        const roomList = RoomList?.data?.content?.filter(room => room?.number_of_rooms == rooms);
-        setAvailableRoom(roomList);
         sessionStorage.removeItem("paymentAccess")
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         })
-    }, [RoomList]);
+    }, []);
 
     return (
         <div className="hotel-details-page-wrapper">
@@ -81,7 +76,7 @@ const RoomlistDetail = () => {
                     </div>
                     <Amentites data={AmentitesParams} />
                     <div ref={roomRef}>
-                        <Roomlist roomTypes={availableRoom} hotel_name={data?.data?.hotel_name} hotel_Id={hotelId} />
+                        <Roomlist roomTypes={RoomList?.data?.content} hotel_name={data?.data?.hotel_name} hotel_Id={hotelId} />
                     </div>
                     <FeedbackPage dataName={Feedback}></FeedbackPage>
                 </Spin>

@@ -13,7 +13,7 @@ const schema = yup.object().shape({
     name: yup.string().required("This field is required").trim(),
     description: yup.string().required("This field is required").trim(),
     duration: yup.number().required("This field is required").min(30, "Duration must at least 30 days."),
-    price: yup.number().required("This field is required").min(50000000, "Price must at least 50.000.000 VND"),
+    price: yup.number().required("This field is required").min(10000000, "Price must at least 10.000.000 VND"),
 });
 
 function AdminPackageCreate() {
