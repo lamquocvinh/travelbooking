@@ -38,6 +38,16 @@ function BookingDetails() {
                                 CANCELLED
                             </Tag>
                         }
+                        {data?.data?.status === "CHECKED_IN" &&
+                            <Tag icon={<LoginOutlined />} color="blue">
+                                CHECKED IN
+                            </Tag>
+                        }
+                        {data?.data?.status === "CHECKED_OUT" &&
+                            <Tag icon={<LogoutOutlined />} color="blue">
+                                CHECKED OUT
+                            </Tag>
+                        }
                     </div>
                     <button className="item cancel" type="reset" onClick={() => {
                         window.history.back();

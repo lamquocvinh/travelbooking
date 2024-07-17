@@ -6,6 +6,8 @@ import {
     CheckCircleOutlined,
     SyncOutlined,
     CloseCircleOutlined,
+    LoginOutlined,
+    LogoutOutlined,
 } from '@ant-design/icons';
 
 function AdminBookingDetails() {
@@ -37,6 +39,16 @@ function AdminBookingDetails() {
                             {data?.data?.status === "CANCELLED" &&
                                 <Tag icon={<CloseCircleOutlined />} color="error">
                                     CANCELLED
+                                </Tag>
+                            }
+                            {data?.data.status === "CHECKED_IN" &&
+                                <Tag icon={<LoginOutlined />} color="blue">
+                                    CHECKED IN
+                                </Tag>
+                            }
+                            {data?.data.status === "CHECKED_OUT" &&
+                                <Tag icon={<LogoutOutlined />} color="blue">
+                                    CHECKED OUT
                                 </Tag>
                             }
                         </div>

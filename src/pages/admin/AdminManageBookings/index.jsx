@@ -9,6 +9,8 @@ import {
     CloseCircleOutlined,
     EyeOutlined,
     ExportOutlined,
+    LoginOutlined,
+    LogoutOutlined,
 } from '@ant-design/icons';
 import { useGetBookingQuery } from '../../../services/bookingAPI';
 import { Link } from 'react-router-dom';
@@ -188,6 +190,14 @@ const AdminManageBookings = () => {
                     text: 'CANCELLED',
                     value: "CANCELLED",
                 },
+                {
+                    text: 'CHECKED_IN',
+                    value: "CHECKED_IN",
+                },
+                {
+                    text: 'CHECKED_OUT',
+                    value: "CHECKED_OUT",
+                },
             ],
             onFilter: (value, record) => record.status === value,
             render: (_, record) => (
@@ -210,6 +220,16 @@ const AdminManageBookings = () => {
                     {record.status === "CANCELLED" &&
                         <Tag icon={<CloseCircleOutlined />} color="error">
                             CANCELLED
+                        </Tag>
+                    }
+                    {record.status === "CHECKED_IN" &&
+                        <Tag icon={<LoginOutlined />} color="blue">
+                            CHECKED IN
+                        </Tag>
+                    }
+                    {record.status === "CHECKED_OUT" &&
+                        <Tag icon={<LogoutOutlined />} color="blue">
+                            CHECKED OUT
                         </Tag>
                     }
                 </div>
