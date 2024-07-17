@@ -35,7 +35,7 @@ const schema = yup.object().shape({
         double_bedroom: yup.boolean(),
     }).test(
         'at-least-one-bedroom',
-        'At least one of single_bedroom, twin_bedroom, or double_bedroom must be selected',
+        'At least one of single bedroom, twin bedroom, or double bedroom must be selected',
         value => {
             const { luxury, ...bedrooms } = value;
             return Object.values(bedrooms).some(v => v === true);
@@ -219,6 +219,7 @@ function CreateRoom() {
                             </div>
                         ))}
                     </div>
+                    <p className="error-message">{errors.types?.root?.message}</p>
                 </div>
                 <div className="item-100">
                     <h3>Conveniences:</h3>
@@ -238,6 +239,7 @@ function CreateRoom() {
                             </div>
                         ))}
                     </div>
+                    <p className="error-message">{errors.conveniences?.root?.message}</p>
                 </div>
                 <div className="btn-group">
                     <button className="cancel" type="reset" onClick={() => {

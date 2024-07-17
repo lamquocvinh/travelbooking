@@ -320,14 +320,7 @@ const ManageHotel = () => {
 
                                     </div>
                                 }
-                                <Link className='link' to={`${record.id}/edit`}>
-                                    <Button
-                                        className='action-item'
-                                        icon={<EditOutlined />}
-                                    >
-                                        <span className='link'>Edit</span>
-                                    </Button>
-                                </Link>
+
                                 <Link className='link' to={`${record.id}/manage-room`}>
                                     <Button
                                         className='action-item'

@@ -21,9 +21,9 @@ import { ErrorMessage } from '@hookform/error-message';
 const schema = yup.object().shape({
     rating: yup.number("Rating from 1-5").min(1).max(5).required("This field is required"),
     description: yup.string().required("This field is required").trim(),
-    brand: yup.string(),
+    brand: yup.string().min(2).required("This field is required"),
     hotel_name: yup.string().required("This field is required").trim(),
-    businessLicense: yup.array().of(yup.mixed().required("This field is required")).min(1, "Business license file is required"),
+    businessLicense: yup.array().of(yup.mixed().required("This field is required")).min(2, "2 pages of business license documents are required"),
     images: yup.array()
         .min(4, "You must upload at least 4 images."),
     conveniences: yup.object().required("At least one convenience must be selected").shape({
@@ -43,8 +43,8 @@ const schema = yup.object().shape({
     location: yup.object().shape({
         address: yup.string().required("This field is required").trim(),
         province: yup.string().required("This field is required").trim(),
-        longitude: yup.string().required("This field is required").trim(),
-        latitude: yup.string().required("This field is required").trim(),
+        longitude: yup.string().required("Please select the hotel's location on the map").trim(),
+        latitude: yup.string().required("Please select the hotel's location on the map").trim(),
     }),
 });
 
@@ -316,10 +316,12 @@ function CreateHotel() {
                         ))}
                     </div>
                     <ErrorMessage
+                        console={error}
                         errors={errors}
                         name="conveniences"
                         render={({ message }) => <p style={{ color: 'red' }}>{message}</p>}
                     />
+                    <p className="error-message">{errors.conveniences?.root?.message}</p>
                 </div>
                 <div className="item-100">
                     <MapContainer center={mapCenter} zoom={15} style={{ height: '500px', width: '100%' }}>
@@ -330,6 +332,7 @@ function CreateHotel() {
                         <SearchField setPosition={setPosition} />
                         <LocationMarker setPosition={setPosition} dataPosition={position} />
                     </MapContainer>
+                    <p className="error-message">{errors.location?.latitude?.message}</p>
                 </div>
                 <div className="btn-group">
                     <button className="cancel" type="reset" onClick={() => {
