@@ -4,8 +4,11 @@ import Step1 from "./Components/Step1";
 import Step2 from "./Components/Step2";
 import Step3 from "./Components/Step3";
 import { Steps } from 'antd';
+import { useNavigate } from "react-router-dom";
 
 function PaymentPage() {
+    const paymentAccess = sessionStorage.getItem("paymentAccess");
+    const navigate = useNavigate();
     const [current, setCurrent] = useState(0);
     const next = () => {
         setCurrent(current + 1);
@@ -33,19 +36,23 @@ function PaymentPage() {
     }));
 
     useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        })
-    }, []);
+        if (!paymentAccess) {
+            navigate(-1);
+        } else {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })
+        }
+    }, [paymentAccess]);
 
     return (
         <div className="payment-wrapper">
-            <div className="container">
+            {paymentAccess && <div className="container">
                 <h1 className="heading">Payment Page</h1>
                 <Steps className="progress" current={current} items={items} />
                 <div>{steps[current].content}</div>
-            </div>
+            </div>}
         </div>
     );
 }

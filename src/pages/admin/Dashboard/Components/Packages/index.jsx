@@ -1,13 +1,15 @@
 import "./Packages.scss";
 import { useGetAllPackagesQuery } from "../../../../../services/packageAPI";
+import { useGetTotalRevenueByPackageQuery } from "../../../../../services/dashboardAPI";
 import { Skeleton } from "antd";
 
 function Packages() {
     const { data, isLoading } = useGetAllPackagesQuery();
+    const { data: total, isLoading: isTotaling } = useGetTotalRevenueByPackageQuery();
 
     return (
         <>
-            {isLoading ?
+            {(isLoading || isTotaling) ?
                 <Skeleton active className="package-container" />
                 :
                 <div className="package-container">
@@ -18,6 +20,7 @@ function Packages() {
                             <div className="price">{`${pack.price.toLocaleString()} đ`}</div>
                             <div className="description">{`${pack.description}`}</div>
                             <div className="description">This package is valid for <strong>{pack.duration}</strong> days </div>
+                            <div className="description">Total revenues: <strong>{total[pack.id]?.toLocaleString()}</strong> VND</div>
                         </div>
                     ))}
                 </div>

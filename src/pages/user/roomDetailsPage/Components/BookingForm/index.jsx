@@ -2,11 +2,11 @@ import "./BookingForm.scss";
 import React, { useState } from 'react';
 import { Modal } from 'antd';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setRoomInfo } from "../../../../../slices/bookingSlice";
 
 function BookingForm({ data }) {
-    const token = useSelector(state => state?.auth?.token);
+    const token = localStorage.getItem("token");
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -22,6 +22,7 @@ function BookingForm({ data }) {
         if (!token) {
             setIsModalOpen(!isModalOpen)
         } else {
+            sessionStorage.setItem("paymentAccess", true);
             navigate("/payment")
         }
     }
@@ -29,12 +30,6 @@ function BookingForm({ data }) {
         <>
             <div className="form-booking" >
                 <span className="title">Book Your Room</span>
-                {/* <button
-                    className="btn add-to-cart"
-                    type="button"
-                >
-                    ADD TO CART
-                </button> */}
                 <button
                     className="btn"
                     onClick={handleClickBooking}
@@ -71,7 +66,9 @@ function BookingForm({ data }) {
                 <div className="border"></div>
                 <div className="guest">
                     <h3 className="sub-title">OR CONTINUE AS GUEST</h3>
-                    <Link className="btn" to={"/payment"}>Continue As Guest</Link>
+                    <Link className="btn" to={"/payment"} onClick={() => {
+                        sessionStorage.setItem("paymentAccess", true);
+                    }}>Continue As Guest</Link>
                 </div>
             </Modal >
         </>

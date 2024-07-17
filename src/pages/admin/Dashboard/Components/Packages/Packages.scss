@@ -1,11 +1,12 @@
 .package-container {
-  margin: 24px 0 0;
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   width: 100%;
 
   .package {
-    width: 33%;
+    flex: 1;
+    min-width: 260px;
     background-color: whitesmoke;
     border-radius: 12px;
     box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,

@@ -62,6 +62,7 @@ const RoomlistDetail = () => {
     }
 
     useEffect(() => {
+        sessionStorage.removeItem("paymentAccess")
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
