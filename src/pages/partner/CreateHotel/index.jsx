@@ -194,7 +194,7 @@ function CreateHotel() {
     };
 
     if (isLoading || isLicenseLoading || isImageLaoding) {
-        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin>;</div>
+        return <div style={{ "display": "flex", "justifyContent": "center", "alignItems": "center", "height": "50vh" }}><Spin></Spin></div>
     }
 
     return (
