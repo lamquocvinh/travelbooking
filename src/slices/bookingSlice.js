@@ -6,7 +6,7 @@ const bookingSlice = createSlice({
         guests: 1,
         rooms: 1,
         date: [],
-        destination: '',
+        destination: 'TP Hồ Chí Minh',
         hotelId: 0,
         hotelName: "",
         roomTypeId: 0,
