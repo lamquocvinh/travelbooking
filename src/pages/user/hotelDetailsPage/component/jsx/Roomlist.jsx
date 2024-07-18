@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import "../scss/RoomList.scss"
+import "../scss/roomlist.scss"
 import { Link } from 'react-router-dom';
 import { setHotelInfo } from "../../../../../slices/bookingSlice";
 import { Badge } from "antd";
