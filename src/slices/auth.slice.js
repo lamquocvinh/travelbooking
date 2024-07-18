@@ -45,6 +45,8 @@ const authSlice = createSlice({
             state.phoneNumber = null;
             state.role = null;
             state.packageId = null;
+            state.package_start_date = null;
+            state.package_end_date = null;
         },
     },
 });
