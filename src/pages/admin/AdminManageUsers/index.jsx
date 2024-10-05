@@ -261,7 +261,7 @@ const AdminManageUsers = () => {
 
     const transformedData = data?.map((item, index) => ({
         ...item,
-        key: index, // add key property
+        key: index,
     }));
 
     const onChange = (pagination, filters, sorter, extra) => {

@@ -62,23 +62,34 @@ const Packet = () => {
                     "fullName": fullName,
                     "email": email
                 });
+
                 if (payRes) {
                     const paymentUrl = payRes?.data?.data?.paymentUrl;
 
-                    setTimeout(() => {
+                    notification.success({
+                        message: "Success",
+                        description: "You will be redirected to the payment page. After completing the payment, you will be logged out.",
+                    });
 
-                        notification.success({
-                            message: "Success",
-                            description: "You will be redirected to the payment page. After completing the payment, you will be logged out.",
-                        });
-
-
-                    }, 2000);
-
+                    // Redirect user to payment URL after showing notification
                     window.location.href = paymentUrl;
-                    navigate('/login');
-                    dispatch(logOut());
 
+                    // Set a listener to detect when the user returns from the payment page
+                    const checkPaymentCompletion = setInterval(async () => {
+                        // You can call a function to check if the payment was completed
+                        const paymentStatus = await checkPaymentStatus(); // Implement this API call based on your backend
+                        if (paymentStatus === 'completed') {
+                            clearInterval(checkPaymentCompletion);
+                            notification.success({
+                                message: "Payment Success",
+                                description: "Payment completed. You will be logged out shortly.",
+                            });
+
+                            // Log out and navigate after successful payment
+                            dispatch(logOut());
+                            navigate('/login');
+                        }
+                    }, 5000); // Check payment status every 5 seconds
                 } else {
                     notification.error({
                         message: "Error",
@@ -98,6 +109,7 @@ const Packet = () => {
             });
         }
     };
+
 
     const handlePackageSelect = (packageId, packagePrice) => {
         setSelectedPackageId(packageId);
