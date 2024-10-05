@@ -108,7 +108,6 @@ const SearchField = ({ setPosition }) => {
 };
 
 function CreateHotel() {
-    const dispatch = useDispatch();
     const [createHotel, { isLoading }] = hotelApi.useCreateHotelMutation();
     const [putLicense, { isLoading: isLicenseLoading, isSuccess, isError, error }] = hotelApi.usePutLicenseMutation();
     const [mapCenter, setMapCenter] = useState([10.740321, 106.678499]);
@@ -117,10 +116,7 @@ function CreateHotel() {
     const [fileList, setFileList] = useState([]);
     const [putImage, { isLoading: isImageLaoding }] = hotelApi.usePutHotelImageMutation();
     const [form] = Form.useForm(); // Tạo instance của form
-    const handleReset = () => {
-        form.resetFields(); // Reset form về trạng thái ban đầu
-        setFileList([]); // Xóa danh sách file
-    };
+
     const handleChange = ({ fileList }) => setFileList(fileList);
 
     const {
@@ -170,15 +166,14 @@ function CreateHotel() {
         businessLicense.forEach(file => {
             formData.append('license', file);
         });
+
         try {
             const response = await createHotel(data).unwrap();
 
             await putLicense({ idHotel: response?.data?.id, license: formData }).unwrap();
 
             await putImage({ idHotel: response?.data?.id, images: fileList }).unwrap();
-
-
-
+            console.log("hotel")
             notification.success({
                 message: "Success",
                 description: "Hotel created successfully!",
@@ -186,9 +181,10 @@ function CreateHotel() {
             reset();
             window.history.back();
         } catch (error) {
+            console.log(error)
             notification.error({
                 message: "Error",
-                description: error?.data?.message,
+                description: error.data.description,
             });
         }
     };

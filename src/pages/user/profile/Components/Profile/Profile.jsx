@@ -87,20 +87,7 @@ const Profile = () => {
                 style={{ maxWidth: 600 }}
                 onFinish={handleSubmit}
             >
-                <Form.Item
-                    size='large'
-                    style={{ fontSize: '18px' }}
-                    label="Change Avatar"
-                    valuePropName="fileList"
-                    getValueFromEvent={normFile}
-                >
-                    <Upload action="/upload.do" listType="picture-card">
-                        <div>
-                            <PlusOutlined />
-                            <div style={{ marginTop: 8 }}>Upload</div>
-                        </div>
-                    </Upload>
-                </Form.Item>
+
                 <Form.Item style={{ fontSize: '18px' }} size='large' label="Gender" name="gender" rules={[{ required: true, message: 'Please select your gender!' }]}>
                     <Radio.Group>
                         <Radio value="female">Female</Radio>
